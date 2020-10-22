@@ -1,0 +1,28 @@
+O Grande Hotel Central volta a abrir portas depois de uma renovação total! Para além da modificação das
+instalações, o hotel vai incluir agora um sistema informático para gerir todas as operações do dia-a-dia.
+O Hotel tem variados clientes sobre os quais interessa saber o nome, o NIF e o histórico de estadias
+anteriores. Os clientes reservam um ou mais quartos de acordo com o número de lugares pretendidos e os
+quartos livres no hotel.
+Existem três tipos de quartos que podem ser reservados: as suites, os quartos com vista e os sem vista. Uma
+suite só pode ser reservada por um cliente que já tenha estado no hotel pelo menos uma vez. Sobre os
+quartos interessa guardar o seu piso, o número do quarto, a capacidade e o preço base por noite.
+Uma reserva caracteriza-se pela quantidade de lugares pretendidos pelo cliente e uma data de início (dia,
+mês, ano) e de fim. Só pode ser aceite uma reserva caso existam suficientes lugares livres para as datas em
+questão.
+Os funcionários do hotel dividem-se em 4 cargos: receção, responsáveis, limpeza e gestão. Sobre os
+funcionários é guardado o seu nome, o seu NIF, o seu salário e anos de serviço no hotel. Os funcionários
+responsáveis são funcionários de receção a quem é atribuída a responsabilidade de monitoração dos quartos
+existentes em um ou mais pisos. A responsabilidade de monitoração de um piso deve ser atribuída ao
+funcionário de tipo responsável, que esteja a monitor menor número de pisos (para equilibrar a
+monitorização dos pisos pelos funcionários responsáveis existentes). Os funcionários de limpeza têm ainda
+um turno associado, noite ou dia. O gestor tem uma avaliação de prestação que vai de 1 (má) a 5 (excelente).
+Para além disto, o Hotel necessita de recorrer a fornecedores para fazer a compra dos produtos que necessita
+diariamente. Para o hotel são adquiridos produtos de limpeza e higiene, maioritariamente, sendo que o
+gestor escolhe sempre os mais baratos. Um produto é caracterizado pelo seu tipo (restauração, limpeza),
+pela sua qualidade (0-5) e pelo seu preço.
+Por forma a atrair novos clientes, o gestor pode efetuar promoções sobre o preço dos quartos do hotel. O
+desconto para suites é de 5%, para quartos com vista 8% e para quartos sem vista 12%.
+O gestor requer ainda uma funcionalidade de pesquisa de funcionários por cargo e salário. Interessa ainda
+ao mesmo pesquisar e listar reservas por dia sendo importante poder filtrar reservas feitas por clientes novos
+(sem histórico). Será ainda necessário saber os custos totais de funcionamento do hotel (compras e salários)
+e o lucro total.

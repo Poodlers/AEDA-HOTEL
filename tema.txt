@@ -1,14 +1,19 @@
 O Grande Hotel Central volta a abrir portas depois de uma renovação total! Para além da modificação das
 instalações, o hotel vai incluir agora um sistema informático para gerir todas as operações do dia-a-dia.
+
+
+
 O Hotel tem variados clientes sobre os quais interessa saber o nome, o NIF e o histórico de estadias
 anteriores. Os clientes reservam um ou mais quartos de acordo com o número de lugares pretendidos e os
 quartos livres no hotel.
+
 Existem três tipos de quartos que podem ser reservados: as suites, os quartos com vista e os sem vista. Uma
 suite só pode ser reservada por um cliente que já tenha estado no hotel pelo menos uma vez. Sobre os
 quartos interessa guardar o seu piso, o número do quarto, a capacidade e o preço base por noite.
 Uma reserva caracteriza-se pela quantidade de lugares pretendidos pelo cliente e uma data de início (dia,
 mês, ano) e de fim. Só pode ser aceite uma reserva caso existam suficientes lugares livres para as datas em
 questão.
+
 Os funcionários do hotel dividem-se em 4 cargos: receção, responsáveis, limpeza e gestão. Sobre os
 funcionários é guardado o seu nome, o seu NIF, o seu salário e anos de serviço no hotel. Os funcionários
 responsáveis são funcionários de receção a quem é atribuída a responsabilidade de monitoração dos quartos

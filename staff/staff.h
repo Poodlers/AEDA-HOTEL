@@ -8,10 +8,10 @@ public:
     string getNIF() const;
     float getWage() const;
     int getyearsOfService() const;
-    void setName(const string name) const;
-    void setNIF(const string NIF) const;
-    void setwage(const string name) const;
-    void setyearsOfService(const string name) const;
+    void setName(const string name);
+    void setNIF(const string NIF);
+    void setwage(const float wage);
+    void setyearsOfService(const int yearsOfService);
 private:
     string name;
     string NIF;
@@ -20,22 +20,22 @@ private:
 };
 
 
-class Receptionist : public Staff(){
+class Receptionist : public Staff{
     
     
-}
+};
 
-class Responsibles : public Receptionist(){
+class Responsibles : public Receptionist{
     
     
-}
+};
 
-class Cleaning : public Staff(){
+class Cleaning : public Staff{
     
     
-}
+};
 
-class Manager : public Staff(){
+class Manager : public Staff{
     
     
-}
+};

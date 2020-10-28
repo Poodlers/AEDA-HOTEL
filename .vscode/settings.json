@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "vector": "cpp",
+        "xstring": "cpp",
+        "iomanip": "cpp",
+        "string": "cpp",
+        "utility": "cpp",
+        "map": "cpp",
+        "xtree": "cpp",
+        "iostream": "cpp",
+        "system_error": "cpp",
+        "xlocale": "cpp"
+    }
+}

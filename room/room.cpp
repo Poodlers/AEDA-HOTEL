@@ -1,5 +1,6 @@
 #include "room.h"
 
+
 Room::Room(const int &floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight ){
     this->floor=floor;
     this->roomNumber = roomNumber;
@@ -26,9 +27,12 @@ void Room::setFloor(const int floor) {
 void Room::setRoomNumber(const unsigned int roomNumber) {
     this->roomNumber = roomNumber;
 }
-void Room::setCapacity(const int capacity){
+void Room::setCapacity(const unsigned int capacity){
     this->capacity = capacity;
 }
 void Room::setPricePerNight(const float pricePerNight){
     this->pricePerNight = pricePerNight;
+}
+void Room::print(){
+    std::cout<< "to make virtual";
 }

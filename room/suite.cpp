@@ -7,3 +7,7 @@ void Suite :: activateDeactivateDiscount(){
 }
 
 bool Suite::discount = false;
+
+void Suite::print(){
+    std::cout<< "to make virtual";
+}

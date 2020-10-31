@@ -6,31 +6,43 @@
 #include "../staff/staff.h"
 #include "../room/room.h"
 #include "../provider/provider.h"
+#include "../product/product1.h"
 
 class Hotel{
 public:
-    Hotel(const unsigned int & floors, const unsigned int & numberOfRooms);
+    Hotel(const std::string &hotelFile);
     void addRoom(const Room& room);
     void addStaff(const Staff& staff);
 
-    void sortByPosition();
-    void sortBySalary();
-    void assignRoom();
-    
+    void sortByStaffPosition();
+    void sortStaffBySalary();
+    void sortReservationsByDay();
+    void sortCurrentReservations();
+    void sortReservationsFromNewClients();
+    void getCosts();
+    void getProfit();
+    void buyProducts();
 
+
+    void logIn(const std::string& name, const std::string& password);
 
 private:
-    std::vector<Client> clients;
-    std::vector<Staff> staff;
-    std::vector<Room> rooms;
-    std::vector<Provider> providers;
+    std::vector<Client*> clients;
+    std::vector<Staff*> staff;
+    std::vector<Room*> rooms;
+    std::vector<Provider*> providers;
+    std::vector<Product*> productsBought;
+
+    bool loggedIn = false;
 
     unsigned int freeRooms;
-    unsigned int freeSuits;
-    unsigned int freeRoomsWithView;
-    unsigned int freeRoomsWithOutView;
+    unsigned int freeSuits = 0;
+    unsigned int freeRoomsWithView = 0;
+    unsigned int freeRoomsWithOutView = 0;
 
-    const unsigned int floors;
-    const unsigned int numberOfRooms;
+    unsigned int floors;
+    unsigned int numberOfRooms;
+    int firstFloor;
 };
+
 #endif

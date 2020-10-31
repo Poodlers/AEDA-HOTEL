@@ -5,26 +5,33 @@
 
 class Staff {
 public:
+    Staff(const std::string& name, const unsigned int & NIF, const float& wage);
+
     std::string getName() const;
     unsigned int getNIF() const;
     float getWage() const;
-    int getyearsOfService() const;
+    int getYearsOfService() const;
+
     void setName(const std::string name);
     void setNIF(const unsigned int NIF);
-    void setwage(const float wage);
-    void setyearsOfService(const int yearsOfService);
-    Staff(const std::string& name, const unsigned int & NIF, const float& wage);
+    void setWage(const float wage);
+    void setYearsOfService(const int yearsOfService);
+
+    virtual void print() const;
+
 protected:
     std::string name;
     unsigned int NIF;
     float wage;
-    int yearsOfService;
+    int yearsOfService; //could be unsigned int!!!
+    static unsigned int staffNumber; //counts the number of staff members
 };
 
 
 class Receptionist : public  Staff{
 public:
-    Receptionist();
+    Receptionist(const std::string& name, const unsigned int & NIF, const float& wage);
+    void print(){};
 };
 
 class Responsible : public Receptionist{
@@ -33,6 +40,7 @@ public:
     void assignFloor(const unsigned int & floor);
     int getNumberOfFloorsBringMonitored() const;
     std::vector<int> getFloorsAssigned() const;
+
 
 private:
     int numberOfFloorsBeingMonitored;
@@ -44,6 +52,7 @@ public:
     Janitor(const bool & shift,const std::string& name, const unsigned int & NIF, const float& wage);
     bool getShift() const;
     void setShift(const bool& shift);
+    void print(){};
 
 private:
     bool shift; //true for day, false for night
@@ -54,35 +63,11 @@ public:
     Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password);
     unsigned int getEvaluation() const;
     void setEvaluation(const unsigned int &evaluation);
+    void print(){};
+
 private:
     unsigned int evaluation; //0 if manager has not been evaluated, 1 to 5 they have been evaluated
     std::string password;
-};
-
-class RoomAlreadyExists{
-private:
-    unsigned int roomNumber;
-    unsigned int roomId;
-public:
-    RoomAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
-        this->roomNumber = roomNumber;
-        this->roomId = roomId;
-    }
-    unsigned int getRoomNumber() const {return this->roomNumber;}
-    unsigned int getRoomId() const {return this-> roomId;}
-};
-
-class RoomWithThisRoomIdAlreadyExists{
-private:
-    unsigned int roomNumber;
-    unsigned int roomId;
-public:
-    RoomWithThisRoomIdAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
-        this->roomNumber = roomNumber;
-        this->roomId = roomId;
-    }
-    unsigned int getRoomNumber() const {return this->roomNumber;}
-    unsigned int getRoomId() const {return this-> roomId;}
 };
 
 #endif

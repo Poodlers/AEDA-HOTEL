@@ -3,4 +3,20 @@ project(aeda_hotel_projeto)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(main.cpp product/product.cpp exceptions/exceptions.h hotel/hotel.h hotel/hotel.cpp provider/provider.h provider/provider.cpp)
+add_executable(
+        aeda_hotel_projeto
+        testing.cpp
+        room/room.cpp
+        room/suite.cpp
+        room/noviewroom.cpp
+        room/viewroom.cpp
+        client/client.cpp
+        staff/staff.cpp
+        staff/manager.cpp
+        staff/janitor.cpp
+        staff/receptionist.cpp
+        staff/responsibles.cpp
+        product/product1.cpp
+        hotel/hotel.cpp
+
+)

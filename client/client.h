@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-typedef struct Date{
+struct Date{
     int year;
     int month;
     int day;
@@ -29,11 +29,12 @@ public:
 
     void setName(const std::string &name);
     void setNIF(const unsigned int &NIF);
-    void addToHistory(const Reservation &reservation);
+    void addToHistory(Reservation &reservation);
 
 private:
     std::string name;
     unsigned int NIF;
     std::vector<Reservation*> history;
+    std::vector<Reservation*> currentReservations;
 };
 #endif

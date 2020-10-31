@@ -1,6 +1,7 @@
 #ifndef ROOM_H
 #define ROOM_H
 #include <string>
+#include <iostream>
 
 class Room{
 public:
@@ -8,14 +9,15 @@ public:
         int getFloor() const;
         int getroomNumber() const;
         int getCapacity() const;
-        float getPricePerNight() const {return this->pricePerNight;} //implementar em cada classe
+        float getPricePerNight() const;
         
         void setFloor(const int floor);
         void setRoomNumber(const unsigned int roomNumber);
         void setCapacity(const unsigned int capacity);
         void setPricePerNight(const float pricePerNight);
+        virtual void print();
 
-protected:
+private:
         int floor;
         unsigned int roomNumber; //maneira de acessar numero de quarto a partir de roomId
         unsigned int roomId;
@@ -27,6 +29,7 @@ class Suite: public Room{
 public:
     Suite(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
     void activateDeactivateDiscount();
+    void print();
 
 private:
     static bool discount;
@@ -37,6 +40,7 @@ class ViewRoom: public Room{
 public:
     ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
     void activateDeactivateDiscount();
+    void print();
 
 private:
     static bool discount;
@@ -47,6 +51,7 @@ class NoViewRoom: public Room{
 public:
     NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
     void activateDeactivateDiscount();
+    void print();
 
 private:
     static bool discount;

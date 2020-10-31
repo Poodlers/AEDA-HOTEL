@@ -1,6 +1,8 @@
-#ifndef CLIENT_H
-#define CLIENT_H
 #include "staff.h"
+#include "iostream"
+/*STAFF*/
+
+unsigned int Staff:: staffNumber = 0;
 
 Staff::Staff(const std::string& name, const unsigned int & NIF, const float& wage){
     //if staff member already exists raise exception
@@ -10,6 +12,7 @@ Staff::Staff(const std::string& name, const unsigned int & NIF, const float& wag
     this->NIF = NIF;
     this->wage = wage;
     this-> yearsOfService = 0;
+    staffNumber ++;
 }
 
 std::string Staff::getName() const{
@@ -24,7 +27,7 @@ float Staff::getWage() const{
     return this->wage;
 }
 
-int Staff::getyearsOfService() const{
+int Staff::getYearsOfService() const {
     return this->yearsOfService;
 }
 
@@ -36,10 +39,16 @@ void Staff::setNIF(const unsigned int NIF){
     this->NIF = NIF;
 }
 
-void Staff::setwage(const float wage){
+void Staff::setWage(const float wage){
     this->wage = wage;
 }
 
-void Staff::setyearsOfService(const int yearsOfService){
+void Staff::setYearsOfService(const int yearsOfService){
     this->yearsOfService = yearsOfService;
 }
+
+void Staff::print() const{
+    std::cout<< "to use dynamic casts";
+}
+/* ------- */
+

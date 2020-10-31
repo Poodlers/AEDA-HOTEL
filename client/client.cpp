@@ -40,7 +40,7 @@ Reservation Client::buildReservation(const int &reservationSize, const Date & ch
     return reservation;
 }
 
-void Client::setName(const std:string &name){
+void Client::setName(const std::string &name){
     this->name = name;
 }
 
@@ -48,7 +48,7 @@ void Client::setNIF(const unsigned int &NIF){
     this->NIF = NIF;
 }
 
-void Client::addToHistory(const Reservation &reservation){
+void Client::addToHistory(Reservation &reservation){
     this->history.push_back(&reservation);
 }
 

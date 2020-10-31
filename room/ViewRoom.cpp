@@ -3,8 +3,12 @@ ViewRoom :: ViewRoom(const int & floor, const unsigned int & roomNumber ,const u
 }
 
 
-void Suite :: activateDeactivateDiscount(){
+void ViewRoom :: activateDeactivateDiscount(){
     this->discount = !(this->discount);
 }
 
 bool ViewRoom::discount = false;
+
+void ViewRoom::print(){
+    std::cout<< "to make virtual";
+}

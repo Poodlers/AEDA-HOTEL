@@ -110,5 +110,30 @@ public:
     unsigned int getNIF() const{ return this->NIF; }
 };
 
+class RoomAlreadyExists{
+private:
+    unsigned int roomNumber;
+    unsigned int roomId;
+public:
+    RoomAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
+        this->roomNumber = roomNumber;
+        this->roomId = roomId;
+    }
+    unsigned int getRoomNumber() const {return this->roomNumber;}
+    unsigned int getRoomId() const {return this-> roomId;}
+};
+
+class RoomWithThisRoomIdAlreadyExists{
+private:
+    unsigned int roomNumber;
+    unsigned int roomId;
+public:
+    RoomWithThisRoomIdAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
+        this->roomNumber = roomNumber;
+        this->roomId = roomId;
+    }
+    unsigned int getRoomNumber() const {return this->roomNumber;}
+    unsigned int getRoomId() const {return this-> roomId;}
+};
 
 #endif

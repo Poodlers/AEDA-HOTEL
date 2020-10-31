@@ -1,4 +1,4 @@
-#include "product.h"
+#include "product1.h"
 #include <string>
 
 Product::Product(const unsigned int& quality, const float& price, const std::string & type, const unsigned int& Id){

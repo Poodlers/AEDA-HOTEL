@@ -19,4 +19,4 @@ add_executable(
         product/product1.cpp
         hotel/hotel.cpp
 
-)
+        hotel/reservation.h hotel/reservation.cpp)

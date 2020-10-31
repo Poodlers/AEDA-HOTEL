@@ -102,16 +102,16 @@ Hotel::Hotel(const std::string &hotelFile) {
     getline(file,getData);
     //if not Client or end of file throw exception
 
-    std::string reserv;
-    Reservation reserv1;
-    Date dateIn, dateOut;
+    std::string reservation1;
 
-
-    while(getline(file,getData)){
+    while(getline(file,getData) && getData != "End"){
         ss<<getData;
         ss>>name>>NIF;
         Client* client = new Client(name,NIF);
-        
+        while(ss>>reservation1){
+            Reservation* reservation = new Reservation(reservation1);
+            client->addToHistory(*reservation);
+        }
     }
 
     file.close();

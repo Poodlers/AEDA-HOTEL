@@ -20,26 +20,6 @@ std::vector<Reservation*> Client::getHistory() const{
     return this->history;
 }
 
-
-Date Client::buildDate(const int &year, const int &month, const int &day){
-    Date date;
-
-    date.day = day;
-    date.month = month;
-    date.year = year;
-
-    return date;
-}
-
-Reservation Client::buildReservation(const int &reservationSize, const Date & checkIn, const Date & checkOut, const int & roomId){
-    Reservation reservation;
-    reservation.checkIn = checkIn;
-    reservation.checkOut = checkOut;
-    reservation.roomId = roomId;
-    reservation.reservationSize = reservationSize;
-    return reservation;
-}
-
 void Client::setName(const std::string &name){
     this->name = name;
 }

@@ -2,26 +2,11 @@
 #define CLIENT_H
 #include <string>
 #include <vector>
-
-struct Date{
-    int year;
-    int month;
-    int day;
-};
-
-struct Reservation{
-    int reservationSize; 
-    Date checkIn;
-    Date checkOut;
-    int roomId;
-};
+#include "../hotel/reservation.h"
 
 class Client{
 public:
     Client(const std::string &name, const unsigned int &NIF);
-
-    Date buildDate(const int &year, const int &month, const int &day);
-    Reservation buildReservation(const int &reservationSize, const Date & checkIn, const Date & checkOut, const int & roomId);
 
     std::string getName() const;
     unsigned int getNIF() const;

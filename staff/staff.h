@@ -3,48 +3,6 @@
 #include <string>
 #include <vector>
 
-class StaffMemberAlreadyExists{
-private:
-    std::string name;
-    unsigned int NIF;
-public:
-    StaffMemberAlreadyExists(const std::string &name, const unsigned int& NIF){
-        this->name = name;
-        this->NIF = NIF;
-    }
-    std::string getName() const{ return this->name; }
-    unsigned int getNIF() const{ return this->NIF; }
-};
-
-class StaffWithThisNIFAlreadyExists{
-private:
-    std::string name;
-    unsigned int NIF;
-public:
-    StaffWithThisNIFAlreadyExists(const std::string &name, const unsigned int& NIF){
-        this->name = name;
-        this->NIF = NIF;
-    }
-    std::string getName() const{ return this->name; }
-    unsigned int getNIF() const{ return this->NIF; }
-};
-
-class FloorDosNotExist{
-private:
-    unsigned int floor;
-public:
-    FloorDosNotExist(const unsigned int &floor){ this->floor = floor; }
-    unsigned int getFloor() const{ return this->floor; }
-};
-
-class InvalidEvaluation{
-private:
-    unsigned int evaluation;
-public:
-    InvalidEvaluation(const unsigned int & evaluation) { this->evaluation = evaluation; }
-    unsigned int getEvaluation() const{ return this->evaluation; }
-};
-
 class Staff {
 public:
     std::string getName() const;
@@ -93,10 +51,38 @@ private:
 
 class Manager : public Staff{
 public:
-    Manager(const std::string& name, const unsigned int & NIF, const float& wage);
+    Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password);
     unsigned int getEvaluation() const;
     void setEvaluation(const unsigned int &evaluation);
 private:
     unsigned int evaluation; //0 if manager has not been evaluated, 1 to 5 they have been evaluated
+    std::string password;
 };
+
+class RoomAlreadyExists{
+private:
+    unsigned int roomNumber;
+    unsigned int roomId;
+public:
+    RoomAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
+        this->roomNumber = roomNumber;
+        this->roomId = roomId;
+    }
+    unsigned int getRoomNumber() const {return this->roomNumber;}
+    unsigned int getRoomId() const {return this-> roomId;}
+};
+
+class RoomWithThisRoomIdAlreadyExists{
+private:
+    unsigned int roomNumber;
+    unsigned int roomId;
+public:
+    RoomWithThisRoomIdAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
+        this->roomNumber = roomNumber;
+        this->roomId = roomId;
+    }
+    unsigned int getRoomNumber() const {return this->roomNumber;}
+    unsigned int getRoomId() const {return this-> roomId;}
+};
+
 #endif

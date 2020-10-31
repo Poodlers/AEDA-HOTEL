@@ -16,32 +16,6 @@ struct Reservation{
     int roomId;
 };
 
-class ClientAlreadyExists{
-private:
-    std::string name;
-    unsigned int NIF;
-public:
-    ClientAlreadyExists(const std::string &name, const unsigned int& NIF){
-        this->name = name;
-        this->NIF = NIF;
-    }
-    std::string getName() const{ return this->name; }
-    unsigned int getNIF() const{ return this->NIF; }
-};
-
-class ClientWithThisNIFAlreadyExists{
-private:
-    std::string name;
-    unsigned int NIF;
-public:
-    ClientWithThisNIFAlreadyExists(const std::string &name, const unsigned int& NIF){
-        this->name = name;
-        this->NIF = NIF;
-    }
-    std::string getName() const{ return this->name; }
-    unsigned int getNIF() const{ return this->NIF; }
-};
-
 class Client{
 public:
     Client(const std::string &name, const unsigned int &NIF);

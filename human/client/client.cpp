@@ -9,4 +9,3 @@ std::vector<Reservation*> Client::getHistory() const{
 void Client::addToHistory(Reservation &reservation){
     this->history.push_back(&reservation);
 }
-

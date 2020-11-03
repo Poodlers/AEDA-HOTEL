@@ -8,7 +8,3 @@ void ViewRoom :: activateDeactivateDiscount(){
 }
 
 bool ViewRoom::discount = false;
-
-void ViewRoom::print(){
-    std::cout<< "to make virtual";
-}

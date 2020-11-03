@@ -5,7 +5,7 @@ instalações, o hotel vai incluir agora um sistema informático para gerir toda
 
 O Hotel tem variados clientes sobre os quais interessa saber o nome, o NIF e o histórico de estadias
 anteriores. Os clientes reservam um ou mais quartos de acordo com o número de lugares pretendidos e os
-quartos livres no hotel.
+quartos livres no hotel. Provavelmente temos de validar este NIF antes de o aceitar no nosso programa.
 
 Existem três tipos de quartos que podem ser reservados: as suites, os quartos com vista e os sem vista. Uma
 suite só pode ser reservada por um cliente que já tenha estado no hotel pelo menos uma vez. Sobre os

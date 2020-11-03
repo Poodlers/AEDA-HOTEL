@@ -17,10 +17,13 @@ public:
 
 
 private:
+    static int reservationId;
+    int reservationNumber;
     int reservationSize;
     Date checkIn;
     Date checkOut;
     int roomId;
 };
+
 
 #endif

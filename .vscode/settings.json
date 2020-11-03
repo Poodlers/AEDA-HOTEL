@@ -9,6 +9,7 @@
         "xtree": "cpp",
         "iostream": "cpp",
         "system_error": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "ostream": "cpp"
     }
 }

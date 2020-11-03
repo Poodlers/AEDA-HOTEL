@@ -1,10 +1,12 @@
 #include "reservation.h"
 #include <sstream>
-
+#include <algorithm>
+int Reservation::reservationId = 0;
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
     Date dateIn, dateOut;
-
+    reservationId++;
+    this->reservationNumber = reservationId;
     this->reservationSize = reservationSize;
     this->roomId = roomId;
     this->checkIn = buildDate(dayIn,monthIn,yearIn);
@@ -13,16 +15,14 @@ Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&
 }
 Reservation :: Reservation(const std::string & reservation){
     //receives reservationSize,dayIn-monthIn-yearIn,dayOut-monthOut-yearOut,roomId
-    std::stringstream ss;
+    std::stringstream ss(reservation);
     std::string dates;
     Date dateIn, dateOut;
-
     char ignore;
-
-    ss>>this->reservationSize>>dates>>this->roomId;
-    ss<< dates;
-
-    ss >> ignore >> dateIn.day >> ignore >> dateIn.month >>ignore >> dateIn.year >> ignore >> dateOut.day >> ignore >> dateOut.month >>ignore >> dateOut.year;
+    reservationId++;
+    this->reservationNumber = reservationId;
+    ss>>this->reservationSize>> ignore >>  dateIn.day >> ignore >> dateIn.month   >> ignore >>  dateIn.year
+    >> ignore >>  dateOut.day  >> ignore >>  dateOut.month >> ignore >> dateOut.year >>ignore >>  this->roomId;
     this->checkIn = dateIn;
     this->checkOut = dateOut;
 }

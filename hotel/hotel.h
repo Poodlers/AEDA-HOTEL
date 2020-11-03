@@ -28,9 +28,13 @@ public:
     void getProfit();
 
     void buyProducts();
+    std::vector<Client*>& getClients();
+    std::vector<Staff*>& getStaff();
+    std::vector<Room*>& getRooms();
+    std::string getManagerName();
+    std::string getManagerPassword();
 
-
-    void logIn(const std::string& name, const std::string& password);
+    bool logIn(const std::string& name, const std::string& password);
     void logOut();
 
 private:

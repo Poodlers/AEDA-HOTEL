@@ -10,20 +10,21 @@ public:
 
     float getWage() const;
     int getYearsOfService() const;
-
+    virtual std::string getType() = 0;
     void setWage(const float wage);
     void setYearsOfService(const int yearsOfService);
-
+    virtual void print() override;
+    void edit() override;
 protected:
     float wage;
     unsigned int yearsOfService;
-    static unsigned int staffNumber; //counts the number of staff members
 };
 
 
 class Receptionist : public  Staff{
 public:
     Receptionist(const std::string& name, const unsigned int & NIF, const float& wage);
+    std::string getType();
 };
 
 class Responsible : public Receptionist{
@@ -32,7 +33,9 @@ public:
     void assignFloor(const unsigned int & floor);
     int getNumberOfFloorsBringMonitored() const;
     std::vector<int> getFloorsAssigned() const;
-
+    std::string getType();
+    void print() override;
+    void edit() override;
 
 private:
     int numberOfFloorsBeingMonitored;
@@ -44,6 +47,9 @@ public:
     Janitor(const bool & shift,const std::string& name, const unsigned int & NIF, const float& wage);
     bool getShift() const;
     void setShift(const bool& shift);
+    std::string getType();
+    void print() override;
+    void edit() override;
 
 private:
     bool shift; //true for day, false for night
@@ -54,6 +60,10 @@ public:
     Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password);
     unsigned int getEvaluation() const;
     void setEvaluation(const unsigned int &evaluation);
+    std::string getType();
+    std::string getPassword();
+    void print() override;
+    void edit() override;
 
 private:
     unsigned int evaluation; //0 if manager has not been evaluated, 1 to 5 they have been evaluated

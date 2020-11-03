@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 project(aeda_hotel_projeto)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 add_executable(
         aeda_hotel_projeto
-        testing.cpp
+        main.cpp
+        GUI/buttons.cpp
+        GUI/utils.cpp
         room/room.cpp
         room/suite.cpp
         room/noviewroom.cpp

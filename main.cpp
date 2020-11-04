@@ -34,7 +34,7 @@ int main(){
     while(true){
         unpause = false;
         gotoxy(60,1);
-        cout << setfill(' ') <<  setw(30) << "Hit Enter to unpause!";
+        cout << setfill(' ') <<  setw(20) << "Hit Enter to unpause!";
         ReadConsoleInput(hin, &InputRecord, 1, &Events);
         switch ( InputRecord.EventType ){
             case MOUSE_EVENT: // mouse input 
@@ -63,7 +63,7 @@ int main(){
         
         if(unpause){
             gotoxy(60,1);
-            cout << setfill(' ') <<  setw(30) << "Hit any key to pause!";
+            cout << setfill(' ') <<  setw(20) << "Hit any key to pause!";
             while(true){
                 runTime(0.1,begin,prev_time,day,month,year,map_month);
                 if(waitForCharInput(30) != '_') break;

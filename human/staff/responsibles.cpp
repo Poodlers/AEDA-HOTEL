@@ -58,7 +58,7 @@ void Responsible::edit() {
         edit = GetNumberInput(2,12,CheckIfInteger);
         this->assignFloor(std::stoi(edit));
         gotoxy(2,12);
-        std::cout << "                          ";
+        std::cout << "                            ";
     }
 
 }

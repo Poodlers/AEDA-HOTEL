@@ -30,6 +30,40 @@ int Date::operator - (const Date& date){
     else
         return 365 * (this->year - date.getYear()) - (this->month - date.getMonth()) * 30 - this->day + date.day;
 }
+Date Date::operator+(int d) const {
+    Date result = *this;
+    result.day += d;
+    while (result.day > result.getDaysInMonth()) {
+        result.day -= result.getDaysInMonth();
+        ++result.month;
+        if (result.month > 12) {
+            result.month = 1;
+            ++result.year;
+        }
+    }
+    return result;
+
+}
+
+int Date::getDaysInMonth() const {
+    switch (this->month) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            return 31;
+        case 4: case 6: case 9: case 11:
+            return 30;
+        case 2:
+            return 28 + isInLeapYear();
+    }
+    return 0;
+}
+
+Date operator+(int daysToAdd, const Date& date) {
+    return date + daysToAdd;
+}
+
+bool Date::isInLeapYear() const {
+    return this->year % 400 == 0 || (this->year % 4 == 0 && this->year % 100 != 0);
+}
 Date::Date(){
 }
 

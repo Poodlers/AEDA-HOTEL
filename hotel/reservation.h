@@ -15,10 +15,14 @@ public:
     int getDay() const;
     int getMonth() const;
     int getYear() const;
+    int getDaysInMonth() const;
+    bool isInLeapYear() const;
     bool operator ==(const Date& date);
     bool operator <(const Date& date);
     bool operator >(const Date& date);
     int operator - (const Date& date);
+    Date operator+(int d) const;
+    friend Date operator+(int daysToAdd, const Date& date);
 };
 
 class Reservation{

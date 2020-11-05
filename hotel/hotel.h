@@ -2,8 +2,8 @@
 #define HOTEL_H
 #include <string>
 #include <vector>
-#include "../human/client/client.h"
-#include "../human/staff/staff.h"
+#include "../person/client/client.h"
+#include "../person/staff/staff.h"
 #include "../room/room.h"
 #include "../provider/provider.h"
 #include "../product/product1.h"
@@ -14,6 +14,7 @@ public:
     void addRoom(const Room& room);
     void addStaff(const Staff& staff);
     void addClient(const Client& client);
+
     void makeReservation(const Reservation& restart);
 
     void assignFloorsToResponsibles();
@@ -28,11 +29,13 @@ public:
     void getProfit();
 
     void buyProducts();
+
     std::vector<Client*>& getClients();
     std::vector<Staff*>& getStaff();
     std::vector<Room*>& getRooms();
-    std::string getManagerName();
-    std::string getManagerPassword();
+    std::string getManagerName() const;
+    std::string getManagerPassword() const;
+    bool getLoggedInState() const;
 
     bool logIn(const std::string& name, const std::string& password);
     void logOut();

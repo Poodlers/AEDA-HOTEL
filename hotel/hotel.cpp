@@ -123,12 +123,17 @@ Hotel::Hotel(const std::string &hotelFile) {
 
 bool Hotel::logIn(const std::string &name, const std::string &password) {
     if(name == getManagerName() && password == getManagerPassword()){
+        loggedIn = true;
         return true;
     }
     return false;
 }
 
-std::string Hotel::getManagerName() {
+void Hotel::logOut(){
+    loggedIn = false;
+}
+
+std::string Hotel::getManagerName() const{
     for(Staff* staff_member: this->staff){
         if(staff_member->getType() == "Manager"){
             return staff_member->getName();
@@ -137,7 +142,7 @@ std::string Hotel::getManagerName() {
     return "ERROR";
 }
 
-std::string Hotel::getManagerPassword() {
+std::string Hotel::getManagerPassword() const{
     for(Staff* staff_member: this->staff){
         if(staff_member->getType() == "Manager"){
             Manager* manager = dynamic_cast<Manager*>(staff_member);
@@ -157,4 +162,7 @@ std::vector<Room *>& Hotel::getRooms() {
 
 std::vector<Staff *>& Hotel::getStaff() {
     return this->staff;
+}
+bool Hotel::getLoggedInState() const{
+    return this->loggedIn;
 }

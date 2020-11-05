@@ -19,13 +19,13 @@ add_executable(
         room/suite.cpp
         room/noviewroom.cpp
         room/viewroom.cpp
-        human/client/client.cpp
-        human/staff/staff.cpp
-        human/staff/manager.cpp
-        human/staff/janitor.cpp
-        human/staff/receptionist.cpp
-        human/staff/responsibles.cpp
-        human/human.cpp
+        person/client/client.cpp
+        person/staff/staff.cpp
+        person/staff/manager.cpp
+        person/staff/janitor.cpp
+        person/staff/receptionist.cpp
+        person/staff/responsibles.cpp
+        person/person.cpp
         product/product1.cpp
         hotel/hotel.cpp
         hotel/reservation.cpp)

@@ -8,7 +8,6 @@
 #include "utils.h"
 #include "../hotel/hotel.h"
 
-
 class BaseButton{
 protected:
     int x;
@@ -28,11 +27,19 @@ public:
 
 };
 
+class ParentButton: public BaseButton{
+private:
+    std::vector<BaseButton*> InitialButtons;
+public:
+    ParentButton(const int x, const int y, const int width,const int height,const std::string &text,const std::vector<BaseButton*>& InitialButtons);
+    void onClick(std::vector<BaseButton*> &CurrentButtons) override;
+};
+
 class GoBackButton: public BaseButton{
 private:
-    std::vector<BaseButton*> NextButtons;
+    BaseButton* NextButtons;
 public:
-    GoBackButton(const int x, const int y, const int width,const int height,const std::string text,std::vector<BaseButton *>& ButtonsNext );
+    GoBackButton(const int x, const int y, const int width,const int height,const std::string text,BaseButton * ButtonsNext );
     void onClick(std::vector<BaseButton*> &CurrentButtons) override;
 };
 
@@ -42,9 +49,10 @@ class MenuButton : public BaseButton{
 private:
     std::vector<N *> menu_items;
     int CurrentPage;
+    BaseButton* Parent_Button;
 public:
     MenuButton(const int x, const int y, const int width,const int height,const std::string &text,const int currentPage,
-                       std::vector<N *>& menu_items);
+                       std::vector<N *>& menu_items,BaseButton * ParentButton);
     void onClick(std::vector<BaseButton*> &CurrentButtons) override;
     void EraseObject(N * item);
 
@@ -79,14 +87,6 @@ public:
     void onClick(std::vector<BaseButton*> &CurrentButtons) override;
 };
 
-template<class Client>
-class ShowReservation: public ModifyButton<Client>{
-private:
-    MenuButton<Client>* Button;
-public:
-    ShowReservation(const int x, const int y, const int width,const int height,const std::string text,Client* object,MenuButton<Client>* button);
-    void onClick(std::vector<BaseButton*> &CurrentButtons) override;
-};
 
 bool ButtonWasPressed(BaseButton *button, INPUT_RECORD &Input_Record);
 void Authentication(Hotel* hotel);

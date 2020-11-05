@@ -11,6 +11,8 @@ public:
     Date(const int &day, const int &month, const int &year);
     Date(const std::string& date);
     Date();
+    int getDaysInMonth() const;
+    bool isInLeapYear() const;
     std::ostream & operator<<(std::ostream &o);
     int getDay() const;
     int getMonth() const;
@@ -18,6 +20,8 @@ public:
     bool operator ==(const Date& date);
     bool operator <(const Date& date);
     bool operator >(const Date& date);
+    Date operator+(int d) const;
+    friend Date operator+(int daysToAdd, const Date& date);
     int operator - (const Date& date);
 };
 
@@ -28,8 +32,8 @@ public:
 
     int getReservationNumber() const;
     int getReservationSize() const;
-    Date getCheckIn() const;
-    Date getCheckOut() const;
+    Date* getCheckIn() const;
+    Date* getCheckOut() const;
     int getRoomId() const;
 
     void setReservationNumber(const int & reservationNumber);
@@ -44,8 +48,8 @@ private:
     static int reservationId;
     int reservationNumber;
     int reservationSize;
-    Date checkIn ;
-    Date checkOut;
+    Date* checkIn;
+    Date* checkOut;
     int roomId;
 };
 

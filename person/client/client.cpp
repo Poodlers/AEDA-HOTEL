@@ -3,7 +3,7 @@
 
 Client:: Client(const std::string &name, const unsigned int &NIF) : Person(name,NIF){}
 
-std::vector<Reservation*> Client::getHistory() const{
+std::vector<Reservation*>& Client::getHistory(){
     return this->history;
 }
 

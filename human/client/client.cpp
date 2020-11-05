@@ -2,7 +2,7 @@
 
 Client:: Client(const std::string &name, const unsigned int &NIF) : Human(name,NIF){}
 
-std::vector<Reservation*> Client::getHistory() const{
+std::vector<Reservation*>& Client::getHistory() const{
     return this->history;
 }
 

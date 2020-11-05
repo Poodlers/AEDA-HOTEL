@@ -50,10 +50,20 @@ public:
 
 };
 
-template <class N>
-class DeleteButton: public BaseButton{
+template<class N>
+class ModifyButton: public BaseButton{
 private:
     N* object;
+public:
+    N* getObject();
+    void onClick(std::vector<BaseButton*> &CurrentButtons) override;
+    ModifyButton(const int x, const int y, const int width,const int height,const std::string text,N* object);
+};
+
+
+template <class N>
+class DeleteButton: public ModifyButton<N>{
+private:
     MenuButton<N>* Button;
 public:
     DeleteButton(const int x, const int y, const int width,const int height,const std::string text,N* object,MenuButton<N>* Button);
@@ -61,12 +71,20 @@ public:
 };
 
 template <class N>
-class EditButton: public BaseButton{
+class EditButton: public ModifyButton<N>{
 private:
-    N * object;
     BaseButton* OriginalButton;
 public:
     EditButton(const int x, const int y, const int width,const int height,const std::string text,N* object,BaseButton* button);
+    void onClick(std::vector<BaseButton*> &CurrentButtons) override;
+};
+
+template<class Client>
+class ShowReservation: public ModifyButton<Client>{
+private:
+    MenuButton<Client>* Button;
+public:
+    ShowReservation(const int x, const int y, const int width,const int height,const std::string text,Client* object,MenuButton<Client>* button);
     void onClick(std::vector<BaseButton*> &CurrentButtons) override;
 };
 

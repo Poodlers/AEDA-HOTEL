@@ -6,6 +6,7 @@ struct Date{
     int year;
     int month;
     int day;
+    std::ostream & operator<<(std::ostream &o);
 };
 
 class Reservation{
@@ -14,7 +15,11 @@ public:
     Reservation(const std::string & reservation);
 
     Date buildDate(const int &day, const int &month, const int &year);
-
+    int getreservationNumber();
+    int getReservationSize();
+    Date getCheckIn();
+    Date getCheckOut();
+    int getRoomId();
 
 private:
     static int reservationId;

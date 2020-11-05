@@ -9,7 +9,7 @@ class Client: public Human{
 public:
     Client(const std::string &name, const unsigned int &NIF);
 
-    std::vector<Reservation*> getHistory() const;
+    std::vector<Reservation*>& getHistory() const;
     void addToHistory(Reservation &reservation);
 
 private:

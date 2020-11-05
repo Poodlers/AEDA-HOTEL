@@ -16,11 +16,11 @@ public:
         void setCapacity(const unsigned int capacity);
         void setPricePerNight(const float pricePerNight);
         void print();
-        void edit();
+        //void edit();
 
 private:
         int floor;
-        unsigned int roomNumber; //maneira de acessar numero de quarto a partir de roomId
+        unsigned int roomNumber;
         unsigned int roomId;
         unsigned int capacity;
         float pricePerNight; //guarda o preço-base

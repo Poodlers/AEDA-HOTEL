@@ -111,7 +111,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         Client* client = new Client(name,NIF);
         while(ss>>reservation1){
             Reservation* reservation = new Reservation(reservation1);
-            client->addToHistory(*reservation);
+            client->addToHistory(reservation);
         }
         this->clients.push_back(client);
         ss.clear();

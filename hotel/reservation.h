@@ -18,6 +18,7 @@ public:
     bool operator ==(const Date& date);
     bool operator <(const Date& date);
     bool operator >(const Date& date);
+    int operator - (const Date& date);
 };
 
 class Reservation{
@@ -36,6 +37,8 @@ public:
     void setCheckIn(const Date& checkIn);
     void setCheckOut(const Date& checkOut);
     void setRoomId(const int& roomId);
+
+    void print();
 
 private:
     static int reservationId;

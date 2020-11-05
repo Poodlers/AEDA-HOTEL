@@ -1,6 +1,8 @@
 #include "reservation.h"
 #include <sstream>
 #include <algorithm>
+#include <iostream>
+
 int Reservation::reservationId = 0;
 
 std::ostream & Date::operator<<(std::ostream &o) {
@@ -18,6 +20,15 @@ Date::Date(const std::string& date){
     ss<<date;
     ss>>this->day>>ignore>>this->month>>ignore>>this->year;
 
+}
+int Date::operator - (const Date& date){
+    if (this-> year == date.getYear() && this->month == date.getMonth())
+        return this->day - date.getDay();
+    else if (this->year == date.getYear()){
+        return (this->month - date.getMonth()) * 30 - this->day + date.day ;
+    }
+    else
+        return 365 * (this->year - date.getYear()) - (this->month - date.getMonth()) * 30 - this->day + date.day;
 }
 Date::Date(){
 }
@@ -122,4 +133,7 @@ void Reservation::setCheckOut(const Date& checkOut){
 }
 void Reservation::setRoomId(const int& roomId){
     this->roomId =roomId;
+}
+void Reservation::print(){
+    std::cout<< "ReservationNumber: "<< this->reservationNumber << " CheckIn date: " << this->checkIn << " CheckOut date: "<< this->checkOut << " Room: " << this->roomId << " Reservation  size: " << this->reservationSize<<std::endl;
 }

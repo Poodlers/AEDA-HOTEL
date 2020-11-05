@@ -17,6 +17,7 @@ std::vector<Reservation*> Client::getFutureReservations() const{
 
 void Client::addNewReservation(Reservation *reservation){
     this->futureReservations.push_back(reservation);
+
 }
 
 bool Client::checkIn( Date *date){
@@ -26,11 +27,13 @@ bool Client::checkIn( Date *date){
             this->futureReservations.push_back(reservation);
         }
         if ((reservation->getCheckIn() > *date)&&(reservation->getCheckOut() < *date)){
+            std::cout << "The checkIn for room " << reservation->getRoomId() <<" was "<< reservation->getCheckIn() - *date <<" days late."<<std::endl;
             reservation->setCheckIn(*date);
             this->futureReservations.push_back(reservation);
         }
         if (reservation->getCheckOut() < *date){
             this->history.push_back(reservation);
+            std::cout << "The checkIn for room " << reservation->getRoomId() <<" was "<< reservation->getCheckIn() - *date <<" days late."<<std::endl;
         }
     }
     if (currentResev == this->futureReservations.size()) return true;
@@ -39,4 +42,16 @@ bool Client::checkIn( Date *date){
 
 void Client::printClient(){
     std::cout << "NIF: " << this->getNIF() << " Name: " << this->getName() << std::endl;
+    std::cout<<"Client History:"<<std::endl;
+    for (Reservation* reservation: this->history){
+        reservation->print();
+    }
+    std::cout << std::endl<<"Current Reservations:"<<std::endl;
+    for (Reservation* reservation: this->currentReservations){
+        reservation->print();
+    }
+    std::cout << std::endl<<"Future Reservations:"<<std::endl;
+    for (Reservation* reservation: this->futureReservations){
+        reservation->print();
+    }
 }

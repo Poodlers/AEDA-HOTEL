@@ -8,23 +8,67 @@
 #include<iostream>
 using namespace std;
 
+template <class Comparable>
+int sequentialSearch(const vector<Comparable> &v, Comparable x)
+{
+    for (unsigned int i = 0; i < v.size(); i++)
+        if (v[i] == x)
+            return i;   // encontrou
+    return -1;     // não encontrou
+}
+
+void clientModify(Client* client){
+    cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "<<endl;
+    string edit;
+    int nif;
+    cout << "New Name: " << endl;
+    cin >>edit;
+    if (edit != "."){
+        client->setName(edit);
+    }
+    cout << "New NIF: " << endl;
+    cin >>edit;
+    if (edit != "."){
+        client->setNIF(nif);
+    }
+}
+
 void Clients(Hotel *hotel){
     for(Client* client: hotel->getClients()){
         client->print();
     }
     while(true){
         string input;
+        int nif;
         if (input == "Help"){
             cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Back and Help "<<endl;
         }
         else if(input == "Modify"){
-
+            cout << "Insert the name and NIF of the client you wish to modify in the following format 'NameNIF':"<<endl;
+            cin >> input>>nif;
+            Client* client = new Client(input,nif);
+            int pos =sequentialSearch(hotel->getClients(), client);
+            delete client;
+            if (pos != -1)
+                clientModify(hotel->getClients()[pos]);
+            else cout << "No client found who matches the description"<<endl;
         }
         else if(input == "Remove"){
-
+            cout << "Insert the name and NIF of the client you wish to remove in the following format 'NameNIF':"<<endl;
+            cin >> input >>nif;
+            Client* client = new Client(input,nif);
+            int pos =sequentialSearch(hotel->getClients(), client);
+            delete client;
+            if (pos != -1)
+                delete(hotel->getClients()[pos]);
+            else cout << "No client found who matches the description"<<endl;
         }
         else if (input == "Add"){
-
+            cout << "Insert client info in the following format 'NameNIF':"<<endl;
+            cin >> input;
+            cin >> input >>nif;
+            Client* client = new Client(input,nif);
+            hotel->addClient(*client);
         }
         else if (input == "Sort"){
 
@@ -73,9 +117,6 @@ int main(){
             if (input == "Clients"){
 
             }
-            else if (input == "Rervations"){
-
-            }
             else if (input == "Rooms"){
 
             }
@@ -84,7 +125,7 @@ int main(){
                 else cout<< "Invalid Password" << endl;
             }
             else if (input == "Help"){
-                cout << "Valid commands are: Clients, Reservations, Rooms, LogIn and Exit"<<endl;
+                cout << "Valid commands are: Clients, Reservations, LogIn and Exit"<<endl;
             }
             else if (input == "Exit"){
                 break;

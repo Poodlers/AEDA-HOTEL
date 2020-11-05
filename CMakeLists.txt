@@ -12,9 +12,7 @@ SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS
 
 add_executable(
         aeda_hotel_projeto
-        main.cpp
-        GUI/buttons.cpp
-        GUI/utils.cpp
+        testing.cpp
         room/room.cpp
         room/suite.cpp
         room/noviewroom.cpp

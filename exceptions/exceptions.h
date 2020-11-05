@@ -135,5 +135,7 @@ public:
     unsigned int getRoomNumber() const {return this->roomNumber;}
     unsigned int getRoomId() const {return this-> roomId;}
 };
+class NotInTheHotel{
 
+};
 #endif

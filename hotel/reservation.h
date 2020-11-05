@@ -10,8 +10,14 @@ private:
 public:
     Date(const int &day, const int &month, const int &year);
     Date(const std::string& date);
+    Date();
     std::ostream & operator<<(std::ostream &o);
-    bool &operator +(const Date& date);
+    int getDay() const;
+    int getMonth() const;
+    int getYear() const;
+    bool operator ==(const Date& date);
+    bool operator <(const Date& date);
+    bool operator >(const Date& date);
 };
 
 class Reservation{
@@ -35,8 +41,8 @@ private:
     static int reservationId;
     int reservationNumber;
     int reservationSize;
-    Date checkIn{};
-    Date checkOut{};
+    Date checkIn ;
+    Date checkOut;
     int roomId;
 };
 

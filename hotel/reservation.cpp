@@ -19,6 +19,47 @@ Date::Date(const std::string& date){
     ss>>this->day>>ignore>>this->month>>ignore>>this->year;
 
 }
+Date::Date(){
+}
+
+int Date::getDay() const{
+    return this->day;
+}
+int Date::getMonth() const{
+    return this->month;
+}
+int Date::getYear() const{
+    return this->year;
+}
+
+bool Date::operator ==(const Date& date){
+    return ((this->day == date.getDay()) && (this->month == date.getMonth())&& (this->year == date.getYear()));
+
+}
+bool Date::operator <(const Date& date){
+    if (this->year < date.getYear()){
+        return true;
+    }
+    else if ((this->year == date.getYear()) && (this->month < date.getMonth())){
+        return true;
+    }
+    else if ((this->year == date.getYear()) && (this->month == date.getMonth()) && (this->day < date.getDay())){
+        return true;
+    }
+    return false;
+}
+bool Date::operator >(const Date& date){
+    if (this->year > date.getYear()){
+        return true;
+    }
+    else if ((this->year == date.getYear()) && (this->month > date.getMonth())){
+        return true;
+    }
+    else if ((this->year == date.getYear()) && (this->month == date.getMonth()) && (this->day > date.getDay())){
+        return true;
+    }
+    return false;
+}
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
     Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
@@ -26,7 +67,7 @@ Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&
     this->reservationNumber = reservationId;
     this->reservationSize = reservationSize;
     this->roomId = roomId;
-    this->checkIn = checkIn;
+    this->checkIn =checkIn;
     this->checkOut = checkOut;
 
 }

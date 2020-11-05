@@ -10,7 +10,7 @@ class Client: public Person{
 public:
     Client(const std::string &name, const unsigned int &NIF);
 
-    std::vector<Reservation*> getHistory() const;
+    std::vector<Reservation*>& getHistory();
     void addToHistory(Reservation *reservation);
     std::vector<Reservation*> getFutureReservations() const;
     void addNewReservation(Reservation *reservation);
@@ -20,7 +20,6 @@ public:
 
 private:
     std::vector<Reservation*> history;
-    std::vector<Reservation*> futureReservations;
-    std::vector<Reservation*> currentReservations;
+
 };
 #endif

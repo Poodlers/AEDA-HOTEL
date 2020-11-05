@@ -1,5 +1,7 @@
 #include "reservation.h"
-#include <sstream>
+#include "../GUI/utils.h"
+#include <iostream>
+#include <iomanip>
 #include <algorithm>
 int Reservation::reservationId = 0;
 
@@ -18,6 +20,40 @@ Date::Date(const std::string& date){
     ss<<date;
     ss>>this->day>>ignore>>this->month>>ignore>>this->year;
 
+}
+Date Date::operator+(int d) const {
+    Date result = *this;
+    result.day += d;
+    while (result.day > result.getDaysInMonth()) {
+        result.day -= result.getDaysInMonth();
+        ++result.month;
+        if (result.month > 12) {
+            result.month = 1;
+            ++result.year;
+        }
+    }
+    return result;
+
+}
+
+int Date::getDaysInMonth() const {
+    switch (this->month) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            return 31;
+        case 4: case 6: case 9: case 11:
+            return 30;
+        case 2:
+            return 28 + isInLeapYear();
+    }
+    return 0;
+}
+
+Date operator+(int daysToAdd, const Date& date) {
+    return date + daysToAdd;
+}
+
+bool Date::isInLeapYear() const {
+    return this->year % 400 == 0 || (this->year % 4 == 0 && this->year % 100 != 0);
 }
 Date::Date(){
 }
@@ -62,16 +98,16 @@ bool Date::operator >(const Date& date){
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
-    Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
+    Date dateIn(dayIn,monthIn,yearIn), dateOut(dayOut,monthOut,yearOut);
     reservationId++;
     this->reservationNumber = reservationId;
     this->reservationSize = reservationSize;
     this->roomId = roomId;
-    this->checkIn =checkIn;
-    this->checkOut = checkOut;
+    this->checkIn = &dateIn;
+    this->checkOut = &dateOut;
 
 }
-Reservation :: Reservation(const std::string & reservation){
+Reservation::Reservation(const std::string & reservation){
     //receives reservationSize,dayIn-monthIn-yearIn,dayOut-monthOut-yearOut,roomId
     std::stringstream ss(reservation);
     std::string dates;
@@ -80,20 +116,23 @@ Reservation :: Reservation(const std::string & reservation){
     reservationId++;
     this->reservationNumber = reservationId;
     ss>>this->reservationSize>> ignore >>  day >> ignore >> month   >> ignore >>  year;
-    Date dateIn(day,month,year);
+    this->checkIn = new Date(day,month,year);
     ss>> ignore >>  day  >> ignore >>  month >> ignore >> year >>ignore >>  this->roomId;
-    Date dateOut(day,month,year);
-    this->checkIn = dateIn;
-    this->checkOut = dateOut;
+    this->checkOut = new Date(day,month,year);
+
 }
 
 
-Date Reservation::getCheckIn() const{
+Date* Reservation::getCheckIn() const{
     return this->checkIn;
 }
 
-Date Reservation::getCheckOut() const{
+Date* Reservation::getCheckOut() const{
     return this->checkOut;
+}
+
+int Reservation::getReservationNumber() const {
+    return this->reservationNumber;
 }
 
 int Reservation::getReservationSize() const {
@@ -104,8 +143,32 @@ int Reservation::getRoomId() const {
     return this->roomId;
 }
 
-int Reservation::getReservationNumber() const {
-    return this->reservationNumber;
+void Reservation::print() {
+    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << this->getReservationNumber()
+              << std::setw(25) << this->getReservationSize()
+              << std::setw(12) << this->getCheckIn()  << std::setw(12) << this->getCheckOut()
+              << std::setw(8) << this->getRoomId();
+}
+
+void Reservation::edit() {
+    std::string edit;
+    std::cout << "Edit the Reservation's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Reservation Number: " << std::endl;
+    edit = GetNumberInput(22,3,CheckIfInteger);
+    if (edit != ".") this->setReservationNumber(std::stoi(edit));
+    gotoxy(0,5);
+    std::cout << "Check In Date (day/month/year): " << std::endl;
+    getStringInput(edit,30,5);
+    if (edit != ".") this->setCheckIn(new Date(edit));
+    gotoxy(0,7);
+    std::cout << "Check Out Date (day/month/year): " << std::endl;
+    getStringInput(edit,30,5);
+    if (edit != ".") this->setCheckOut(new Date(edit));
+    gotoxy(0,9);
+    std::cout << "Room Id: " << std::endl;
+    edit = GetNumberInput(10,9,CheckIfInteger);
+    if (edit != ".") this->setRoomId(std::stoi(edit));
 }
 
 void Reservation::setReservationNumber(const int & reservationNumber){
@@ -114,11 +177,11 @@ void Reservation::setReservationNumber(const int & reservationNumber){
 void Reservation::setReservationSize(const int & reservationSize){
     this->reservationSize =reservationSize;
 }
-void Reservation::setCheckIn(const Date& checkIn){
-    this->checkIn =checkIn;
+void Reservation::setCheckIn(Date* checkIn){
+    this->checkIn = checkIn;
 }
-void Reservation::setCheckOut(const Date& checkOut){
-    this->checkOut =checkOut;
+void Reservation::setCheckOut(Date* checkOut){
+    this->checkOut = checkOut;
 }
 void Reservation::setRoomId(const int& roomId){
     this->roomId =roomId;

@@ -11,7 +11,6 @@ public:
     void setName(const std::string& name);
     void setNIF(const unsigned int & NIF);
     virtual void print();
-    virtual void edit();
 private:
     std::string name;
     unsigned int NIF;

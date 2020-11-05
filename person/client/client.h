@@ -10,13 +10,13 @@ class Client: public Person{
 public:
     Client(const std::string &name, const unsigned int &NIF);
 
-    std::vector<Reservation*> getHistory() const;
+    std::vector<Reservation*>& getHistory();
     void addToHistory(Reservation *reservation);
     std::vector<Reservation*> getFutureReservations() const;
     void addNewReservation(Reservation *reservation);
     bool checkOut( Date *date);
     bool checkIn( Date *date);
-    void printClient();
+    void edit();
 
 private:
     std::vector<Reservation*> history;

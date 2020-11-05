@@ -52,5 +52,6 @@ void Staff::edit() {
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") this->setYearsOfService(std::stoi(edit));
 }
+
 /* ------- */
 

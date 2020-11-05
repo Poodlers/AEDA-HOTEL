@@ -1,4 +1,5 @@
 #include "room.h"
+#include <iostream>
 #include "../GUI/utils.h"
 #include <iomanip>
 Room::Room(const int &floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight ){
@@ -34,7 +35,7 @@ void Room::setPricePerNight(const float pricePerNight){
     this->pricePerNight = pricePerNight;
 }
 
-/*
+
 void Room::edit() {
     std::string edit;
     std::cout << "Edit the Room's information as follows: " << std::endl;
@@ -55,7 +56,7 @@ void Room::edit() {
     edit = GetNumberInput(20,9,CheckIfFloat);
     if (edit != ".") this->setPricePerNight(std::stof(edit));
 
-}*/
+}
 
 
 void Room::print() {

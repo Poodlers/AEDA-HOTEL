@@ -11,7 +11,6 @@ public:
     Date(const int &day, const int &month, const int &year);
     Date(const std::string& date);
     Date();
-    std::ostream & operator<<(std::ostream &o);
     int getDay() const;
     int getMonth() const;
     int getYear() const;
@@ -22,6 +21,7 @@ public:
     bool operator >(const Date& date);
     int operator - (const Date& date);
     Date operator+(int d) const;
+    friend std::ostream& operator<<(std::ostream& o, const Date& date);
     friend Date operator+(int daysToAdd, const Date& date);
 };
 
@@ -41,7 +41,7 @@ public:
     void setCheckIn(const Date& checkIn);
     void setCheckOut(const Date& checkOut);
     void setRoomId(const int& roomId);
-
+    void edit(); //esta merda dá jeito
     void print();
 
 private:

@@ -3,8 +3,6 @@
 #include <algorithm>
 int Reservation::reservationId = 0;
 
-
-
 std::ostream & Date::operator<<(std::ostream &o) {
     o << this->day << "/" << this->month << "/" << this->year;
     return o;
@@ -23,13 +21,13 @@ Date::Date(const std::string& date){
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
-    Date dateIn(dayIn,monthIn,yearIn), dateOut(dayOut,monthOut,yearOut);
+    Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
     reservationId++;
     this->reservationNumber = reservationId;
     this->reservationSize = reservationSize;
     this->roomId = roomId;
-    this->checkIn = dateIn;
-    this->checkOut = dateOut;
+    this->checkIn = checkIn;
+    this->checkOut = checkOut;
 
 }
 Reservation :: Reservation(const std::string & reservation){

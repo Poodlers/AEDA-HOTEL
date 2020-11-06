@@ -131,22 +131,22 @@ void MenuButton<N>::onClick(std::vector<BaseButton*> &CurrentButtons) {
     if constexpr(std::is_same_v<N,Client>){
         edit_delete_x = 60;
         std::cout << "CLIENTS: ";
-        gotoxy(3,3);
+        gotoxy(1,3);
         std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Name" << std::setw(10) << "NIF" << std::endl;
     }
     else if constexpr (std::is_same_v<N,Reservation>){
-        edit_delete_x = 80;
+        edit_delete_x = 90;
         std::cout << "Reservations: ";
         gotoxy(1,3);
         int increment_y = 0;
         std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation Id"
                   << std::setw(25) << "Reservation Size"
-                  << std::setw(12) << "CheckIn" << std::setw(12) << "CheckOut" << std::setw(8) << "RoomId";
+                  << std::setw(15) << "CheckIn" << std::setw(15) << "CheckOut" << std::setw(8) << "RoomId";
     }
     else if constexpr (std::is_same_v<N,Room>){
         edit_delete_x = 60;
         std::cout << "ROOMS: ";
-        gotoxy(3,3);
+        gotoxy(1,3);
         std::cout << std::left <<  std::setw(10) << std::setfill(' ') << "Room Id" << std::setw(15)
         << "Room Number" << std::setw(8)<< "Floor" << std::setw(10) << "Capacity" << std::setw(18)
         << "Price Per Night" << std::endl;
@@ -155,7 +155,7 @@ void MenuButton<N>::onClick(std::vector<BaseButton*> &CurrentButtons) {
     else if constexpr (std::is_same_v<N,Staff>){
         edit_delete_x = 110;
         std::cout << "STAFF: ";
-        gotoxy(3,3);
+        gotoxy(1,3);
         std::cout << std::left << std::setw(13) << "Type" <<  std::setw(20) << std::setfill(' ') << "Name" <<
         std::setw(10) << "NIF" << std::setw(7) << "Wage" << std::setw(19) << "Years Of Service"
         << std::setw(19) << "Floors Assigned" << std::setw(8) << "Shift" << std::setw(12) << "Evaluation";
@@ -170,7 +170,7 @@ void MenuButton<N>::onClick(std::vector<BaseButton*> &CurrentButtons) {
     InitialButton->DrawButton();
     int increment_y = 0;
     for(N* item: this->menu_items){
-        gotoxy(3,5 + increment_y);
+        gotoxy(1,5 + increment_y);
         item->print();
         BaseButton* NewEditButton = new EditButton<N>(edit_delete_x,4 + increment_y,8,0,"Edit",item,this);
         BaseButton* NewDeleteButton = new DeleteButton<N>(edit_delete_x, 5 + increment_y, 8,0,"Delete",item,this);

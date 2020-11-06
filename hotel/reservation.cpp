@@ -21,7 +21,7 @@ Date::Date(const std::string& date){
 }
 
 std::ostream& operator<<(std::ostream& o, const Date& date){
-    o << date.day << "/" << date.month << "/" << date.year;
+    o << std::left << std::setw(2) << std::setfill('0') << date.day << "/"  << std::setw(2) << date.month << "/" << std::setfill(' ') << std::setw(9) << date.year;
     return o;
 }
 
@@ -159,8 +159,8 @@ int Reservation::getRoomId() const {
 
 void Reservation::print() {
     std::cout << std::left <<  std::setw(20) << std::setfill(' ') << this->getReservationNumber()
-              << std::setw(25) << this->getReservationSize()<< std::setw(12) << this->getCheckIn()
-              << std::setw(12) << this->getCheckOut()
+              << std::setw(25) << this->getReservationSize()<< this->getCheckIn()
+               << this->getCheckOut()
               << std::setw(8) << this->getRoomId();
 }
 

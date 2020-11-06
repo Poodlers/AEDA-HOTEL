@@ -1,6 +1,7 @@
 #include "hotel.h"
 #include<fstream>
 #include<sstream>
+#include "../GUI/utils.h"
 
 Hotel::Hotel(const std::string &hotelFile) {
     std::ifstream file;
@@ -108,6 +109,9 @@ Hotel::Hotel(const std::string &hotelFile) {
     while(std::getline(file,getData) && getData != "End"){
         ss<<getData;
         ss>>name>>NIF;
+        if(!validateNIF(std::to_string(NIF))){
+            continue;
+        }
         Client* client = new Client(name,NIF);
         while(ss>>reservation1){
             Reservation* reservation = new Reservation(reservation1);

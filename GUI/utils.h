@@ -19,5 +19,5 @@ bool CheckIfInteger(std::string input);
 bool CheckIfFloat(std::string input);
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input));
 std::ostream& operator<<(std::ostream &o, std::vector<int> v);
-
+bool validateNIF(std::string contribuinte);
 #endif

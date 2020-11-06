@@ -55,3 +55,4 @@ void Client::edit() {
     edit = GetNumberInput(5,5,CheckIfInteger);
     if(edit != ".") this->setNIF(std::stoi(edit));
 }
+

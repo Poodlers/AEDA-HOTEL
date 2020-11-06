@@ -17,17 +17,42 @@ int sequentialSearch(const vector<Comparable> &v, Comparable x)
     return -1;     // não encontrou
 }
 
+void cleanCinBuffer(){
+    cin.clear();
+    cin.ignore(1000000000,'\n');
+}
+
+void clientSort(const vector<Client>& clients){
+    cout<< "Choose by which you wish to sort: Name, NIF, Total Number of Reservations, Number of Future Reservations, Number of Past Reservations, Current Reservations, Last Reservation."<<endl;
+
+}
+template <class P>
+void search(const vector<P>& people){
+    string input;
+    int nif, pos;
+    cout << "Input the name and Nif of the client:"<<endl;
+    cin>>input>>nif;
+    P* person = new P(input,nif);
+    pos = sequentialSearch(people,*person);
+    if (pos == -1){
+        cout << "Client not found"<<endl;
+    }
+    person->print();
+}
+
 void clientModify(Client* client){
     cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "<<endl;
     string edit;
     int nif;
     cout << "New Name: " << endl;
     cin >>edit;
+    cleanCinBuffer();
     if (edit != "."){
         client->setName(edit);
     }
     cout << "New NIF: " << endl;
     cin >>edit;
+    cleanCinBuffer();
     if (edit != "."){
         client->setNIF(nif);
     }
@@ -37,44 +62,50 @@ void Clients(Hotel *hotel){
     for(Client* client: hotel->getClients()){
         client->print();
     }
+    cout << endl;
     while(true){
         string input;
+        cout << "Write Help to see possible commands."<<endl;
+        cin >> input;
+        cleanCinBuffer();
         int nif;
         if (input == "Help"){
             cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Back and Help "<<endl;
         }
         else if(input == "Modify"){
-            cout << "Insert the name and NIF of the client you wish to modify in the following format 'NameNIF':"<<endl;
-            cin >> input>>nif;
+            cout << "Insert the name and NIF of the client you wish to modify, name first and then NIF:"<<endl;
+            cin >> input >> nif;
+            cleanCinBuffer();
             Client* client = new Client(input,nif);
-            int pos =sequentialSearch(hotel->getClients(), client);
+            int pos = sequentialSearch(hotel->getClients(), client);
             delete client;
             if (pos != -1)
                 clientModify(hotel->getClients()[pos]);
             else cout << "No client found who matches the description"<<endl;
         }
         else if(input == "Remove"){
-            cout << "Insert the name and NIF of the client you wish to remove in the following format 'NameNIF':"<<endl;
-            cin >> input >>nif;
+            cout << "Insert the name and NIF of the client you wish to remove, name first and then NIF:"<<endl;
+            cin >> input >> nif;
+            cleanCinBuffer();
             Client* client = new Client(input,nif);
-            int pos =sequentialSearch(hotel->getClients(), client);
+            int pos = sequentialSearch(hotel->getClients(), client);
             delete client;
             if (pos != -1)
                 delete(hotel->getClients()[pos]);
             else cout << "No client found who matches the description"<<endl;
         }
         else if (input == "Add"){
-            cout << "Insert client info in the following format 'NameNIF':"<<endl;
-            cin >> input;
+            cout << "Insert the name and NIF of the client you wish to add, name first (FirstName_..._LastName) and then NIF:"<<endl;
             cin >> input >>nif;
+            cleanCinBuffer();
             Client* client = new Client(input,nif);
-            hotel->addClient(*client);
+            hotel->addClient(client);
         }
         else if (input == "Sort"){
 
         }
         else if (input == "Search"){
-
+            search(hotel->getClients());
         }
         else if(input == "Back"){
             return;
@@ -99,8 +130,10 @@ bool LogIn(Hotel* hotel){
     string username, password;
     cout << "Insert Username"<<endl;
     cin >> username;
+    cleanCinBuffer();
     cout << "Insert Password"<<endl;
     cin >> password;
+    cleanCinBuffer();
     return hotel->logIn(username,password);
 }
 int main(){
@@ -108,6 +141,8 @@ int main(){
 
     cout << "input the name of the hotel file (without .txt)"<< endl;
     cin >> input;
+    cleanCinBuffer();
+
     Hotel* hotel = new Hotel(input);
 
     while (true){
@@ -115,7 +150,7 @@ int main(){
         getline(cin,input);
         if (!hotel->getLoggedInState()){
             if (input == "Clients"){
-
+                Clients(hotel);
             }
             else if (input == "Rooms"){
 

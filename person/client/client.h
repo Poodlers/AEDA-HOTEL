@@ -17,6 +17,7 @@ public:
     bool checkOut( Date *date);
     bool checkIn( Date *date);
     void printClient();
+    bool operator==(Client* client);
 
 private:
     std::vector<Reservation*> history;

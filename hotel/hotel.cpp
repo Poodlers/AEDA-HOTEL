@@ -166,3 +166,6 @@ std::vector<Staff *>& Hotel::getStaff() {
 bool Hotel::getLoggedInState() const{
     return this->loggedIn;
 }
+void Hotel::addClient(Client* client){
+    this->clients.push_back(client);
+}

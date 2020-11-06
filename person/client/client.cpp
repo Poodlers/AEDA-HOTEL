@@ -55,3 +55,6 @@ void Client::printClient(){
         reservation->print();
     }
 }
+bool Client::operator==(Client* client){
+    return ((this->getName() == client->getName()) &&(this->getNIF() == client->getNIF()));
+}

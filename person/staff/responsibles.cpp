@@ -30,7 +30,7 @@ void Responsible::print() {
     std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService()
     << std::setw(16) << this->floorsAssigned << std::setw(7) << "";
 }
-
+/*
 void Responsible::edit() {
     std::string edit;
     std::cout << "Edit the Responsible's information as follows: " << std::endl;
@@ -61,5 +61,5 @@ void Responsible::edit() {
         std::cout << "                          ";
     }
 
-}
+}*/
 

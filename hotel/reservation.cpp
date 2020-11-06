@@ -5,8 +5,8 @@
 
 int Reservation::reservationId = 0;
 
-std::ostream & Date::operator<<(std::ostream &o) {
-    o << this->day << "/" << this->month << "/" << this->year;
+std::ostream & operator<<(std::ostream &o, const Date& date) {
+    o << date.getDay() << "/" << date.getMonth() << "/" << date.getYear();
     return o;
 }
 Date::Date(const int &day, const int &month, const int &year){

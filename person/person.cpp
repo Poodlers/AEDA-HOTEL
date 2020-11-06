@@ -27,7 +27,7 @@ void Person::setName(const std::string &name){
 void Person::setNIF(const unsigned int &NIF){
     this->NIF = NIF;
 }
-
+/*
 void Person::edit() {
     std::string edit;
     std::cout << "Edit the client's information as follows: " << std::endl;
@@ -40,4 +40,4 @@ void Person::edit() {
     std::cout << "NIF: " << std::endl;
     edit = GetNumberInput(5,5,CheckIfInteger);
     if(edit != ".") this->setNIF(std::stoi(edit));
-}
+}*/

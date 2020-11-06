@@ -13,7 +13,7 @@ public:
     Hotel(const std::string &hotelFile);
     void addRoom(const Room& room);
     void addStaff(const Staff& staff);
-    void addClient(const Client& client);
+    void addClient(Client* client);
 
     void makeReservation(const Reservation& restart);
 

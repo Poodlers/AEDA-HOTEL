@@ -17,8 +17,7 @@ message("CMAKE_STATIC_LINKER_FLAGS is ${CMAKE_STATIC_LINKER_FLAGS} ")
 
 add_executable(
         aeda_hotel_projeto
-        main.cpp
-        GUI/buttons.cpp
+        testing.cpp
         GUI/utils.cpp
         room/room.cpp
         room/suite.cpp

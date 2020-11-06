@@ -31,7 +31,7 @@ void Staff::print() {
               std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService();
 
 }
-
+/*
 void Staff::edit() {
     std::string edit;
     std::cout << "Edit the Staff's information as follows: " << std::endl;

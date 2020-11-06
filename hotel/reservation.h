@@ -11,7 +11,7 @@ public:
     Date(const int &day, const int &month, const int &year);
     Date(const std::string& date);
     Date();
-    std::ostream & operator<<(std::ostream &o);
+    friend std::ostream & operator<<(std::ostream &o,const Date& date);
     int getDay() const;
     int getMonth() const;
     int getYear() const;
@@ -23,6 +23,7 @@ public:
     int operator - (const Date& date);
     Date operator+(int d) const;
     friend Date operator+(int daysToAdd, const Date& date);
+
 };
 
 class Reservation{

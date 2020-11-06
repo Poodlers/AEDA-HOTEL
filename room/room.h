@@ -1,7 +1,6 @@
 #ifndef ROOM_H
 #define ROOM_H
 #include <string>
-#include <iostream>
 
 class Room{
 public:
@@ -16,8 +15,7 @@ public:
         void setCapacity(const unsigned int capacity);
         void setPricePerNight(const float pricePerNight);
         void print();
-        //void edit();
-
+        void edit();
 private:
         int floor;
         unsigned int roomNumber;

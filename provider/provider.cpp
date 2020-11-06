@@ -1,4 +1,7 @@
-//
-// Created by Joana on 31/10/2020.
-//
+#include "provider.h"
+
+Provider::Provider(const std::string &name, const std::string &productsFile) {
+    this->name = name;
+    this->products = products;
+}
 

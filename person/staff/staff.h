@@ -14,7 +14,7 @@ public:
     void setWage(const float wage);
     void setYearsOfService(const int yearsOfService);
     virtual void print() override;
-    //void edit() override;
+    //virtual void edit() override;
 protected:
     float wage;
     unsigned int yearsOfService;

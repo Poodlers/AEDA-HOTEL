@@ -1,7 +1,9 @@
 #include "reservation.h"
+#include "../GUI/utils.h"
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 
 int Reservation::reservationId = 0;
 
@@ -21,6 +23,12 @@ Date::Date(const std::string& date){
     ss>>this->day>>ignore>>this->month>>ignore>>this->year;
 
 }
+
+std::ostream& operator<<(std::ostream& o, const Date& date){
+    o << std::left << std::setw(2) << std::setfill('0') << date.day << "/"  << std::setw(2) << date.month << "/" << std::setfill(' ') << std::setw(9) << date.year;
+    return o;
+}
+
 int Date::operator - (const Date& date){
     if (this-> year == date.getYear() && this->month == date.getMonth())
         return this->day - date.getDay();
@@ -141,6 +149,10 @@ Date Reservation::getCheckOut() const{
     return this->checkOut;
 }
 
+int Reservation::getReservationNumber() const {
+    return this->reservationNumber;
+}
+
 int Reservation::getReservationSize() const {
     return this->reservationSize;
 }
@@ -149,9 +161,13 @@ int Reservation::getRoomId() const {
     return this->roomId;
 }
 
-int Reservation::getReservationNumber() const {
-    return this->reservationNumber;
+void Reservation::print() {
+    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << this->getReservationNumber()
+              << std::setw(25) << this->getReservationSize()<< this->getCheckIn()
+               << this->getCheckOut()
+              << std::setw(8) << this->getRoomId();
 }
+
 
 void Reservation::setReservationNumber(const int & reservationNumber){
     this->reservationNumber =reservationNumber;

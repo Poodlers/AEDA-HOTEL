@@ -21,20 +21,7 @@ private:
     unsigned int quality;
     float price;
     unsigned int Id;
-
     std::string type; // hygiene, cleaning or other
 };
 
-//Worth using inheritance?
-/*
-class Cleaning: public Product{
-public:
-    Cleaning(const unsigned int& quality, const float& price);
-};
-class Hygiene: public Product{
-public:
-    Hygiene(const unsigned int& quality, const float& price);
-};
-
- */
 #endif

@@ -1,9 +1,10 @@
 #include "client.h"
 #include <iostream>
+#include "../../GUI/utils.h"
 
 Client:: Client(const std::string &name, const unsigned int &NIF) : Person(name,NIF){}
 
-std::vector<Reservation*> Client::getHistory() const{
+std::vector<Reservation*>& Client::getHistory(){
     return this->history;
 }
 
@@ -20,14 +21,15 @@ void Client::addNewReservation(Reservation *reservation){
 
 }
 
-bool Client::checkIn( Date *date){
+bool Client::checkIn( Date *date) {
     int currentResev = this->futureReservations.size();
-    for(Reservation* reservation: this->futureReservations){
-        if (reservation->getCheckIn() == *date){
+    for (Reservation *reservation: this->futureReservations) {
+        if (reservation->getCheckIn() == *date) {
             this->futureReservations.push_back(reservation);
         }
-        if ((reservation->getCheckIn() > *date)&&(reservation->getCheckOut() < *date)){
-            std::cout << "The checkIn for room " << reservation->getRoomId() <<" was "<< reservation->getCheckIn() - *date <<" days late."<<std::endl;
+        if ((reservation->getCheckIn() > *date) && (reservation->getCheckOut() < *date)) {
+            std::cout << "The checkIn for room " << reservation->getRoomId() << " was "
+                      << reservation->getCheckIn() - *date << " days late." << std::endl;
             reservation->setCheckIn(*date);
             this->futureReservations.push_back(reservation);
         }

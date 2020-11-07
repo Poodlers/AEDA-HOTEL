@@ -27,6 +27,7 @@ void Person::setName(const std::string &name){
 void Person::setNIF(const unsigned int &NIF){
     this->NIF = NIF;
 }
+
 /*
 void Person::edit() {
     std::string edit;

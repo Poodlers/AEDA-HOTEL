@@ -26,18 +26,19 @@ void clientSort(const vector<Client>& clients){
     cout<< "Choose by which you wish to sort: Name, NIF, Total Number of Reservations, Number of Future Reservations, Number of Past Reservations, Current Reservations, Last Reservation."<<endl;
 
 }
-template <class P>
-void search(const vector<P>& people){
+
+
+void searchClient(vector<Client*>* clients){
     string input;
     int nif, pos;
     cout << "Input the name and Nif of the client:"<<endl;
     cin>>input>>nif;
-    P* person = new P(input,nif);
-    pos = sequentialSearch(people,*person);
+    Client* client = new Client(input,nif);
+    pos = sequentialSearch(*clients,client);
     if (pos == -1){
-        cout << "Client not found"<<endl;
+        cout << " not found"<<endl;
     }
-    person->print();
+    (*clients)[pos]->print();
 }
 
 void clientModify(Client* client){
@@ -105,7 +106,9 @@ void Clients(Hotel *hotel){
 
         }
         else if (input == "Search"){
-            search(hotel->getClients());
+            searchClient(&hotel->getClients());
+            cout << "Press enter to proceed";
+            cin.ignore();
         }
         else if(input == "Back"){
             return;

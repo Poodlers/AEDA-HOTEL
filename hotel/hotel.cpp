@@ -1,30 +1,64 @@
 #include "hotel.h"
 #include<fstream>
 #include<sstream>
+#include<iostream>
 #include "../GUI/utils.h"
+#include "../exceptions/exceptions.h"
 
 Hotel::Hotel(const std::string &hotelFile) {
     std::ifstream file;
     std::string getData;
     std::stringstream ss;
+    int check;
 
     file.open(hotelFile +".txt");
-    //throw exception if file can't be opened
+    if(!file.is_open()){
+        throw FileNotFound(hotelFile);
+    }
 
     std::getline(file,getData);
-
-    //if getData != Hotel-File throw exception file is wrong
-
-    std::getline(file,getData);
-    //if getData <0 or == Rooms or not int or file ends throw exception
-    this->floors = std::stoi(getData);
-
-    std::getline(file,getData);
-    //if == Rooms or not int or file ends throw exception
-    this->firstFloor = std::stoi(getData);
+    if (getData != "Hotel-File"){
+        throw HotelFileHasWrongFormat("First line should be 'Hotel-File'");
+    }
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
 
     std::getline(file,getData);
-    //if not Rooms or end of file throw exception
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    ss << getData;
+    ss >> check;
+    ss.clear();
+    if(ss.fail()){
+        throw HotelFileHasWrongFormat("Number of floors should be an integer");
+    }
+    if (check < 0){
+        throw HotelFileHasWrongFormat("Number of floors should be a positive integer.");
+    }
+    this->floors = check;
+
+    std::getline(file,getData);
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    ss << getData;
+    ss >> check;
+    ss.clear();
+    if(ss.fail()) {
+        throw HotelFileHasWrongFormat("First floor should be an integer");
+    }
+    this->firstFloor = check;
+
+    std::getline(file,getData);
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    if (getData != "Rooms"){
+        throw HotelFileHasWrongFormat("Line should be 'Rooms'");
+    }
+
 
     int floor;
     unsigned int roomNumber;
@@ -35,7 +69,14 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     while(std::getline(file,getData) && getData!="Staff"){
         ss<<getData;
-        ss >> floor >> roomNumber >> roomId >> capacity>> price>>type;
+        ss >> floor >> roomNumber >> roomId >> capacity>> price;
+        if(ss.fail()) {
+            throw HotelFileHasWrongFormat("Floor, Room Number, Room Id, capacity and price should be integers");
+        }
+        if (roomId < 0 || capacity<=0 || price <= 0){
+            throw HotelFileHasWrongFormat("Room Id, capacity and price should be positive integers. Capacity and price can't be 0.");
+        }
+        ss>>type;
         if (type == "Suite"){
             Suite* suite = new Suite(floor,roomNumber,roomId,capacity,price);
             rooms.push_back(suite);
@@ -52,7 +93,7 @@ Hotel::Hotel(const std::string &hotelFile) {
             freeRoomsWithOutView++;
         }
         else{
-            //throw exception
+            throw HotelFileHasWrongFormat("Room type invalid, should be 'Suite', 'ViewRoom' or 'NoViewRoom'");
         }
         ss.clear();
     }
@@ -60,7 +101,12 @@ Hotel::Hotel(const std::string &hotelFile) {
     this->numberOfRooms = rooms.size();
 
     std::getline(file,getData);
-    //if not Staff or end of file throw exception
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    if (getData != "Staff"){
+        throw HotelFileHasWrongFormat("Line should be 'Staff'");
+    }
 
     std::string name;
     unsigned int NIF;
@@ -71,7 +117,15 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     while(std::getline(file,getData) && getData!="Client"){
         ss<<getData;
-        ss >> name >> NIF >> salary >> type;
+        ss >> name;
+        ss >> NIF >> salary;
+        if(ss.fail()) {
+            throw HotelFileHasWrongFormat("NIF and salary should be integers");
+        }
+        if (NIF < 0 || salary<=0){
+            throw HotelFileHasWrongFormat("Nif and salary should be positive integers, salary should not be 0.");
+        }
+        ss >> type;
         //switch fixe aqui
         if (type == "Receptionist"){
             Receptionist* receptionist = new Receptionist(name,NIF,salary);
@@ -85,24 +139,31 @@ Hotel::Hotel(const std::string &hotelFile) {
         else if (type == "Janitor"){
             ss >> shift;
 
-            if (shift == "night") shift1 == false;
+            if (shift == "night") shift1 = false;
             else if (shift == "day") shift1 = true;
-            else {}//exception
+            else { throw HotelFileHasWrongFormat("Invalid shift for janitor "+ name + ". Should be 'night' or 'day'.");}
 
             Janitor* janitor = new Janitor(shift1,name,NIF,salary);
             staff.push_back(janitor);
         }
-
         else if (type == "Manager"){
             ss >> password;
 
             Manager* manager = new Manager(name,NIF,salary,password);
             staff.push_back(manager);
         }
+        else{
+            throw HotelFileHasWrongFormat("Staff type invalid, should be 'janitor', 'responsible', 'manager' or 'receptionist'");
+        }
         ss.clear();
     }
 
-    //if not Client or end of file throw exception
+    if (getData.empty()){
+        return;
+    }
+    if (getData != "Client"){
+        throw HotelFileHasWrongFormat("Line should be 'Client'");
+    }
 
     std::string reservation1;
 

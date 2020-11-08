@@ -7,10 +7,6 @@
 
 int Reservation::reservationId = 0;
 
-std::ostream & operator<<(std::ostream &o, const Date& date) {
-    o << date.getDay() << "/" << date.getMonth() << "/" << date.getYear();
-    return o;
-}
 Date::Date(const int &day, const int &month, const int &year){
     this->day = day;
     this->month = month;
@@ -183,7 +179,4 @@ void Reservation::setCheckOut(const Date& checkOut){
 }
 void Reservation::setRoomId(const int& roomId){
     this->roomId =roomId;
-}
-void Reservation::print(){
-    std::cout<< "ReservationNumber: "<< this->reservationNumber << " CheckIn date: " << this->checkIn << " CheckOut date: "<< this->checkOut << " Room: " << this->roomId << " Reservation  size: " << this->reservationSize<<std::endl;
 }

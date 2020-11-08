@@ -4,6 +4,7 @@
 #include "person/client/client.h"
 #include "room/room.h"
 #include "person/staff/staff.h"
+#include "exceptions/exceptions.h"
 #include <string>
 #include<iostream>
 using namespace std;
@@ -26,7 +27,6 @@ void clientSort(const vector<Client>& clients){
     cout<< "Choose by which you wish to sort: Name, NIF, Total Number of Reservations, Number of Future Reservations, Number of Past Reservations, Current Reservations, Last Reservation."<<endl;
 
 }
-
 
 void searchClient(vector<Client*>* clients){
     string input;
@@ -139,43 +139,73 @@ bool LogIn(Hotel* hotel){
     cleanCinBuffer();
     return hotel->logIn(username,password);
 }
-int main(){
-    string input;
 
-    cout << "input the name of the hotel file (without .txt)"<< endl;
-    cin >> input;
-    cleanCinBuffer();
+void system(Hotel* hotel){
 
-    Hotel* hotel = new Hotel(input);
+    std::string input;
 
     while (true){
         cout << "Write Help to see commands"<<endl;
         getline(cin,input);
-        if (!hotel->getLoggedInState()){
-            if (input == "Clients"){
-                Clients(hotel);
-            }
-            else if (input == "Rooms"){
 
-            }
-            else if (input == "LogIn"){
-                if(LogIn(hotel)) continue;
-                else cout<< "Invalid Password" << endl;
-            }
-            else if (input == "Help"){
-                cout << "Valid commands are: Clients, Reservations, LogIn and Exit"<<endl;
-            }
-            else if (input == "Exit"){
-                break;
-            }
-            else{
-                cout << "Invalid command. Write Help to see possible commands."<<endl;
-            }
+        if (input == "Clients"){
+            Clients(hotel);
+        }
+        else if (input == "Rooms"){
+
+        }
+        else if (input == "LogIn"){
+            if(LogIn(hotel)) continue;
+            else cout<< "Invalid Password" << endl;
+        }
+        else if (input == "Help"){
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, CheckIn, CheckOut and Exit"<<endl;
+        }
+        else if(input == "CheckIn"){
+
+        }
+        else if (input == "CheckOut"){
+
+        }
+        else if(input == "LogOut"){
+
+        }
+        else if(input == "Staff"){
+
+        }
+        else if (input =="Providers"){
+
+        }
+        else if (input == "Countability"){
+
+        }
+        else if (input == "Exit"){
+            break;
         }
         else{
-
+            cout << "Invalid command. Write Help to see possible commands."<<endl;
         }
 
+    }
+}
+
+int main(){
+    string input;
+    while(true){
+        cout << "input the name of the hotel file (without .txt)"<< endl;
+        cin >> input;
+        cleanCinBuffer();
+        try {
+            Hotel *hotel = new Hotel(input);
+            system(hotel);
+            break;
+        }
+        catch(FileNotFound& msg){
+            cout <<msg;
+        }
+        catch(HotelFileHasWrongFormat msg){
+            cout << msg;
+        }
     }
     return 0;
 }

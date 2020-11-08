@@ -2,6 +2,7 @@
 #define EXCEPTIONS_H
 #include<string>
 #include<vector>
+#include <iostream>
 
 class InvalidQualityValue{
 private:
@@ -135,7 +136,56 @@ public:
     unsigned int getRoomNumber() const {return this->roomNumber;}
     unsigned int getRoomId() const {return this-> roomId;}
 };
-class NotInTheHotel{
 
+/* */
+class NotLoggedIn{
+private:
+    std::string action;
+public:
+    NotLoggedIn(const std::string& action){this->action = action;}
+    std::string getAction() const {return action;}
+    friend std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception);
 };
+
+std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception){
+    o << "The command "<< exception.getAction() << " is only available to the manager, to access this area freely, LogIn."<<std::endl;
+}
+
+/* */
+class AlreadyLoggedIn{
+public:
+    AlreadyLoggedIn(){}
+    friend std::ostream & operator << (std::ostream& o,const AlreadyLoggedIn& exception);
+};
+std::ostream & operator << (std::ostream& o,const AlreadyLoggedIn& exception){
+    o<<"User is already logged in. Write LogOut to log out."<<std::endl;
+}
+
+/**/
+class FileNotFound{
+private:
+    std::string fileName;
+public:
+    FileNotFound(const std::string & fileName){this->fileName = fileName;}
+    std::string getFileName() const {return fileName;}
+    friend std::ostream & operator << (std::ostream& o,const FileNotFound& exception);
+};
+
+std::ostream & operator << (std::ostream& o,const FileNotFound& exception){
+    o << "File not found. Make sure that the name " << exception.getFileName() << " is spelled correctly, that it does not include .txt and that the file is in the cmake-build-debug folder.";
+}
+
+class HotelFileHasWrongFormat{
+private:
+    std::string issue;
+public:
+    HotelFileHasWrongFormat(const std::string& issue){this->issue = issue;}
+    std::string getIssue() const {return issue;}
+    friend std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception);
+};
+
+std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception){
+    o << "File format is wrong, because " << exception.getIssue() << ". Fix the issue and try again.";
+
+}
 #endif

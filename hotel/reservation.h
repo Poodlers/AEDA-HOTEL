@@ -42,7 +42,7 @@ public:
     void setCheckIn(const Date& checkIn);
     void setCheckOut(const Date& checkOut);
     void setRoomId(const int& roomId);
-    //void edit(); //esta merda dá jeito
+    void edit();
     void print();
 
 private:

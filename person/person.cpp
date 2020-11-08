@@ -28,17 +28,4 @@ void Person::setNIF(const unsigned int &NIF){
     this->NIF = NIF;
 }
 
-/*
-void Person::edit() {
-    std::string edit;
-    std::cout << "Edit the client's information as follows: " << std::endl;
-    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
-    std::cout << "Name: " << std::endl;
-    getStringInput(edit, 6, 3);
-    if (edit != ".") this->setName(edit);
-    gotoxy(0, 5);
-    edit = "";
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if(edit != ".") this->setNIF(std::stoi(edit));
-}*/
+

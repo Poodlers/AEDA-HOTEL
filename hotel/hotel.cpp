@@ -120,6 +120,21 @@ Hotel::Hotel(const std::string &hotelFile) {
         this->clients.push_back(client);
         ss.clear();
     }
+    /*
+    std::string product_types;
+    while(std::getline(file,getData) && getData != "End"){
+        ss<<getData;
+        ss>>name>> product_types;
+
+
+        while(ss>>reservation1){
+            Reservation* reservation = new Reservation(reservation1);
+            client->addToHistory(reservation);
+        }
+        this->clients.push_back(client);
+        ss.clear();
+    }
+     */
 
     file.close();
 

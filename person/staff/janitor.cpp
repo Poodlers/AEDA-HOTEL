@@ -21,7 +21,7 @@ void Janitor::print() {
     std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
     << std::setw(19) << "" << std::setw(8) << (this->getShift()) ? "day" : "night";
 }
-/*
+
 void Janitor::edit() {
     std::string edit;
     std::cout << "Edit the Janitor's information as follows: " << std::endl;
@@ -51,4 +51,4 @@ void Janitor::edit() {
     }
 
 
-}*/
+}

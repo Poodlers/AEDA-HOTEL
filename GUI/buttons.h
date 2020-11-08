@@ -50,6 +50,7 @@ private:
     std::vector<N *> menu_items;
     int CurrentPage;
     BaseButton* Parent_Button;
+    BaseButton* GoBack_Button;
 public:
     MenuButton(const int x, const int y, const int width,const int height,const std::string &text,const int currentPage,
                        std::vector<N *>& menu_items,BaseButton * ParentButton);

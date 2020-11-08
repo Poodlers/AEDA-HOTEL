@@ -28,7 +28,7 @@ void Manager::print() {
               std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService()
               << std::setw(16) << "" << std::setw(7) << " " << std::setw(12) << this->evaluation;
 }
-/*
+
 void Manager::edit() {
     std::string edit;
     std::cout << "Edit the Manager's information as follows: " << std::endl;
@@ -53,4 +53,4 @@ void Manager::edit() {
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") this->setEvaluation(std::stoi(edit));
 
-}*/
+}

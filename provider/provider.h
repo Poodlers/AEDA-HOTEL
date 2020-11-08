@@ -6,7 +6,7 @@
 
 class Provider{
 public:
-    Provider(const std::string & name, const std::string & productsFile);
+    Provider(const std::string & name, std::vector<Product> products);
 private:
     std::string name;
     std::vector<Product> products;

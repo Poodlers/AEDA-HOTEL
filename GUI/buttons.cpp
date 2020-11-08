@@ -45,6 +45,7 @@ GoBackButton::GoBackButton(const int x, const int y, const int width, const int 
 void GoBackButton::onClick(std::vector<BaseButton*> &CurrentButtons) {
     clearscreen();
     this->NextButtons->onClick(CurrentButtons);
+
 }
 
 template <class N>
@@ -119,7 +120,7 @@ MenuButton<N>::MenuButton(const int x, const int y, const int width, const int h
     this->menu_items = menu_items;
     this->CurrentPage = currentPage;
     this->Parent_Button = ParentButton;
-
+    this->GoBack_Button = NULL;
 }
 
 
@@ -161,13 +162,16 @@ void MenuButton<N>::onClick(std::vector<BaseButton*> &CurrentButtons) {
         << std::setw(19) << "Floors Assigned" << std::setw(8) << "Shift" << std::setw(12) << "Evaluation";
 
     }
-
-    BaseButton* InitialButton = new GoBackButton(85,0,10,2,"Go Back",this->Parent_Button);
-    if(this->Parent_Button == NULL){
-        InitialButton = new ParentButton(85,0,10,2,"Go Back",CurrentButtons);
+    if(this->GoBack_Button == NULL){
+        if(this->Parent_Button == NULL){
+            this->GoBack_Button = new ParentButton(85,0,10,2,"Go Back",CurrentButtons);
+        }else{
+            this->GoBack_Button = new GoBackButton(85,0,10,2,"Go Back",this->Parent_Button);
+        }
     }
-    CurrentButtons = {InitialButton};
-    InitialButton->DrawButton();
+
+    CurrentButtons = {this->GoBack_Button};
+    this->GoBack_Button->DrawButton();
     int increment_y = 0;
     for(N* item: this->menu_items){
         gotoxy(1,5 + increment_y);

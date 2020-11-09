@@ -11,8 +11,10 @@ public:
     void setName(const std::string& name);
     void setNIF(const unsigned int & NIF);
     virtual void print();
+    virtual void personModify(const std::string& name, const std::string& NIF);
+    bool operator ==(Person* person);
 
-private:
+protected:
     std::string name;
     unsigned int NIF;
 };

@@ -10,7 +10,7 @@ public:
 
     float getWage() const;
     int getYearsOfService() const;
-    virtual std::string getType() = 0;
+    virtual std::string getType();
     void setWage(const float wage);
     void setYearsOfService(const int yearsOfService);
     virtual void print() override;

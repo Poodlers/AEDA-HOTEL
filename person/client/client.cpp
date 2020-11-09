@@ -42,23 +42,27 @@ bool Client::checkIn( Date *date) {
     return false;
 }
 
-void Client::printClient(){
+void Client::printConsole(){
     std::cout << "NIF: " << this->getNIF() << " Name: " << this->getName() << std::endl;
     std::cout<<"Client History:"<<std::endl;
     for (Reservation* reservation: this->history){
         reservation->print();
+        std::cout<<std::endl;
     }
     std::cout << std::endl<<"Current Reservations:"<<std::endl;
     for (Reservation* reservation: this->currentReservations){
         reservation->print();
+        std::cout<<std::endl;
     }
     std::cout << std::endl<<"Future Reservations:"<<std::endl;
     for (Reservation* reservation: this->futureReservations){
         reservation->print();
+        std::cout<<std::endl;
     }
 }
+
 bool Client::operator==(Client* client){
-    return ((this->getName() == client->getName()) &&(this->getNIF() == client->getNIF()));
+    return ((this->getName() == client->getName()) && (this->getNIF() == client->getNIF()));
 }
 
 void Client::edit() {

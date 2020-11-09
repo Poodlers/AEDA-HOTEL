@@ -212,15 +212,31 @@ Hotel::Hotel(const std::string &hotelFile) {
 
 }
 
-bool Hotel::logIn(const std::string &name, const std::string &password) {
+int Hotel::search(const std::string& name, const unsigned int& NIF, const std::string& type){
+    int pos;
+    if (type == "Client"){
+        Client* client = new Client(name,NIF);
+        pos = sequentialSearch(this->clients, client);
+        return pos;
+    }
+    else if (type == "Staff"){
+        Staff* staffMember = new Staff(name,NIF,0);
+        pos = sequentialSearch(this->staff, staffMember);
+        return pos;
+    }
+}
+
+void Hotel::logIn(const std::string &name, const std::string &password) {
     if(name == getManagerName() && password == getManagerPassword()){
         loggedIn = true;
-        return true;
     }
-    return false;
+    throw IncorrectCredentials();
 }
 
 void Hotel::logOut(){
+    if(!this->loggedIn){
+        throw NotLoggedIn("LogOut");
+    }
     loggedIn = false;
 }
 

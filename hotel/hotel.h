@@ -25,6 +25,8 @@ public:
     void sortCurrentReservations();
     void sortReservationsFromNewClients();
 
+    int search(const std::string& name, const unsigned int& NIF,const std::string& type);
+
     void getCosts();
     void getProfit();
 
@@ -37,7 +39,7 @@ public:
     std::string getManagerPassword() const;
     bool getLoggedInState() const;
 
-    bool logIn(const std::string& name, const std::string& password);
+    void logIn(const std::string& name, const std::string& password);
     void logOut();
 
 private:

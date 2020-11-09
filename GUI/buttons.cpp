@@ -212,14 +212,17 @@ void Authentication(Hotel* hotel){
     unsigned wait_new_attempt = 2000;
     std::string passwordAttempt = "";
     std::string name = "";
-    while(!hotel->logIn(name,passwordAttempt)){
+    while(!hotel->getLoggedInState()){
         std::cout << "Please write your name: " << std::endl;
         std::getline(std::cin, name);
         std::cout << "Please write your password: ";
         std::getline(std::cin,passwordAttempt);
-        if(!hotel->logIn(name,passwordAttempt)){
-            std::cout << std::endl;
-            std::cout << "It seems you typed the wrong password. Please try again shortly!" << std::endl;
+        try{
+            hotel->logIn(name,passwordAttempt);
+            break;
+        }
+        catch(IncorrectCredentials& msg){
+            std::cout << msg;
             Sleep(wait_new_attempt);
         }
         clearscreen();

@@ -53,5 +53,8 @@ void Staff::edit() {
     if (edit != ".") this->setYearsOfService(std::stoi(edit));
 }
 
+std::string Staff::getType(){
+    return "staff";
+}
 /* ------- */
 

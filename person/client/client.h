@@ -16,7 +16,7 @@ public:
     void addNewReservation(Reservation *reservation);
     bool checkOut( Date *date);
     bool checkIn( Date *date);
-    void printClient();
+    void printConsole();
     bool operator==(Client* client);
     void edit();
 

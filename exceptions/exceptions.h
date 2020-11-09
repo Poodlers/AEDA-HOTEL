@@ -74,15 +74,26 @@ public:
 
 class InvalidType{
 private:
-    unsigned int Id;
+    int Id;
     std::string type;
+    std::string name;
 public:
-    InvalidType(const unsigned int &Id, const std::string& type){
+    InvalidType(const unsigned int &Id, const std::string& type,const std::string& name){
         this->Id = Id;
         this->type = type;
+        this->name = name;
     }
+
     unsigned int getId() const{ return this->Id; }
     std::string  getType() const{ return this->type; }
+    std::string getName() const {return this->name;}
+    friend std::ostream& operator <<(std::ostream& o, InvalidType& exception){
+        if (exception.getId() != -1)
+            return o << "Room with Id " << exception.getId() << " has the invalid type "<< exception.getType()<< ". Type must be 'Suite', 'ViewRoom' or 'NoViewRoom'."<< std::endl;
+        else
+            return o << "Staff member " << exception.getName() << " has the invalid position "<< exception.getType()<< ". Position must be 'Receptionist', 'Responsible', 'Janitor' or 'Manager'."<< std::endl;
+    }
+
 };
 
 class ClientAlreadyExists{
@@ -96,6 +107,41 @@ public:
     }
     std::string getName() const{ return this->name; }
     unsigned int getNIF() const{ return this->NIF; }
+    friend std::ostream& operator <<(std::ostream& o, ClientAlreadyExists& exception){
+        return o << exception.getName() << " with NIF "<< exception.getNIF() << " already exists."<<std::endl;
+    }
+};
+
+class ClientDoesNotExist{
+private:
+    std::string name;
+    unsigned int NIF;
+public:
+    ClientDoesNotExist(const std::string &name, const unsigned int& NIF){
+        this->name = name;
+        this->NIF = NIF;
+    }
+    std::string getName() const{ return this->name; }
+    unsigned int getNIF() const{ return this->NIF; }
+    friend std::ostream& operator <<(std::ostream& o, ClientDoesNotExist& exception){
+        return o << exception.getName() << " with NIF "<< exception.getNIF() << " is not in the list of clients."<<std::endl;
+    }
+};
+
+class StaffMemberDoesNotExist{
+private:
+    std::string name;
+    unsigned int NIF;
+public:
+    StaffMemberDoesNotExist(const std::string &name, const unsigned int& NIF){
+        this->name = name;
+        this->NIF = NIF;
+    }
+    std::string getName() const{ return this->name; }
+    unsigned int getNIF() const{ return this->NIF; }
+    friend std::ostream& operator <<(std::ostream& o,  StaffMemberDoesNotExist& exception){
+        return o << exception.getName() << " with NIF "<< exception.getNIF() << " is not a staff member."<<std::endl;
+    }
 };
 
 class ClientWithThisNIFAlreadyExists{
@@ -109,6 +155,9 @@ public:
     }
     std::string getName() const{ return this->name; }
     unsigned int getNIF() const{ return this->NIF; }
+    friend std::ostream& operator <<(std::ostream& o, ClientWithThisNIFAlreadyExists& exception){
+        return o << exception.getName() << " with NIF "<< exception.getNIF() << " exists under a different name."<<std::endl;
+    }
 };
 
 class RoomAlreadyExists{
@@ -145,7 +194,7 @@ public:
     NotLoggedIn(const std::string& action){this->action = action;}
     std::string getAction() const {return action;}
     friend std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception){
-        return o << "The command "<< exception.getAction() << " is only available to the manager, to access this area freely, LogIn."<<std::endl;
+        return o << "The command "<< exception.getAction() << " is only available to the manager, to access this area freely or LogOut, LogIn first."<<std::endl;
     }
 };
 
@@ -158,19 +207,30 @@ public:
         return o<<"User is already logged in. Write LogOut to log out."<<std::endl;
     }
 };
+/**/
+class IncorrectCredentials{
+public:
+    IncorrectCredentials(){}
+    friend std::ostream & operator << (std::ostream& o,const IncorrectCredentials& exception){
+        return o<<"Password or username are incorrect."<<std::endl;
+    }
+};
 
 /**/
 class NIFIsNotValid{
 private:
     std::string name;
-    unsigned int NIF;
+    int NIF;
 public:
     NIFIsNotValid(const std::string& name, const unsigned int& NIF){this->name = name;
     this->NIF = NIF;}
     unsigned int getNIF() const {return NIF;}
     std::string getName() const {return name;}
     friend std::ostream & operator << (std::ostream& o,const NIFIsNotValid& exception){
-        return o << exception.getName() << "has the invalid NIF: " <<  exception.getNIF() << ". Please choose a valid NIF." <<std::endl;
+        if (exception.getNIF() != -1)
+            return o << exception.getName() << "has the invalid NIF: " <<  exception.getNIF() << ". Please choose a valid NIF." <<std::endl;
+        else
+            return o << exception.getName() <<"'s NIF is not an integer, NIF's must be integers."<<std::endl;
     }
 };
 

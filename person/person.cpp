@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include "../GUI/utils.h"
+#include "../exceptions/exceptions.h"
 
 Person::Person(const std::string& name, const unsigned int & NIF){
     this->name = name;
@@ -27,5 +28,12 @@ void Person::setName(const std::string &name){
 void Person::setNIF(const unsigned int &NIF){
     this->NIF = NIF;
 }
-
+void Person::personModify(const std::string& name, const std::string& NIF){
+    if (name != "."){
+        this->name = name;
+    }
+    if(NIF != "."){
+        this->NIF = stoi(NIF);
+    }
+}
 

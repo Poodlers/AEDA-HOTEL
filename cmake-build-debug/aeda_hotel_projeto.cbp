@@ -104,6 +104,9 @@
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/hotel/reservation.h">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
+		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/main.cpp">
+			<Option target="aeda_hotel_projeto"/>
+		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/person/client/client.cpp">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
@@ -159,9 +162,6 @@
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/room/suite.cpp">
-			<Option target="aeda_hotel_projeto"/>
-		</Unit>
-		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/testing.cpp">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/CMakeLists.txt">

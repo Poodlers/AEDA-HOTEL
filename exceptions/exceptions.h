@@ -144,22 +144,35 @@ private:
 public:
     NotLoggedIn(const std::string& action){this->action = action;}
     std::string getAction() const {return action;}
-    friend std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception);
+    friend std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception){
+        return o << "The command "<< exception.getAction() << " is only available to the manager, to access this area freely, LogIn."<<std::endl;
+    }
 };
 
-std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception){
-    o << "The command "<< exception.getAction() << " is only available to the manager, to access this area freely, LogIn."<<std::endl;
-}
 
 /* */
 class AlreadyLoggedIn{
 public:
     AlreadyLoggedIn(){}
-    friend std::ostream & operator << (std::ostream& o,const AlreadyLoggedIn& exception);
+    friend std::ostream & operator << (std::ostream& o,const AlreadyLoggedIn& exception){
+        return o<<"User is already logged in. Write LogOut to log out."<<std::endl;
+    }
 };
-std::ostream & operator << (std::ostream& o,const AlreadyLoggedIn& exception){
-    o<<"User is already logged in. Write LogOut to log out."<<std::endl;
-}
+
+/**/
+class NIFIsNotValid{
+private:
+    std::string name;
+    unsigned int NIF;
+public:
+    NIFIsNotValid(const std::string& name, const unsigned int& NIF){this->name = name;
+    this->NIF = NIF;}
+    unsigned int getNIF() const {return NIF;}
+    std::string getName() const {return name;}
+    friend std::ostream & operator << (std::ostream& o,const NIFIsNotValid& exception){
+        return o << exception.getName() << "has the invalid NIF: " <<  exception.getNIF() << ". Please choose a valid NIF." <<std::endl;
+    }
+};
 
 /**/
 class FileNotFound{
@@ -168,12 +181,10 @@ private:
 public:
     FileNotFound(const std::string & fileName){this->fileName = fileName;}
     std::string getFileName() const {return fileName;}
-    friend std::ostream & operator << (std::ostream& o,const FileNotFound& exception);
+    friend std::ostream & operator << (std::ostream& o,const FileNotFound& exception){
+        return     o << "File not found. Make sure that the name " << exception.getFileName() << " is spelled correctly, that it does not include .txt and that the file is in the cmake-build-debug folder.";
+    }
 };
-
-std::ostream & operator << (std::ostream& o,const FileNotFound& exception){
-    o << "File not found. Make sure that the name " << exception.getFileName() << " is spelled correctly, that it does not include .txt and that the file is in the cmake-build-debug folder.";
-}
 
 class HotelFileHasWrongFormat{
 private:
@@ -181,11 +192,9 @@ private:
 public:
     HotelFileHasWrongFormat(const std::string& issue){this->issue = issue;}
     std::string getIssue() const {return issue;}
-    friend std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception);
+    friend std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception){
+        return     o << "File format is wrong, because " << exception.getIssue() << ". Fix the issue and try again.";
+
+    }
 };
-
-std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception){
-    o << "File format is wrong, because " << exception.getIssue() << ". Fix the issue and try again.";
-
-}
 #endif

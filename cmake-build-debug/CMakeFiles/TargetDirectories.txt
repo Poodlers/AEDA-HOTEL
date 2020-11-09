@@ -1,3 +1,0 @@
-C:/Users/radio/OneDrive/Ambiente de Trabalho/aeda_hotel_projeto/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/radio/OneDrive/Ambiente de Trabalho/aeda_hotel_projeto/cmake-build-debug/CMakeFiles/aeda_hotel_projeto.dir
-C:/Users/radio/OneDrive/Ambiente de Trabalho/aeda_hotel_projeto/cmake-build-debug/CMakeFiles/edit_cache.dir

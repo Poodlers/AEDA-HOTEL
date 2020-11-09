@@ -1,7 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2020.2.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -D "CMAKE_EXE_LINKER_FLAGS=-static -static-libgcc -static-libstdc++" -G "CodeBlocks - MinGW Makefiles" "C:\Users\radio\OneDrive\Ambiente de Trabalho\aeda_hotel_projeto"
-CMAKE_CXX_FLAGS is  -static
-CMAKE_EXE_LINKER_FLAGS  is -static -static-libgcc -static-libstdc++ -static
-CMAKE_STATIC_LINKER_FLAGS is  -static 
--- Configuring done
--- Generating done
--- Build files have been written to: C:/Users/radio/OneDrive/Ambiente de Trabalho/aeda_hotel_projeto/cmake-build-debug

@@ -10,10 +10,10 @@ Rooms
 1 6 7895 2 12.70 Suite
 1 7 7896 1 18.70 NoViewRoom
 Staff
-Luís_Nunes 123456789 12.90 Responsible
-Antonio_Nunes 123456790 12.90 Receptionist
-Maria_Ferreira 123456792 12.90 Manager 1234
-Carla_Alves 123423789 12.90 Janitor night
+Luís Nunes 288779169 12.90 Responsible
+Antonio Nunes 264740130 12.90 Receptionist
+Maria Ferreira 271425067 12.90 Manager 1234
+Carla Alves 254823840 12.90 Janitor night
 Client
-Arminda_Dias 398098234 2,2-7-2002,4-7-2002,7891 1,2-5-2003,3-5-2003,7890
+Arminda Dias 235981974 2,2-7-2002,4-7-2002,7891 1,2-5-2003,3-5-2003,7890
 End

@@ -100,7 +100,6 @@ Hotel::Hotel(const std::string &hotelFile) {
     this->freeRooms = rooms.size();
     this->numberOfRooms = rooms.size();
 
-    std::getline(file,getData);
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
@@ -108,7 +107,10 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("Line should be 'Staff'");
     }
 
+    std::getline(file,getData);
+
     std::string name;
+    std::string surname;
     unsigned int NIF;
     float salary;
     std::string shift;
@@ -117,16 +119,19 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     while(std::getline(file,getData) && getData!="Client"){
         ss<<getData;
-        ss >> name;
+        ss >> name>>surname;
+        name = name + " " + surname;
         ss >> NIF >> salary;
         if(ss.fail()) {
             throw HotelFileHasWrongFormat("NIF and salary should be integers");
         }
-        if (NIF < 0 || salary<=0){
+        if(!validateNIF(std::to_string(NIF))){
+            throw NIFIsNotValid(name, NIF);
+        }
+        if (salary<=0){
             throw HotelFileHasWrongFormat("Nif and salary should be positive integers, salary should not be 0.");
         }
         ss >> type;
-        //switch fixe aqui
         if (type == "Receptionist"){
             Receptionist* receptionist = new Receptionist(name,NIF,salary);
             staff.push_back(receptionist);
@@ -159,6 +164,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
 
     if (getData.empty()){
+        std::cout << "File ended. Clients must be added manually."<<std::endl;
         return;
     }
     if (getData != "Client"){
@@ -169,9 +175,14 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     while(std::getline(file,getData) && getData != "End"){
         ss<<getData;
-        ss>>name>>NIF;
+        ss>>name>>surname;
+        name = name + " "+surname;
+        ss>>NIF;
+        if(ss.fail()) {
+            throw HotelFileHasWrongFormat("NIF and salary should be integers");
+        }
         if(!validateNIF(std::to_string(NIF))){
-            continue;
+            throw NIFIsNotValid(name, NIF);
         }
         Client* client = new Client(name,NIF);
         while(ss>>reservation1){

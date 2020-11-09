@@ -5,23 +5,11 @@
 #include "room/room.h"
 #include "person/staff/staff.h"
 #include "exceptions/exceptions.h"
+#include "GUI/utils.h"
 #include <string>
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-template <class Comparable>
-int sequentialSearch(const vector<Comparable> &v, Comparable x)
-{
-    for (unsigned int i = 0; i < v.size(); i++)
-        if (v[i] == x)
-            return i;   // encontrou
-    return -1;     // não encontrou
-}
-
-void cleanCinBuffer(){
-    cin.clear();
-    cin.ignore(1000000000,'\n');
-}
 
 void clientSort(const vector<Client>& clients){
     cout<< "Choose by which you wish to sort: Name, NIF, Total Number of Reservations, Number of Future Reservations, Number of Past Reservations, Current Reservations, Last Reservation."<<endl;
@@ -125,8 +113,8 @@ void Reservations(){
 }
 
 void Rooms(){
-    //should display rooms and their desponibility
-    //be able to add rooms or remove them?
+    //should display rooms and their disponibility
+    // be able to add rooms or remove them?
 }
 
 bool LogIn(Hotel* hotel){
@@ -203,8 +191,11 @@ int main(){
         catch(FileNotFound& msg){
             cout <<msg;
         }
-        catch(HotelFileHasWrongFormat msg){
+        catch(HotelFileHasWrongFormat& msg){
             cout << msg;
+        }
+        catch(NIFIsNotValid& msg){
+            cout <<msg;
         }
     }
     return 0;

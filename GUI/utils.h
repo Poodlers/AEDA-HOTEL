@@ -15,9 +15,24 @@ void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURS
 void runTime(float rate, std::chrono::steady_clock::time_point begin, double &prev_time, int &day, int &month, int &year, std::map<int,std::string> &map_month);
 void fill_month_map(std::map<int,std::string> &map_month);
 void getStringInput(std::string& input, int x, int y);
-bool CheckIfInteger(std::string input);
-bool CheckIfFloat(std::string input);
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input));
+
+bool CheckIfInteger(std::string input);
+
+bool CheckIfFloat(std::string input);
+
 std::ostream& operator<<(std::ostream &o, std::vector<int> v);
+
 bool validateNIF(std::string contribuinte);
+
+template <class Comparable>
+int sequentialSearch(const std::vector<Comparable> &v, Comparable x)
+{
+    for (unsigned int i = 0; i < v.size(); i++)
+        if (v[i] == x)
+            return i;   // encontrou
+    return -1;     // não encontrou
+}
+
+void cleanCinBuffer();
 #endif

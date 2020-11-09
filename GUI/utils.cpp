@@ -250,3 +250,9 @@ bool validateNIF(std::string contribuinte) {
     }
     return true;
 }
+
+
+void cleanCinBuffer(){
+    cin.clear();
+    cin.ignore(1000000000,'\n');
+}

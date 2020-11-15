@@ -15,7 +15,6 @@ Date::Date(const std::string& date){
     char ignore;
     ss<<date;
     ss>>this->day>>ignore>>this->month>>ignore>>this->year;
-
 }
 
 std::ostream& operator<<(std::ostream& o, const Date& date){

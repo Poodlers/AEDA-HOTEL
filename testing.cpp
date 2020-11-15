@@ -17,6 +17,7 @@ void checkIn(Hotel* hotel){
     cout << "Date: " << hotel->getDate() <<endl;
     cout << "Input the name and NIF of the client who wishes to check in."<<endl;
     cout << "Name: "<<endl;
+    cleanCinBuffer();
     getline(cin, name);
     cout << "NIF: "<<endl;
     cin >>NIF;
@@ -209,7 +210,7 @@ void system(Hotel* hotel){
     while (true){
         cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see commands"<<endl;
-        getline(cin,input);
+        cin>>input;
 
         if (input == "Clients"){
             clients(hotel);

@@ -18,7 +18,9 @@ Date::Date(const std::string& date){
 }
 
 std::ostream& operator<<(std::ostream& o, const Date& date){
-    o << std::left << std::setw(2) << std::setfill('0') << date.day << "-"  << std::setw(2) << date.month << "-" << std::setfill(' ') << std::setw(9) << date.year;
+    char a[19];
+    sprintf(a,"%02d-%02d-%02d         ",date.getDay(),date.getMonth(),date.getYear());
+    o << a;
     return o;
 }
 
@@ -83,17 +85,18 @@ bool Date::operator ==(const Date& date){
 
 }
 bool Date::operator <(const Date& date){
-    if (this->year < date.getYear()){
-        return true;
+    if(this->year == date.getYear()){
+        if(this->month == date.getMonth()){
+            if (this->day < date.getDay()) return true;
+            else return false;
+        }
+        if(this->month < date.getMonth()) return true;
+        else return false;
     }
-    else if ((this->year == date.getYear()) && (this->month < date.getMonth())){
-        return true;
-    }
-    else if ((this->year == date.getYear()) && (this->month == date.getMonth()) && (this->day < date.getDay())){
-        return true;
-    }
-    return false;
+    else if (this->year < date.getYear()) return true;
+    else return false;
 }
+
 bool Date::operator >(const Date& date){
     if (this->year > date.getYear()){
         return true;
@@ -108,17 +111,31 @@ bool Date::operator >(const Date& date){
 }
 
 Reservation::Reservation(const int &reservationSize,Date* checkIn,Date* checkOut, const int & roomId, const int& reservationId){
-    if(checkOut < checkIn) throw ReservationHasInvalidDates();
+    if(*checkOut < *checkIn) {throw ReservationHasInvalidDates();}
+
     if (reservationId == -1) this->reservationId = rand()%200 +1;
     else this->reservationId = reservationId;
+
     this->reservationSize = reservationSize;
+
     this->roomId = roomId;
+
     this->checkIn = *checkIn;
+
     this->checkOut = *checkOut;
 }
 
 bool Date::operator <=(const Date& date){
-    return (this->day == date.getDay() && this->month == date.getMonth() && this->year == date.getYear()) || (*this < date);
+    if(this->year == date.getYear()){
+        if(this->month == date.getMonth()){
+            if (this->day <= date.getDay()) return true;
+            else return false;
+        }
+        if(this->month < date.getMonth()) return true;
+        else return false;
+    }
+    else if (this->year < date.getYear()) return true;
+    else return false;
 }
 
 Date Reservation::getCheckIn() const{

@@ -259,6 +259,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     std::string NIF;
     std::string salary;
     std::string shift;
+    int year;
     bool shift1;
     std::string password;
 
@@ -266,7 +267,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss<<getData;
         ss >> name>>surname;
         name = name + " " + surname;
-        ss >> NIF >> salary>>type;
+        ss >> NIF >> year >> salary>>type;
         try{
             checkIfValidPriceOrWage(salary, name);
             search(name,NIF,"Staff");
@@ -430,7 +431,6 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
                 if (in == true){
                     clients[posClient]->checkIn(date);
                 }
-
             }
             catch(...){
                 throw;

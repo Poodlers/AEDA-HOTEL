@@ -1,6 +1,7 @@
 #include "client.h"
 #include <iostream>
 #include "../../GUI/utils.h"
+#include <iomanip>
 
 Client:: Client(const std::string &name, const unsigned int &NIF) : Person(name,NIF){}
 
@@ -51,18 +52,26 @@ void Client::archiveExpiredReservations(Date date){
 }
 
 void Client::printConsole(){
-    std::cout << "NIF: " << this->getNIF() << " Name: " << this->getName() << std::endl;
-    std::cout<<"Client History:"<<std::endl;
+
+    std::cout << std::endl <<"NIF: " << this->getNIF() << " Name: " << this->getName() << std::endl;
+
+    if(!this->history.empty()){
+        std::cout<<"Client History:"<<std::endl;
+    }
     for (Reservation* reservation: this->history){
         reservation->print();
         std::cout<<std::endl;
     }
-    std::cout << std::endl<<"Current Reservations:"<<std::endl;
+    if(!this->currentReservations.empty()) {
+        std::cout << std::endl << "Current Reservations:" << std::endl;
+    }
     for (Reservation* reservation: this->currentReservations){
         reservation->print();
         std::cout<<std::endl;
     }
-    std::cout << std::endl<<"Future Reservations:"<<std::endl;
+    if(!this->futureReservations.empty()) {
+        std::cout << std::endl << "Future Reservations:" << std::endl;
+    }
     for (Reservation* reservation: this->futureReservations){
         reservation->print();
         std::cout<<std::endl;

@@ -285,6 +285,7 @@ Hotel* createHotel(){
         string input;
         cout << "input the name of the hotel file (without .txt)"<< endl;
         cin >> input;
+        system("CLS");
         cleanCinBuffer();
         try {
             Hotel *hotel = new Hotel(input);

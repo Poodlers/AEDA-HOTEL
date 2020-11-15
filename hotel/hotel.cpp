@@ -44,6 +44,72 @@ void Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
     throw RoomDoesNotExist(roomNumber, roomId);
 }
 
+void Hotel::saveHotel(const std::string &hotelFile){
+    std::ofstream file;
+    file.open(hotelFile+ ".txt");
+    if(!file.is_open()){
+
+    }
+    file << "Hotel-File\n";
+    file << this->numberOfFloors<<"\n";
+    file <<this->firstFloor<<"\n";
+    file << "Rooms"<<"\n";
+    for (Room* room: rooms){
+        file << room->getFloor() << " " <<room->getRoomNumber() << " " << room->getRoomId() << " " << room->getCapacity() << " " <<room->getPricePerNight() << " ";
+        Suite* suite = dynamic_cast<Suite*>(room);
+        NoViewRoom* noViewRoom = dynamic_cast<NoViewRoom*>(room);
+        ViewRoom* ViewRoom = dynamic_cast<class ViewRoom*>(room);
+        if( suite != nullptr){
+            file << "Suite\n";
+        }
+        else if( noViewRoom != nullptr){
+            file << "NoViewRoom\n";
+        }
+        else if( ViewRoom != nullptr){
+            file << "ViewRoom\n";
+        }
+    }
+    file << "Staff\n";
+    for(Staff* staff: staff){
+        file << staff->getName()<< " " << staff->getNIF() << " " << staff->getWage() << " ";
+        Receptionist* receptionist = dynamic_cast<Receptionist*>(staff);
+        Responsible* responsible = dynamic_cast<Responsible*>(staff);
+        Janitor* janitor = dynamic_cast<Janitor*>(staff);
+        Manager* manager = dynamic_cast<Manager*>(staff);
+        if(responsible != nullptr){
+            file << "Responsible\n";
+        }
+        else if (receptionist != nullptr){
+            file << "Receptionist\n";
+        }
+        else if (janitor != nullptr){
+            file << "Janitor ";
+            if (janitor->getShift()){
+                file << "day\n";
+            }
+            else file << "night\n";
+        }
+        else if (manager != nullptr){
+            file << "Manager " << manager->getPassword()<<"\n";
+        }
+    }
+    file << "Client\n";
+    for (Client* client: clients){
+        file << client->getName()<< " " << client->getNIF();
+        for (Reservation* reservation: client->getHistory()){
+            file << reservation->getReservationSize() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getRoomId()<<","<<reservation->getReservationId()<<",0 ";
+        }
+        for (Reservation* reservation: client->getCurrentReservations()){
+            file << reservation->getReservationSize() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getRoomId()<<","<<reservation->getReservationId()<<",1 ";
+        }
+        for (Reservation* reservation: client->getFutureReservations()){
+            file << reservation->getReservationSize() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getRoomId()<<","<<reservation->getReservationId()<<",0 ";
+        }
+    }
+    file<<"\n";
+    file<<"End\n";
+}
+
 Hotel::Hotel(const std::string &hotelFile) {
     std::ifstream file;
     std::string getData;

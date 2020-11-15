@@ -15,7 +15,7 @@ public:
         void setRoomNumber(const unsigned int roomNumber);
         void setCapacity(const unsigned int capacity);
         void setPricePerNight(const float pricePerNight);
-        void print();
+        virtual void print();
         //void edit();
 private:
         int floor;

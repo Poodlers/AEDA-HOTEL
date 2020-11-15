@@ -16,7 +16,7 @@ public:
     Hotel(const std::string &hotelFile);
     void addRoom(const Room& room);
     void addStaff(const Staff& staff);
-
+    void saveHotel(const std::string &hotelFile);
 
     void assignFloorsToResponsibles();
 

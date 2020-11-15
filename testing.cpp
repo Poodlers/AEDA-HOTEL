@@ -14,8 +14,7 @@ void checkIn(Hotel* hotel){
     string name, NIF;
     int pos;
 
-    cout << "Date: " << hotel->getDate() <<endl;
-    cout << "Input the name and NIF of the client who wishes to check in."<<endl;
+    cout << endl << "Input the name and NIF of the client who wishes to check in."<<endl;
     cout << "Name: "<<endl;
     cleanCinBuffer();
     getline(cin, name);
@@ -45,8 +44,7 @@ void checkOut(Hotel* hotel){
     string name, NIF;
     int pos;
 
-    cout << "Date: " << hotel->getDate() <<endl;
-    cout << "Input the name and NIF of the client who wishes to check in."<<endl;
+    cout <<endl<< "Input the name and NIF of the client who wishes to check in."<<endl;
     cout << "Name: "<<endl;
     cleanCinBuffer();
     getline(cin, name);
@@ -73,7 +71,7 @@ void checkOut(Hotel* hotel){
 }
 
 void clients(Hotel *hotel){
-
+    system("CLS");
     cout << endl;
     int pos;
     string input;
@@ -89,7 +87,7 @@ void clients(Hotel *hotel){
         cin >> input;
         try{
             if (input == "Help"){
-                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, Back and Help "<<endl;
+                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, CheckIn, CheckOut Back and Help "<<endl;
             }
             else if(input == "Modify"){
 
@@ -114,6 +112,7 @@ void clients(Hotel *hotel){
                 cin >> NIF;
 
                 hotel->modifyClient(name,NIF,pos);
+
             }
             else if(input == "Remove"){
                 cout << "Insert the name of the client you wish to remove:"<<endl;
@@ -137,6 +136,7 @@ void clients(Hotel *hotel){
                 cin >> NIF;
 
                 hotel->addClient(name,NIF);
+
 
             }
             else if (input == "Sort"){
@@ -167,8 +167,14 @@ void clients(Hotel *hotel){
             else if(input == "Back"){
                 return;
             }
+            else if(input == "CheckIn"){
+                checkIn(hotel);
+            }
             else if(input == "Time"){
                 hotel->incrementDate(1);
+            }
+            else if (input == "CheckOut"){
+                checkOut(hotel);
             }
             else{
                 cout << "Invalid command. Write Help to see possible commands."<<endl;
@@ -189,6 +195,8 @@ void clients(Hotel *hotel){
         catch(SortingError& msg){
             cout << msg;
         }
+        cout<<"Wait a second ..."<<endl;
+        Sleep(1000);
         system("CLS");
     }
 }
@@ -237,16 +245,10 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservation, Time, CheckIn, CheckOut and Exit"<<endl;
-        }
-        else if(input == "CheckIn"){
-            checkIn(hotel);
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservation, Time and Exit"<<endl;
         }
         else if(input == "Time"){
             hotel->incrementDate(1);
-        }
-        else if (input == "CheckOut"){
-            checkOut(hotel);
         }
         else if(input == "LogOut"){
             try{

@@ -22,16 +22,16 @@ public:
     bool operator ==(const Date& date);
     bool operator <(const Date& date);
     bool operator >(const Date& date);
-    int operator - (const Date& date);
-    Date operator+(int d) const;
+    int operator -(const Date& date);
+    Date operator +(int d) const;
+    bool operator <=(const Date& date);
 
     friend Date operator+(int daysToAdd, const Date& date);
 };
 
 class Reservation{
 public:
-    Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
-    Reservation(const std::string & reservation);
+    Reservation(const int &reservationSize,Date* CheckIn,Date* CheckOut, const int & roomId, const int& reservationId);
 
     int getReservationId() const;
     int getReservationSize() const;

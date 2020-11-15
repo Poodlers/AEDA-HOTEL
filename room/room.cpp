@@ -67,3 +67,10 @@ void Room::print() {
               << this->roomNumber << std::setw(8)<< this->floor << std::setw(10) << this->capacity << std::setw(18)
               << this->pricePerNight << std::endl;
 }
+
+std::vector<Reservation*> Room::getReservations() const{
+    return reservations;
+}
+void Room::addReservation(Reservation* reservation){
+    reservations.push_back(reservation);
+}

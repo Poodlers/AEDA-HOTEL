@@ -13,7 +13,6 @@ Date Hotel::getDate() const{
 
 void Hotel::incrementDate(const int& i){
     date = date + i;
-
     for(Client* client: clients){
         client->archiveExpiredReservations(this->date);
     }
@@ -29,10 +28,11 @@ void Hotel::checkIfFloorIsValid(unsigned int floor){
         }
     }
 }
-void Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
+int Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
+    int pos = 0;
     for (Room* room: rooms){
         if(room->getRoomNumber() == roomNumber && room->getRoomId() == roomId){
-            return;
+            return pos;
         }
         if(room->getRoomNumber() == roomNumber && room->getRoomId() != roomId){
             throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(roomNumber,roomId,"Room Number");
@@ -40,6 +40,7 @@ void Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
         if(room->getRoomNumber() != roomNumber && room->getRoomId() == roomId){
             throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(roomNumber,roomId,"Room Id");
         }
+        pos++;
     }
     throw RoomDoesNotExist(roomNumber, roomId);
 }
@@ -51,8 +52,9 @@ void Hotel::saveHotel(const std::string &hotelFile){
 
     }
     file << "Hotel-File\n";
+    file << date.getDay()<<"-"<<date.getMonth()<<"-"<<date.getYear();
     file << this->numberOfFloors<<"\n";
-    file <<this->firstFloor<<"\n";
+    file << this->firstFloor<<"\n";
     file << "Rooms"<<"\n";
     for (Room* room: rooms){
         file << room->getFloor() << " " <<room->getRoomNumber() << " " << room->getRoomId() << " " << room->getCapacity() << " " <<room->getPricePerNight() << " ";
@@ -95,18 +97,18 @@ void Hotel::saveHotel(const std::string &hotelFile){
     }
     file << "Client\n";
     for (Client* client: clients){
-        file << client->getName()<< " " << client->getNIF();
+        file << client->getName()<< " " << client->getNIF()<< " ";
         for (Reservation* reservation: client->getHistory()){
-            file << reservation->getReservationSize() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getRoomId()<<","<<reservation->getReservationId()<<",0 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
         }
         for (Reservation* reservation: client->getCurrentReservations()){
-            file << reservation->getReservationSize() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getRoomId()<<","<<reservation->getReservationId()<<",1 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",1 ";
         }
         for (Reservation* reservation: client->getFutureReservations()){
-            file << reservation->getReservationSize() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getRoomId()<<","<<reservation->getReservationId()<<",0 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
         }
+        file<<"\n";
     }
-    file<<"\n";
     file<<"End\n";
 }
 
@@ -134,6 +136,12 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
 
+    date = Date(getData);
+
+    std::getline(file,getData);
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
 
     try{
         checkIfPositiveInteger(getData, "Number of Floors");
@@ -248,8 +256,8 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     std::string name;
     std::string surname;
-    std::string  NIF;
-    std::string  salary;
+    std::string NIF;
+    std::string salary;
     std::string shift;
     bool shift1;
     std::string password;
@@ -319,7 +327,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
 
     std::string reservation1;
-
+    int pos = 0;
     while(std::getline(file,getData) && getData != "End"){
         ss<<getData;
         ss>>name>>surname;
@@ -344,13 +352,46 @@ Hotel::Hotel(const std::string &hotelFile) {
         catch(ClientDoesNotExist& msg){}
 
         Client* client = new Client(name,stoi(NIF));
-        while(ss>>reservation1){
-            Reservation* reservation = new Reservation(reservation1);
-            client->addToHistory(reservation);
-        }
         this->clients.push_back(client);
+        while(ss>>reservation1){
+            int roomId,dayIn,monthIn,yearIn,dayOut,monthOut,yearOut,reservationId,capacity;
+            bool in;
+            char ignore;
+            std::stringstream ss1;
+            ss1 << reservation1;
+            ss1 >> roomId >>ignore>> dayIn >> ignore>> monthIn >> ignore>> yearIn >> ignore>> dayOut >> ignore>>monthOut >> ignore>> yearOut >> ignore>> reservationId >> ignore >> capacity>>in;
+            Date* checkIn =new Date(dayIn,monthIn,yearIn);
+            Date* checkOut =new Date(dayOut,monthOut,yearOut);
+            try{
+                this->makeReservation(roomId,checkIn,checkOut,capacity,pos,reservationId,in);
+            }
+            catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
+                std::cout<<msg;
+                throw HotelFileHasWrongFormat("Room chosen for reservation by "+ name + " with NIF "+NIF+ " doesn't have the necessary capacity.");
+            }
+            catch(AnotherReservationForThisRoomAlreadyExistsAtThisTime& msg){
+                std::cout<<msg;
+                throw HotelFileHasWrongFormat("Room chosen for reservation by "+ name + " with NIF "+NIF+ " is not free in the chosen date.");
+            }
+            catch(RoomDoesNotExist& msg){
+                std::cout<<msg;
+                throw HotelFileHasWrongFormat("Room chosen for reservation by "+ name + " with NIF "+NIF+ " does not exist.");
+            }
+            catch(ReservationHasInvalidDates& msg){
+                std::cout<<msg;
+                throw HotelFileHasWrongFormat("Reservation by "+ name + " with NIF "+NIF+ " has invalid dates.");
+            }
+            catch(NoReservationsToCheckIn& msg){
+                std::cout<<msg;
+                throw HotelFileHasWrongFormat("A reservation that can't be check in at the time is marked as checked in.");
+            }
+        }
+        pos++;
         ss.clear();
     }
+
+    this->incrementDate(1);
+
     /*
     std::string product_types;
     while(std::getline(file,getData) && getData != "End"){
@@ -369,6 +410,35 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     file.close();
 
+}
+
+void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in){
+    for (Room* room: rooms){
+        if (room->getRoomId() == roomId){
+            if (room->getCapacity() < capacity){
+                throw RoomDoesNotHaveTheNecessaryCapacity(roomId);
+            }
+            for(Reservation* reservation: room->getReservations()){
+                if (reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
+                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
+                }
+            }
+            try{
+                Reservation* reservation = new Reservation(capacity,checkIn,checkOut,roomId,reservationId);
+                clients[posClient]->addNewReservation(reservation);
+                room->addReservation(reservation);
+                if (in == true){
+                    clients[posClient]->checkIn(date);
+                }
+
+            }
+            catch(...){
+                throw;
+            }
+            return;
+        }
+    }
+    throw RoomDoesNotExist(roomId);
 }
 
 int Hotel::search(const std::string& name, const std::string& NIF, const std::string& type){

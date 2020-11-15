@@ -27,12 +27,14 @@ public:
     void sortReservationsFromNewClients();
 
     void checkIfFloorIsValid(unsigned int floors);
-    void searchForRoom(unsigned int roomId, unsigned int roomNumber);
+    int searchForRoom(unsigned int roomId, unsigned int roomNumber);
 
     void getCosts();
     void getProfit();
 
     void buyProducts();
+
+    void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
 
     Date getDate() const;
     void incrementDate(const int& i);

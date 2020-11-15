@@ -26,14 +26,35 @@ private:
     std::string name;
     unsigned int NIF;
 public:
-    NoReservationsToCheckIn (const std::string& name, const unsigned int& NIF){
+    NoReservationsToCheckOut (const std::string& name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
     unsigned int getNIF() const {return NIF;}
     std::string getName() const {return name;}
-    friend std::ostream & operator << (std::ostream& o,const NoReservationsToCheckIn& exception){
+    friend std::ostream & operator << (std::ostream& o,const NoReservationsToCheckOut& exception){
         return o << exception.getName() << " with NIF: " << exception.getNIF() << " doesn't have any reservations to check out."<<std::endl;
+    }
+};
+
+class ReservationHasInvalidDates{
+public:
+    ReservationHasInvalidDates (){}
+    friend std::ostream & operator << (std::ostream& o,const ReservationHasInvalidDates& exception){
+        return o << "Check Out date can't be before Check In date."<<std::endl;
+    }
+};
+
+class AnotherReservationForThisRoomAlreadyExistsAtThisTime{
+private:
+    int roomId;
+public:
+    AnotherReservationForThisRoomAlreadyExistsAtThisTime(const int& roomId){
+        this->roomId = roomId;
+    }
+    int getRoomId() const {return roomId;}
+    friend std::ostream & operator << (std::ostream& o,const AnotherReservationForThisRoomAlreadyExistsAtThisTime& exception){
+        return o << "Room with Id: "<< exception.getRoomId() << " already has a reservation at this time."<<std::endl;
     }
 };
 
@@ -250,17 +271,35 @@ public:
 
 class RoomDoesNotExist{
 private:
-    unsigned int roomNumber;
+    int roomNumber;
     unsigned int roomId;
 public:
     RoomDoesNotExist(const unsigned int &roomNumber, const unsigned int &roomId){
         this->roomNumber = roomNumber;
         this->roomId = roomId;
     }
+    RoomDoesNotExist(const unsigned int &roomId){
+        this->roomId = roomId;
+        this->roomNumber = -1;
+    }
     unsigned int getRoomNumber() const {return this->roomNumber;}
     unsigned int getRoomId() const {return this-> roomId;}
     friend std::ostream& operator <<(std::ostream& o, RoomDoesNotExist& exception){
-        return o << "Room with room number: "<< exception.getRoomNumber() << " and room id:"<<exception.getRoomId()<< "does not exist"<<std::endl;
+        if(exception.getRoomNumber() != -1) return o << "Room with room number: "<< exception.getRoomNumber() << " and room id:"<<exception.getRoomId()<< "does not exist"<<std::endl;
+        else return o << "Room with room id: "<<exception.getRoomId()<< " does not exist"<<std::endl;
+    }
+};
+
+class RoomDoesNotHaveTheNecessaryCapacity{
+private:
+    unsigned int roomId;
+public:
+    RoomDoesNotHaveTheNecessaryCapacity(const unsigned int& roomId){
+        this->roomId = roomId;
+    }
+    unsigned int getRoomId() const {return this-> roomId;}
+    friend std::ostream& operator <<(std::ostream& o, RoomDoesNotHaveTheNecessaryCapacity& exception){
+        return o << "Room with room id: "<<exception.getRoomId()<< " doesn't have the necessary capacity for the reservation."<<std::endl;
     }
 };
 

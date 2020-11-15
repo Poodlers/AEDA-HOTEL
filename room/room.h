@@ -6,16 +6,17 @@ class Room{
 public:
         Room(const int &floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight );
         int getFloor() const;
-        int getroomNumber() const;
+        int getRoomNumber() const;
         int getCapacity() const;
         float getPricePerNight() const;
+        unsigned int getRoomId() const;
         
         void setFloor(const int floor);
         void setRoomNumber(const unsigned int roomNumber);
         void setCapacity(const unsigned int capacity);
         void setPricePerNight(const float pricePerNight);
         void print();
-        void edit();
+        //void edit();
 private:
         int floor;
         unsigned int roomNumber;

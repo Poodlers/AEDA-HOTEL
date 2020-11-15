@@ -10,122 +10,186 @@
 #include <iostream>
 using namespace std;
 
+void checkIn(Hotel* hotel){
+    string name, NIF;
+    int pos;
 
-void Clients(Hotel *hotel){
-    for(Client* client: hotel->getClients()){
-        client->printConsole();
+    cout << "Date: " << hotel->getDate() <<endl;
+    cout << "Input the name and NIF of the client who wishes to check in."<<endl;
+    cout << "Name: "<<endl;
+    cleanCinBuffer();
+    getline(cin, name);
+    cout << "NIF: "<<endl;
+    cin >>NIF;
+
+    try{
+        pos = hotel->search(name,NIF, "Client");
+        hotel->getClients()[pos]->checkIn(hotel->getDate());
     }
+    catch(ClientDoesNotExist& msg){
+        cout <<msg;
+    }
+    catch(NIFIsNotValid& msg){
+        cout << msg;
+    }
+    catch(ClientWithThisNIFAlreadyExists& msg){
+        cout <<msg;
+    }
+    catch(NoReservationsToCheckIn& msg){
+        cout << msg;
+    }
+
+}
+
+void checkOut(Hotel* hotel){
+    string name, NIF;
+    int pos;
+
+    cout << "Date: " << hotel->getDate() <<endl;
+    cout << "Input the name and NIF of the client who wishes to check in."<<endl;
+    cout << "Name: "<<endl;
+    cleanCinBuffer();
+    getline(cin, name);
+    cout << "NIF: "<<endl;
+    cin >>NIF;
+
+    try{
+        pos = hotel->search(name,NIF, "Client");
+        hotel->getClients()[pos]->checkOut(hotel->getDate());
+    }
+    catch(ClientDoesNotExist& msg){
+        cout <<msg;
+    }
+    catch(NIFIsNotValid& msg){
+        cout << msg;
+    }
+    catch(ClientWithThisNIFAlreadyExists& msg){
+        cout <<msg;
+    }
+    catch(NoReservationsToCheckOut& msg){
+        cout << msg;
+    }
+
+}
+
+void clients(Hotel *hotel){
+
     cout << endl;
     int pos;
     string input;
     string name;
     string NIF;
     while(true){
+        cout << "Date: " << hotel->getDate() <<endl;
+        for(Client* client: hotel->getClients()){
+            client->printConsole();
+        }
         cout << "Write Help to see possible commands."<<endl;
-        cleanCinBuffer();
+
         cin >> input;
+        try{
+            if (input == "Help"){
+                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, Back and Help "<<endl;
+            }
+            else if(input == "Modify"){
 
-        if (input == "Help"){
-            cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Back and Help "<<endl;
-        }
-        else if(input == "Modify"){
-            cout << "Insert the name of the client you wish to modify:"<<endl;
-            cleanCinBuffer();
-            getline(cin, name);
-            cout << "Insert the NIF of the client you wish to modify:"<<endl;
-            cin >> NIF;
-            if (!CheckIfInteger(NIF)) {
-                throw NIFIsNotValid(name, -1);
-            }
-            pos = (hotel->search(name, stoi(NIF), "Client"));
-            if (pos == -1) {
-                throw ClientDoesNotExist(name, stoi(NIF));
-            }
-            cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
-            << endl;
-            cout << "New Name: " << endl;
-            getline(cin, name);
-            cout << "New NIF: " << endl;
-            cin >> NIF;
-            if (!CheckIfInteger(NIF) && NIF != ".") {
-                throw NIFIsNotValid(name, -1);
-            }
-            if (!validateNIF(NIF)) {
-                throw NIFIsNotValid(name, stoi(NIF));
-            }
-            for (Client *client1: hotel->getClients()) {
-                if (client1->getNIF() == stoi(NIF)) {
-                    throw ClientWithThisNIFAlreadyExists(name, stoi(NIF));
-                }
-            }
-            hotel->getClients()[pos]->personModify(name, NIF);
-        }
-        else if(input == "Remove"){
-            cout << "Insert the name of the client you wish to remove:"<<endl;
-            cleanCinBuffer();
-            getline(cin, name);
-            cleanCinBuffer();
-            cout << "Insert the NIF of the client you wish to remove:"<<endl;
-            cin >> NIF;
-            cleanCinBuffer();
+                cout << "Insert the name of the client you wish to modify:"<<endl;
 
-            if (!CheckIfInteger(NIF)){
-                throw NIFIsNotValid(name, -1);
-            }
-            pos = (hotel->search(name,stoi(NIF),"Client"));
-            if (pos == -1){
-                throw ClientDoesNotExist(name,stoi(NIF));
-            }
-            delete hotel->getClients()[pos];
-        }
-        else if (input == "Add"){
-            cout << "Insert the name of the client you wish to add:"<<endl;
-            cleanCinBuffer();
-            getline(cin, name);
-            cout << "Insert the NIF of the client you wish to add:"<<endl;
-            cin >> NIF;
-            if (!CheckIfInteger(NIF)){
-                throw NIFIsNotValid(name, -1);
-            }
-            pos = (hotel->search(name,stoi(NIF),"Client"));
-            if (pos == -1){
-                for (Client* client1: hotel->getClients()){
-                    if (client1->getNIF() == stoi(NIF)){
-                        throw ClientWithThisNIFAlreadyExists(name, stoi(NIF));
-                    }
-                }
-                Client* client = new Client(name,stoi(NIF));
-                hotel->addClient(client);
-                }
-            else throw ClientAlreadyExists(name,stoi(NIF));
-        }
+                cleanCinBuffer();
+                getline(cin, name);
 
-        else if (input == "Sort"){
-            cleanCinBuffer();
+                cout << "Insert the NIF of the client you wish to modify:"<<endl;
+                cin >> NIF;
 
-        }
-        else if (input == "Search"){
-            cout << "Insert the name of the client you wish to find:"<<endl;
-            cleanCinBuffer();
-            getline(cin, name);
-            cout << "Insert the NIF of the client you wish to find:"<<endl;
-            cin >> NIF;
+                pos = (hotel->search(name, NIF, "Client"));
 
-            if (!CheckIfInteger(NIF)){
-                throw NIFIsNotValid(name, -1);
+                cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
+                     << endl;
+
+                cout << "New Name: " << endl;
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "New NIF: " << endl;
+                cin >> NIF;
+
+                hotel->modifyClient(name,NIF,pos);
             }
-            pos = (hotel->search(name,stoi(NIF),"Client"));
-            if (pos == -1){
-                throw ClientDoesNotExist(name,stoi(NIF));
+            else if(input == "Remove"){
+                cout << "Insert the name of the client you wish to remove:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the client you wish to remove:"<<endl;
+                cin >> NIF;
+
+                pos = hotel->search(name,NIF,"Client");
+                hotel->removeClient(pos);
             }
-            hotel->getClients()[pos]->printConsole();
+            else if (input == "Add"){
+                cout << "Insert the name of the client you wish to add:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the client you wish to add:"<<endl;
+                cin >> NIF;
+
+                hotel->addClient(name,NIF);
+
+            }
+            else if (input == "Sort"){
+                cout << "Insert the type of sorting to be done. Options are: name, NIF, Amount of future reservations, Amount of past reservations, Current reservations,"
+                        " Amount of reservations, Most Recent Reservation"<<endl;
+                string sorting,order;
+                cin >> sorting;
+                cout <<"Should the order by ascending or descending?"<<endl;
+                cin>> order;
+
+                hotel->clientSort(sorting,order);
+            }
+            else if (input == "Search"){
+                cout << "Insert the name of the client you wish to find:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the client you wish to find:"<<endl;
+                cin >> NIF;
+
+                validateNIF(NIF, name);
+
+                pos = (hotel->search(name,NIF,"Client"));
+
+                hotel->getClients()[pos]->printConsole();
+            }
+            else if(input == "Back"){
+                return;
+            }
+            else if(input == "Time"){
+                hotel->incrementDate(1);
+            }
+            else{
+                cout << "Invalid command. Write Help to see possible commands."<<endl;
+            }
         }
-        else if(input == "Back"){
-            return;
+        catch(NIFIsNotValid& msg){
+            cout << msg;
         }
-        else{
-            cout << "Invalid command. Write Help to see possible commands."<<endl;
+        catch(ClientWithThisNIFAlreadyExists& msg){
+            cout << msg;
         }
+        catch(ClientDoesNotExist& msg){
+            cout << msg;
+        }
+        catch(ClientAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(SortingError& msg){
+            cout << msg;
+        }
+        system("CLS");
     }
 }
 
@@ -144,35 +208,18 @@ void system(Hotel* hotel){
     std::string input;
 
     while (true){
+        cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see commands"<<endl;
         getline(cin,input);
 
         if (input == "Clients"){
-            try{
-                Clients(hotel);
-            }
-            catch(NIFIsNotValid& msg){
-                cout << msg;
-            }
-            catch (ClientWithThisNIFAlreadyExists& msg){
-                cout << msg;
-            }
-            catch(ClientDoesNotExist& msg){
-                cout << msg;
-            }
-            catch(ClientAlreadyExists& msg){
-                cout << msg;
-            }
-            input ="Clients";
+            clients(hotel);
         }
         else if (input == "Rooms"){
 
         }
         else if (input == "LogIn"){
             try{
-                if(hotel->getLoggedInState()){
-                    throw AlreadyLoggedIn();
-                }
                 string username, password;
                 cout << "Insert Username"<<endl;
                 cin >> username;
@@ -185,15 +232,21 @@ void system(Hotel* hotel){
             catch(IncorrectCredentials& msg){
                 cout << msg;
             }
+            catch(AlreadyLoggedIn& msg){
+                cout << msg;
+            }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservatio, CheckIn, CheckOut and Exit"<<endl;
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservation, Time, CheckIn, CheckOut and Exit"<<endl;
         }
         else if(input == "CheckIn"){
-
+            checkIn(hotel);
+        }
+        else if(input == "Time"){
+            hotel->incrementDate(1);
         }
         else if (input == "CheckOut"){
-
+            checkOut(hotel);
         }
         else if(input == "LogOut"){
             try{
@@ -221,41 +274,36 @@ void system(Hotel* hotel){
         else{
             cout << "Invalid command. Write Help to see possible commands."<<endl;
         }
-
+        system("CLS");
     }
 }
 
 Hotel* createHotel(){
-    string input;
-    cout << "input the name of the hotel file (without .txt)"<< endl;
-    cin >> input;
-    cleanCinBuffer();
-    try {
-        Hotel *hotel = new Hotel(input);
-        return hotel;
+    while(true){
+        string input;
+        cout << "input the name of the hotel file (without .txt)"<< endl;
+        cin >> input;
+        cleanCinBuffer();
+        try {
+            Hotel *hotel = new Hotel(input);
+            return hotel;
+        }
+        catch(FileNotFound& msg){
+            cout <<msg;
+        }
+        catch(HotelFileHasWrongFormat& msg){
+            cout << msg;
+        }
+        catch(NIFIsNotValid& msg){
+            cout <<msg;
+        }
     }
-    catch(FileNotFound& msg){
-        cout <<msg;
-    }
-    catch(HotelFileHasWrongFormat& msg){
-        cout << msg;
-    }
-    catch(NIFIsNotValid& msg){
-        cout <<msg;
-    }
-
 }
 
 int main(){
 
     Hotel* hotel = createHotel();
-
-    try{
-        system(hotel);
-    }
-    catch(AlreadyLoggedIn& msg){
-        cout << msg;
-    }
+    system(hotel);
 
     return 0;
 }

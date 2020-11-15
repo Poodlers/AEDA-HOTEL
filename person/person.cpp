@@ -33,7 +33,7 @@ void Person::personModify(const std::string& name, const std::string& NIF){
         this->name = name;
     }
     if(NIF != "."){
-        this->NIF = stoi(NIF);
+        this->NIF =stoi(NIF);
     }
 }
 

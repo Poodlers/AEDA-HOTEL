@@ -5,8 +5,6 @@
 #include <iostream>
 #include <iomanip>
 
-int Reservation::reservationId = 0;
-
 Date::Date(const int &day, const int &month, const int &year){
     this->day = day;
     this->month = month;
@@ -112,8 +110,8 @@ bool Date::operator >(const Date& date){
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
     Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
-    reservationId++;
-    this->reservationNumber = reservationId;
+    reservationId = rand();
+    this->reservationId = reservationId;
     this->reservationSize = reservationSize;
     this->roomId = roomId;
     this->checkIn =checkIn;
@@ -121,16 +119,14 @@ Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&
 
 }
 Reservation :: Reservation(const std::string & reservation){
-    //receives reservationSize,dayIn-monthIn-yearIn,dayOut-monthOut-yearOut,roomId
+    //receives reservationSize,dayIn-monthIn-yearIn,dayOut-monthOut-yearOut,roomId,reservationId
     std::stringstream ss(reservation);
     std::string dates;
-    int day, month, year;
+    int day, month, year, reservationId;
     char ignore;
-    reservationId++;
-    this->reservationNumber = reservationId;
     ss>>this->reservationSize>> ignore >>  day >> ignore >> month   >> ignore >>  year;
     Date dateIn(day,month,year);
-    ss>> ignore >>  day  >> ignore >>  month >> ignore >> year >>ignore >>  this->roomId;
+    ss>> ignore >>  day  >> ignore >>  month >> ignore >> year >>ignore >>  this->roomId >> this->reservationId;
     Date dateOut(day,month,year);
     this->checkIn = dateIn;
     this->checkOut = dateOut;
@@ -145,8 +141,8 @@ Date Reservation::getCheckOut() const{
     return this->checkOut;
 }
 
-int Reservation::getReservationNumber() const {
-    return this->reservationNumber;
+int Reservation::getReservationId() const {
+    return this->reservationId;
 }
 
 int Reservation::getReservationSize() const {
@@ -158,15 +154,14 @@ int Reservation::getRoomId() const {
 }
 
 void Reservation::print() {
-    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << this->getReservationNumber()
+    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << this->getReservationId()
               << std::setw(25) << this->getReservationSize()<< this->getCheckIn()
                << this->getCheckOut()
               << std::setw(8) << this->getRoomId();
 }
 
-
-void Reservation::setReservationNumber(const int & reservationNumber){
-    this->reservationNumber =reservationNumber;
+void Reservation::setReservationId(const int & reservationId){
+    this->reservationId =reservationId;
 }
 void Reservation::setReservationSize(const int & reservationSize){
     this->reservationSize =reservationSize;
@@ -181,7 +176,7 @@ void Reservation::setRoomId(const int& roomId){
     this->roomId =roomId;
 }
 
-
+/*
 void Reservation::edit() {
     std::string edit;
     std::cout << "Edit the Reservation's information as follows: " << std::endl;
@@ -201,4 +196,4 @@ void Reservation::edit() {
     std::cout << "Room Id: " << std::endl;
     edit = GetNumberInput(10,9,CheckIfInteger);
     if (edit != ".") this->setRoomId(std::stoi(edit));
-}
+}*/

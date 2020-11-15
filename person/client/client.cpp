@@ -21,25 +21,32 @@ void Client::addNewReservation(Reservation *reservation){
 
 }
 
-bool Client::checkIn( Date *date) {
-    int currentResev = this->futureReservations.size();
-    for (Reservation *reservation: this->futureReservations) {
-        if (reservation->getCheckIn() == *date) {
-            this->futureReservations.push_back(reservation);
+void Client::checkIn( Date date) {
+    int numberOfFutureReservations = this->futureReservations.size();
+    for (int i = 0; i < futureReservations.size(); i++) {
+        if (futureReservations[i]->getCheckIn() == date) {
+            this->currentReservations.push_back(futureReservations[i]);
+            this->futureReservations.erase(futureReservations.begin()+i);
         }
-        if ((reservation->getCheckIn() > *date) && (reservation->getCheckOut() < *date)) {
-            std::cout << "The checkIn for room " << reservation->getRoomId() << " was "
-                      << reservation->getCheckIn() - *date << " days late." << std::endl;
-            reservation->setCheckIn(*date);
-            this->futureReservations.push_back(reservation);
-        }
-        if (reservation->getCheckOut() < *date){
-            this->history.push_back(reservation);
-            std::cout << "The checkIn for room " << reservation->getRoomId() <<" was "<< reservation->getCheckIn() - *date <<" days late."<<std::endl;
+        if ((futureReservations[i]->getCheckIn() > date) && (futureReservations[i]->getCheckOut() < date)) {
+            std::cout << "The checkIn for room " << futureReservations[i]->getRoomId() << " was "
+                      << futureReservations[i]->getCheckIn() - date << " days late." << std::endl;
+            futureReservations[i]->setCheckIn(date);
+            this->currentReservations.push_back(futureReservations[i]);
+            this->futureReservations.erase(futureReservations.begin()+i);
         }
     }
-    if (currentResev == this->futureReservations.size()) return true;
-    return false;
+    if (numberOfFutureReservations == this->futureReservations.size()) throw NoReservationsToCheckIn(this->getName(),this->getNIF());
+}
+
+void Client::archiveExpiredReservations(Date date){
+    for (int i = 0; i < futureReservations.size(); i++){
+        if (futureReservations[i]->getCheckOut() < date){
+            this->history.push_back(futureReservations[i]);
+            this->futureReservations.erase(futureReservations.begin()+i);
+            std::cout << "Reservation " << futureReservations[i]->getReservationId() <<" for client: " << this->name << " with NIF: " << this->NIF << "has expired."<<std::endl;
+        }
+    }
 }
 
 void Client::printConsole(){
@@ -65,6 +72,29 @@ bool Client::operator==(Client* client){
     return ((this->getName() == client->getName()) && (this->getNIF() == client->getNIF()));
 }
 
+std::vector<Reservation*> Client::getCurrentReservations() const{
+    return this->currentReservations;
+}
+
+void Client::checkOut( Date date){
+    int numberOfCurrentReservations = this->currentReservations.size();
+    for (int i = 0; i < currentReservations.size(); i++) {
+        if (futureReservations[i]->getCheckOut() == date) {
+            this->history.push_back(futureReservations[i]);
+            this->currentReservations.erase(currentReservations.begin()+i);
+        }
+        if (currentReservations[i]->getCheckOut() < date) {
+            std::cout << "The checkOut for room " << futureReservations[i]->getRoomId() << " was "
+                      << futureReservations[i]->getCheckIn() - date << " days early." << std::endl;
+            currentReservations[i]->setCheckOut(date);
+            this->history.push_back(futureReservations[i]);
+            this->currentReservations.erase(currentReservations.begin()+i);
+        }
+    }
+    if (numberOfCurrentReservations == this->currentReservations.size()) throw NoReservationsToCheckOut(this->getName(),this->getNIF());
+}
+
+/*
 void Client::edit() {
     std::string edit;
     std::cout << "Edit the client's information as follows: " << std::endl;
@@ -77,4 +107,5 @@ void Client::edit() {
     std::cout << "NIF: " << std::endl;
     edit = GetNumberInput(5,5,CheckIfInteger);
     if(edit != ".") this->setNIF(std::stoi(edit));
-}
+
+}*/

@@ -18,7 +18,6 @@ add_executable(
         aeda_hotel_projeto
         testing.cpp
         GUI/utils.cpp
-        GUI/buttons.cpp
         room/room.cpp
         room/suite.cpp
         room/noviewroom.cpp

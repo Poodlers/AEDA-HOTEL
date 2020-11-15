@@ -11,14 +11,18 @@ public:
     Client(const std::string &name, const unsigned int &NIF);
 
     std::vector<Reservation*>& getHistory();
-    void addToHistory(Reservation *reservation);
     std::vector<Reservation*> getFutureReservations() const;
+    std::vector<Reservation*> getCurrentReservations() const;
+
+    void addToHistory(Reservation *reservation);
     void addNewReservation(Reservation *reservation);
-    bool checkOut( Date *date);
-    bool checkIn( Date *date);
+    void checkOut( Date date);
+    void checkIn( Date date);
+    void archiveExpiredReservations(Date date);
     void printConsole();
     bool operator==(Client* client);
     void edit();
+
 
 private:
     std::vector<Reservation*> history;

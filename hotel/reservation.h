@@ -2,6 +2,8 @@
 #define RESERVATION_H
 #include <string>
 
+
+
 class Date{
 private:
     int year;
@@ -31,23 +33,22 @@ public:
     Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
     Reservation(const std::string & reservation);
 
-    int getReservationNumber() const;
+    int getReservationId() const;
     int getReservationSize() const;
     Date getCheckIn() const;
     Date getCheckOut() const;
     int getRoomId() const;
 
-    void setReservationNumber(const int & reservationNumber);
+    void setReservationId(const int & reservationId);
     void setReservationSize(const int & reservationSize);
     void setCheckIn(const Date& checkIn);
     void setCheckOut(const Date& checkOut);
     void setRoomId(const int& roomId);
-    void edit();
+    //void edit();
     void print();
 
 private:
-    static int reservationId;
-    int reservationNumber;
+    int reservationId;
     int reservationSize;
     Date checkIn ;
     Date checkOut;

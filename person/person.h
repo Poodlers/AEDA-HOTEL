@@ -12,7 +12,6 @@ public:
     void setNIF(const unsigned int & NIF);
     virtual void print();
     virtual void personModify(const std::string& name, const std::string& NIF);
-    bool operator ==(Person* person);
 
 protected:
     std::string name;

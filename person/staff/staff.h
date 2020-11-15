@@ -14,7 +14,7 @@ public:
     void setWage(const float wage);
     void setYearsOfService(const int yearsOfService);
     virtual void print() override;
-    virtual void edit();
+    //virtual void edit();
 protected:
     float wage;
     unsigned int yearsOfService;
@@ -35,7 +35,7 @@ public:
     std::vector<int> getFloorsAssigned() const;
     std::string getType();
     void print() override;
-    void edit() override;
+    //void edit() override;
 
 private:
     int numberOfFloorsBeingMonitored;
@@ -49,7 +49,7 @@ public:
     void setShift(const bool& shift);
     std::string getType();
     void print() override;
-    void edit() override;
+    //void edit() override;
 
 private:
     bool shift; //true for day, false for night
@@ -63,7 +63,7 @@ public:
     std::string getType();
     std::string getPassword();
     void print() override;
-    void edit() override;
+    //void edit() override;
 
 private:
     unsigned int evaluation; //0 if manager has not been evaluated, 1 to 5 they have been evaluated

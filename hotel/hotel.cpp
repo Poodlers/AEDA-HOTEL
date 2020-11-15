@@ -5,6 +5,45 @@
 #include "../GUI/utils.h"
 #include "../exceptions/exceptions.h"
 
+Date Hotel::date(10,11,2020);
+
+Date Hotel::getDate() const{
+    return date;
+}
+
+void Hotel::incrementDate(const int& i){
+    date = date + i;
+
+    for(Client* client: clients){
+        client->archiveExpiredReservations(this->date);
+    }
+}
+
+void Hotel::checkIfFloorIsValid(unsigned int floor){
+    for (int i = firstFloor; i <= firstFloor + numberOfFloors; i++){
+        if (i == floor){
+            break;
+        }
+        if (i == firstFloor + numberOfFloors){
+            throw FloorDosNotExist(floor);
+        }
+    }
+}
+void Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
+    for (Room* room: rooms){
+        if(room->getRoomNumber() == roomNumber && room->getRoomId() == roomId){
+            return;
+        }
+        if(room->getRoomNumber() == roomNumber && room->getRoomId() != roomId){
+            throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(roomNumber,roomId,"Room Number");
+        }
+        if(room->getRoomNumber() != roomNumber && room->getRoomId() == roomId){
+            throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(roomNumber,roomId,"Room Id");
+        }
+    }
+    throw RoomDoesNotExist(roomNumber, roomId);
+}
+
 Hotel::Hotel(const std::string &hotelFile) {
     std::ifstream file;
     std::string getData;
@@ -28,28 +67,35 @@ Hotel::Hotel(const std::string &hotelFile) {
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
-    ss << getData;
-    ss >> check;
-    ss.clear();
-    if(ss.fail()){
-        throw HotelFileHasWrongFormat("Number of floors should be an integer");
+
+
+    try{
+        checkIfPositiveInteger(getData, "Number of Floors");
     }
-    if (check < 0){
-        throw HotelFileHasWrongFormat("Number of floors should be a positive integer.");
+    catch(NotAPositiveInt& msg){
+        std::cout << msg;
+        throw HotelFileHasWrongFormat("Next element must be the number of floors.");
     }
-    this->floors = check;
+    catch(NotAnInt& msg){
+        std::cout << msg;
+        throw HotelFileHasWrongFormat("Next element must be the number of floors.");
+    }
+    this->numberOfFloors = stoi(getData);
+
 
     std::getline(file,getData);
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
-    ss << getData;
-    ss >> check;
-    ss.clear();
-    if(ss.fail()) {
-        throw HotelFileHasWrongFormat("First floor should be an integer");
+
+    try{
+        checkIfInteger(getData,"First Floor");
     }
-    this->firstFloor = check;
+    catch(NotAnInt& msg){
+        std::cout <<msg;
+        throw HotelFileHasWrongFormat("Next element has to be the number of the first floor.");
+    }
+    this->firstFloor = stoi(getData);
 
     std::getline(file,getData);
     if (getData.empty()){
@@ -60,35 +106,60 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
 
 
-    int floor;
-    unsigned int roomNumber;
-    unsigned int roomId;
-    unsigned int capacity;
-    float price;
+    std::string floor;
+    std::string roomNumber;
+    std::string roomId;
+    std::string capacity;
+    std::string price;
     std::string type;
 
     while(std::getline(file,getData) && getData!="Staff"){
         ss<<getData;
-        ss >> floor >> roomNumber >> roomId >> capacity>> price;
-        if(ss.fail()) {
-            throw HotelFileHasWrongFormat("Floor, Room Number, Room Id, capacity and price should be integers");
+        ss >> floor >> roomNumber >> roomId >> capacity>> price >> type;
+        try{
+            checkIfInteger(floor,"Room Floor");
+            checkIfFloorIsValid(stoi(floor));
+            checkIfPositiveInteger(roomNumber,"Room Number");
+            checkIfPositiveInteger(roomId,"Room ID");
+            checkIfPositiveInteger(capacity,"Capacity");
+            checkIfValidPriceOrWage(price, "Price");
+            searchForRoom(stoi(roomId),stoi(roomNumber));
+            throw HotelFileHasWrongFormat("Room Already Exists! Must not repeat rooms.");
         }
-        if (roomId < 0 || capacity<=0 || price <= 0){
-            throw HotelFileHasWrongFormat("Room Id, capacity and price should be positive integers. Capacity and price can't be 0.");
+        catch(NotAnInt& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("Elements floor, room number, room ID and capacity have to be integers and appear in this order.");
         }
-        ss>>type;
+        catch(NotAPositiveInt& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("Elements room number, room ID and capacity have to be positive integers and appear in this order.");
+        }
+        catch(FloorDosNotExist& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("The floor must be within the ones declared at the begging of the file.");
+        }
+        catch(NotAPositiveFloat& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("Price must be a positive float or an integer.");
+        }
+        catch(RoomWithThisRoomIdOrRoomNumberAlreadyExists& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("Must not repeat room numbers and room IDs");
+        }
+        catch(RoomDoesNotExist){}
+
         if (type == "Suite"){
-            Suite* suite = new Suite(floor,roomNumber,roomId,capacity,price);
+            Suite* suite = new Suite(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stoi(price));
             rooms.push_back(suite);
             freeSuits ++;
         }
         else if(type == "ViewRoom"){
-            ViewRoom* viewRoom = new ViewRoom(floor,roomNumber,roomId,capacity,price);
+            ViewRoom* viewRoom = new ViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stoi(price));
             rooms.push_back(viewRoom);
             freeRoomsWithView ++;
         }
         else if (type == "NoViewRoom"){
-            NoViewRoom* noViewRoom = new NoViewRoom(floor,roomNumber,roomId,capacity,price);
+            NoViewRoom* noViewRoom = new NoViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stoi(price));
             rooms.push_back(noViewRoom);
             freeRoomsWithOutView++;
         }
@@ -111,8 +182,8 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     std::string name;
     std::string surname;
-    unsigned int NIF;
-    float salary;
+    std::string  NIF;
+    std::string  salary;
     std::string shift;
     bool shift1;
     std::string password;
@@ -121,24 +192,34 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss<<getData;
         ss >> name>>surname;
         name = name + " " + surname;
-        ss >> NIF >> salary;
-        if(ss.fail()) {
-            throw HotelFileHasWrongFormat("NIF and salary should be integers");
+        ss >> NIF >> salary>>type;
+        try{
+            checkIfValidPriceOrWage(salary, name);
+            search(name,NIF,"Staff");
+            throw StaffMemberAlreadyExists(name,stoi(NIF));
         }
-        if(!validateNIF(std::to_string(NIF))){
-            throw NIFIsNotValid(name, NIF);
+        catch(NIFIsNotValid& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("NIFs must be valid.");
         }
-        if (salary<=0){
-            throw HotelFileHasWrongFormat("Nif and salary should be positive integers, salary should not be 0.");
+        catch(NotAPositiveFloat& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("Price must be a positive float or an integer.");
         }
-        ss >> type;
+        catch(StaffMemberWithThisNIFAlreadyExists& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Staff Members must have distinct NIFs");
+        }
+        catch(StaffMemberDoesNotExist& msg){}
+
+
         if (type == "Receptionist"){
-            Receptionist* receptionist = new Receptionist(name,NIF,salary);
+            Receptionist* receptionist = new Receptionist(name,stoi(NIF),stoi(salary));
             staff.push_back(receptionist);
 
         }
         else if(type == "Responsible"){
-            Responsible* responsible = new Responsible(name,NIF,salary);
+            Responsible* responsible = new Responsible(name,stoi(NIF),stoi(salary));
             staff.push_back(responsible);
         }
         else if (type == "Janitor"){
@@ -148,13 +229,13 @@ Hotel::Hotel(const std::string &hotelFile) {
             else if (shift == "day") shift1 = true;
             else { throw HotelFileHasWrongFormat("Invalid shift for janitor "+ name + ". Should be 'night' or 'day'.");}
 
-            Janitor* janitor = new Janitor(shift1,name,NIF,salary);
+            Janitor* janitor = new Janitor(shift1,name,stoi(NIF),stoi(salary));
             staff.push_back(janitor);
         }
         else if (type == "Manager"){
             ss >> password;
 
-            Manager* manager = new Manager(name,NIF,salary,password);
+            Manager* manager = new Manager(name,stoi(NIF),stoi(salary),password);
             staff.push_back(manager);
         }
         else{
@@ -178,13 +259,25 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss>>name>>surname;
         name = name + " "+surname;
         ss>>NIF;
-        if(ss.fail()) {
-            throw HotelFileHasWrongFormat("NIF and salary should be integers");
+        try{
+            search(name,NIF,"Client");
+            throw ClientAlreadyExists(name,stoi(NIF));
         }
-        if(!validateNIF(std::to_string(NIF))){
-            throw NIFIsNotValid(name, NIF);
+        catch(NIFIsNotValid& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("NIFs must be valid.");
         }
-        Client* client = new Client(name,NIF);
+        catch(NotAPositiveFloat& msg){
+            std::cout <<msg;
+            throw HotelFileHasWrongFormat("Price must be a positive float or an integer.");
+        }
+        catch(ClientWithThisNIFAlreadyExists& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Staff Members must have distinct NIFs");
+        }
+        catch(ClientDoesNotExist& msg){}
+
+        Client* client = new Client(name,stoi(NIF));
         while(ss>>reservation1){
             Reservation* reservation = new Reservation(reservation1);
             client->addToHistory(reservation);
@@ -212,22 +305,47 @@ Hotel::Hotel(const std::string &hotelFile) {
 
 }
 
-int Hotel::search(const std::string& name, const unsigned int& NIF, const std::string& type){
-    int pos;
+int Hotel::search(const std::string& name, const std::string& NIF, const std::string& type){
+    int pos = 0;
+
+    try{
+        validateNIF(NIF, name);
+    }
+    catch(...){
+        throw;
+    }
+
     if (type == "Client"){
-        Client* client = new Client(name,NIF);
-        pos = sequentialSearch(this->clients, client);
-        return pos;
+        for(Client* client: clients){
+            if (client->getName() == name && client->getNIF() == stoi(NIF)){
+                return pos;
+            }
+            if (client->getName() != name && client->getNIF() == stoi(NIF)){
+                throw ClientWithThisNIFAlreadyExists(name, stoi(NIF));
+            }
+            pos ++;
+        }
+        throw ClientDoesNotExist(name, stoi(NIF));
     }
     else if (type == "Staff"){
-        Staff* staffMember = new Staff(name,NIF,0);
-        pos = sequentialSearch(this->staff, staffMember);
-        return pos;
+        for(Staff* staff: staff){
+            if (staff->getName() == name && staff->getNIF() == stoi(NIF)){
+                return pos;
+            }
+            if (staff->getName() != name && staff->getNIF() == stoi(NIF)){
+                throw StaffMemberWithThisNIFAlreadyExists(name, stoi(NIF));
+            }
+            pos ++;
+        }
+        throw StaffMemberDoesNotExist(name, stoi(NIF));
     }
 }
 
 void Hotel::logIn(const std::string &name, const std::string &password) {
     if(name == getManagerName() && password == getManagerPassword()){
+        if (loggedIn == true){
+            throw AlreadyLoggedIn();
+        }
         loggedIn = true;
     }
     throw IncorrectCredentials();
@@ -273,6 +391,189 @@ std::vector<Staff *>& Hotel::getStaff() {
 bool Hotel::getLoggedInState() const{
     return this->loggedIn;
 }
-void Hotel::addClient(Client* client){
-    this->clients.push_back(client);
+void Hotel::addClient(const std::string& name, const std::string& NIF){
+    try{
+        int pos = search(name,NIF, "Client");
+    }
+    catch(ClientDoesNotExist& msg){
+        Client* client = new Client(name, stoi(NIF));
+        this->clients.push_back(client);
+        return;
+    }
+    catch(...){
+        throw;
+    }
+    throw ClientAlreadyExists(name, stoi(NIF));
+}
+
+void Hotel::modifyClient(const std::string & name, std::string& NIF, const int& pos){
+    if (NIF != "."){
+        try{
+            validateNIF(NIF,name);
+        }
+        catch(...){
+            throw;
+        }
+    }
+
+    clients[pos]->personModify(name,NIF);
+}
+
+void Hotel::removeClient(const int& pos){
+    clients.erase(clients.begin() + pos);
+}
+
+void Hotel::clientSort(const std::string& input,const std::string& order1){
+    bool order;
+    if (order1 == "Ascending"){
+        order = true;
+    }
+    else if (order1 == "Descending"){
+        order = false;
+    }
+    else throw SortingError();
+
+    if (input == "name"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getName() < c2->getName();
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getName() > c2->getName();
+            });
+        }
+    }
+    else if (input == "NIF"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getNIF() < c2->getNIF();
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getNIF() > c2->getNIF();
+            });
+        }
+    }
+    else if (input == "Amount of future reservations"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getFutureReservations().size() < c2->getFutureReservations().size();
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getFutureReservations().size() > c2->getFutureReservations().size();
+            });
+        }
+    }
+    else if (input == "Amount of past reservations"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getHistory().size() < c2->getHistory().size();
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getHistory().size() > c2->getHistory().size();
+            });
+        }
+    }
+    else if (input == "Current reservations"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getCurrentReservations().size() < c2->getCurrentReservations().size();
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return c1->getCurrentReservations().size() > c2->getCurrentReservations().size();
+            });
+        }
+    }
+    else if (input == "Amount of reservations"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return (c1->getCurrentReservations().size() + c1->getHistory().size() + c1->getCurrentReservations().size()) < (c2->getCurrentReservations().size() + c2->getHistory().size() + c2->getCurrentReservations().size());
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                return (c1->getCurrentReservations().size() + c1->getHistory().size() + c1->getCurrentReservations().size()) > (c2->getCurrentReservations().size() + c2->getHistory().size() + c2->getCurrentReservations().size());
+            });
+        }
+    }
+    else if(input == "Most Recent Reservation"){
+        if (order){
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                Date min1(31,12,9999), min2(31,12,9999);
+                if(!c1->getCurrentReservations().empty()){
+                    for(Reservation* reservation: c1->getCurrentReservations()){
+                        if (reservation->getCheckIn() > min1){
+                            min1 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                else{
+                    for(Reservation* reservation: c1->getHistory()){
+                        if (reservation->getCheckIn() > min1){
+                            min1 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                if(!c2->getCurrentReservations().empty()) {
+                    for (Reservation *reservation: c2->getCurrentReservations()) {
+                        if (reservation->getCheckIn() > min2) {
+                            min2 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                else{
+                    for(Reservation* reservation: c2->getHistory()){
+                        if (reservation->getCheckIn() > min2){
+                            min2 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                return min1 < min2;
+            });
+        }
+        else{
+            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
+                Date min1(31,12,9999), min2(31,12,9999);
+                if(!c1->getCurrentReservations().empty()){
+                    for(Reservation* reservation: c1->getCurrentReservations()){
+                        if (reservation->getCheckIn() > min1){
+                            min1 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                else{
+                    for(Reservation* reservation: c1->getHistory()){
+                        if (reservation->getCheckIn() > min1){
+                            min1 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                if(!c2->getCurrentReservations().empty()) {
+                    for (Reservation *reservation: c2->getCurrentReservations()) {
+                        if (reservation->getCheckIn() > min2) {
+                            min2 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                else{
+                    for(Reservation* reservation: c2->getHistory()){
+                        if (reservation->getCheckIn() > min2){
+                            min2 = reservation->getCheckIn();
+                        }
+                    }
+                }
+                return min1 < min2;
+            });
+        }
+    }
+    else throw SortingError();
 }

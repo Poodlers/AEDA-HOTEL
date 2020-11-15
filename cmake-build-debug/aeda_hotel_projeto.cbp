@@ -80,12 +80,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/buttons.cpp">
-			<Option target="aeda_hotel_projeto"/>
-		</Unit>
-		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/buttons.h">
-			<Option target="aeda_hotel_projeto"/>
-		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/utils.cpp">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>

@@ -13,11 +13,14 @@ Room::Room(const int &floor, const unsigned int & roomNumber ,const unsigned int
 int Room::getFloor() const{
     return this->floor;
 }
-int Room::getroomNumber() const{
+int Room::getRoomNumber() const{
     return this->roomNumber;
 }
 int Room::getCapacity() const{
     return this->capacity;
+}
+unsigned int Room::getRoomId() const{
+    return this->roomId;
 }
 float Room::getPricePerNight() const{
     return this->pricePerNight;
@@ -35,7 +38,7 @@ void Room::setPricePerNight(const float pricePerNight){
     this->pricePerNight = pricePerNight;
 }
 
-
+/*
 void Room::edit() {
     std::string edit;
     std::cout << "Edit the Room's information as follows: " << std::endl;
@@ -56,7 +59,7 @@ void Room::edit() {
     edit = GetNumberInput(20,9,CheckIfFloat);
     if (edit != ".") this->setPricePerNight(std::stof(edit));
 
-}
+}*/
 
 
 void Room::print() {

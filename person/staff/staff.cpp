@@ -31,7 +31,7 @@ void Staff::print() {
               std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService();
 
 }
-
+/*
 void Staff::edit() {
     std::string edit;
     std::cout << "Edit the Staff's information as follows: " << std::endl;
@@ -51,7 +51,7 @@ void Staff::edit() {
     std::cout << "Years of Service: " << std::endl;
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") this->setYearsOfService(std::stoi(edit));
-}
+}*/
 
 std::string Staff::getType(){
     return "staff";

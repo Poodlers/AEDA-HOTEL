@@ -302,6 +302,14 @@ public:
     }
 };
 
+class ClientCantMakeThisReservation{
+public:
+    ClientCantMakeThisReservation(){};
+    friend std::ostream& operator <<(std::ostream& o, ClientCantMakeThisReservation& exception){
+        return o << "Client has to have reserved at least one other room before they can make a reservation for a suite."<<std::endl;
+    }
+};
+
 /*ROOMS*/
 
 class RoomDoesNotExist{

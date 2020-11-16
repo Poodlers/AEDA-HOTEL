@@ -426,6 +426,10 @@ Hotel::Hotel(const std::string &hotelFile) {
 void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in){
     for (Room* room: rooms){
         if (room->getRoomId() == roomId){
+            Suite* suite = dynamic_cast<Suite*>(room);
+            if (suite != nullptr && clients[posClient]->getHistory().size() == 0){
+                throw ClientCantMakeThisReservation();
+            }
             if (room->getCapacity() < capacity){
                 throw RoomDoesNotHaveTheNecessaryCapacity(roomId);
             }
@@ -685,6 +689,7 @@ void Hotel::assignFloorsToResponsibles(){
         for (Responsible* responsible: responsibles){
             responsible->assignFloor(floors);
             floors--;
+            if (floors == 0) break;
         }
     }
 

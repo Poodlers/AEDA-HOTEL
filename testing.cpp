@@ -11,7 +11,7 @@
 using namespace std;
 
 void reservation(Hotel * hotel){
-    string name, NIF, capacity, roomId,date;
+    string name, NIF, capacity, roomId, date;
     int pos;
     string type;
 
@@ -38,6 +38,54 @@ void reservation(Hotel * hotel){
         Date* checkOut = new Date(date);
         hotel->makeReservation(stoi(roomId),checkIn,checkOut,stoi(capacity),pos,-1,false);
     }
+    catch(...){
+        throw;
+    }
+}
+
+
+void Rooms(Hotel * hotel){
+    string input;
+    cout << "Date: " << hotel->getDate() <<endl;
+
+    for (Room* room: hotel->getRooms()){
+        room->print();
+    }
+
+    cout << "Write Help to see possible commands."<<endl;
+
+    cin >> input;
+
+    string roomId, roomNumber, capacity, type, price, floor;
+    try{
+        if (input == "Help"){
+
+        }
+        else if (input == "Back"){
+
+        }
+        else if (input == "Add"){
+
+        }
+        else if (input == "Modify"){
+
+        }
+        else if (input == "Remove"){
+
+        }
+        else if (input == "Reservation"){
+            reservation(hotel);
+        }
+        else if (input == "Sort"){
+
+        }
+        else if (input == "Search"){
+
+        }
+        else{
+
+        }
+    }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
     }
@@ -58,6 +106,12 @@ void reservation(Hotel * hotel){
     }
     catch(ReservationHasInvalidDates& msg){
         cout << msg;
+    }
+    catch(ClientCantMakeThisReservation& msg){
+        cout << msg;
+    }
+    catch(RoomDoesNotExist& msg){
+        cout <<msg;
     }
 }
 
@@ -414,11 +468,6 @@ void staff(Hotel *hotel){
     }
 }
 
-void Rooms(){
-    //should display rooms and their disponibility
-    // be able to add rooms or remove them?
-}
-
 void system(Hotel* hotel){
 
     std::string input;
@@ -452,7 +501,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservation, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Time and Exit"<<endl;
         }
         else if(input == "Time"){
             hotel->incrementDate(1);
@@ -478,9 +527,6 @@ void system(Hotel* hotel){
         }
         else if (input == "Countability"){
 
-        }
-        else if (input == "Reservation"){
-            reservation(hotel);
         }
         else if (input == "Exit"){
             string filename;

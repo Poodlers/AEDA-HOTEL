@@ -87,6 +87,10 @@ std::vector<Reservation*> Client::getCurrentReservations() const{
     return this->currentReservations;
 }
 
+void Client::addCurrentReservation(Reservation *reservation){
+    currentReservations.push_back(reservation);
+}
+
 void Client::checkOut( Date date){
     if (this->currentReservations.size()==0) throw NoReservationsToCheckOut(this->getName(),this->getNIF());
     for (int i = 0; i < currentReservations.size(); i++) {

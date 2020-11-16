@@ -16,6 +16,8 @@ public:
 
     void addToHistory(Reservation *reservation);
     void addNewReservation(Reservation *reservation);
+    void addCurrentReservation(Reservation *reservation);
+
     void checkOut( Date date);
     void checkIn( Date date);
     void archiveExpiredReservations(Date date);

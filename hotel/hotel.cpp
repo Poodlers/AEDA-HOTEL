@@ -263,7 +263,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     std::string surname;
     std::string NIF;
     std::string salary1;
-    std::string shift;
+    std::string shift,typeSearch;
     int year;
     bool shift1;
     std::string password;
@@ -275,7 +275,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss >> NIF >> year >> salary1>>type;
         try{
             checkIfValidPriceOrWage(salary1, name);
-            search(name, NIF, (std::string &) "Staff");
+            search(name, NIF,  typeSearch="Staff");
             throw StaffMemberAlreadyExists(name,stoi(NIF));
         }
         catch(NIFIsNotValid& msg){
@@ -345,7 +345,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         name = name + " "+surname;
         ss>>NIF;
         try{
-            search(name, NIF, (std::string &) "Client");
+            search(name, NIF, typeSearch = "Client");
             throw ClientAlreadyExists(name,stoi(NIF));
         }
         catch(NIFIsNotValid& msg){
@@ -396,12 +396,15 @@ Hotel::Hotel(const std::string &hotelFile) {
                 std::cout<<msg;
                 throw HotelFileHasWrongFormat("A reservation that can't be check in at the time is marked as checked in.");
             }
+            catch(ClientCantMakeThisReservation& msg){
+                std::cout <<msg;
+                throw HotelFileHasWrongFormat(name + "'s first reservation can't be for a suite.");
+            }
         }
         pos++;
         ss.clear();
     }
-
-    this->incrementDate(1);
+    this->assignFloorsToResponsibles();
 
     /*
     std::string product_types;
@@ -440,7 +443,12 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
             }
             try{
                 Reservation* reservation = new Reservation(capacity,checkIn,checkOut,roomId,reservationId);
-                clients[posClient]->addNewReservation(reservation);
+                if(*checkOut < date){
+                    clients[posClient]->addToHistory(reservation);
+                }
+                else if (in) clients[posClient]->addCurrentReservation(reservation);
+                else clients[posClient]->addNewReservation(reservation);
+
                 room->addReservation(reservation);
                 if (in == true){
                     clients[posClient]->checkIn(date);

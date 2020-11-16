@@ -50,6 +50,7 @@ void Rooms(Hotel * hotel){
 
     for (Room* room: hotel->getRooms()){
         room->print();
+        cout <<endl;
     }
 
     cout << "Write Help to see possible commands."<<endl;
@@ -323,6 +324,7 @@ void staff(Hotel *hotel){
         cout << "Date: " << hotel->getDate() <<endl;
         for(Staff* staff: hotel->getStaff()){
             staff->print();
+            cout<<endl;
         }
         cout << "Write Help to see possible commands."<<endl;
 

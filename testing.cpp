@@ -10,9 +10,40 @@
 #include <iostream>
 using namespace std;
 
+void Reservation(Hotel * hotel){
+    string name, NIF;
+    int pos;
+    string type;
+
+    cout << endl << "Input the name and NIF of the client making the reservation."<<endl;
+    cout << "Name: "<<endl;
+    cleanCinBuffer();
+    getline(cin, name);
+    cout << "NIF: "<<endl;
+    cin >>NIF;
+
+    try{
+        pos = hotel->search(name,NIF, type ="Client");
+        cout << ""
+    }
+    catch(ClientDoesNotExist& msg){
+        cout <<msg;
+    }
+    catch(NIFIsNotValid& msg){
+        cout << msg;
+    }
+    catch(ClientWithThisNIFAlreadyExists& msg){
+        cout <<msg;
+    }
+    catch(NoReservationsToCheckIn& msg){
+        cout << msg;
+    }
+}
+
 void checkIn(Hotel* hotel){
     string name, NIF;
     int pos;
+    string type;
 
     cout << endl << "Input the name and NIF of the client who wishes to check in."<<endl;
     cout << "Name: "<<endl;
@@ -22,7 +53,7 @@ void checkIn(Hotel* hotel){
     cin >>NIF;
 
     try{
-        pos = hotel->search(name,NIF, "Client");
+        pos = hotel->search(name,NIF, type ="Client");
         hotel->getClients()[pos]->checkIn(hotel->getDate());
     }
     catch(ClientDoesNotExist& msg){
@@ -43,6 +74,7 @@ void checkIn(Hotel* hotel){
 void checkOut(Hotel* hotel){
     string name, NIF;
     int pos;
+    string type;
 
     cout <<endl<< "Input the name and NIF of the client who wishes to check in."<<endl;
     cout << "Name: "<<endl;
@@ -52,7 +84,7 @@ void checkOut(Hotel* hotel){
     cin >>NIF;
 
     try{
-        pos = hotel->search(name,NIF, "Client");
+        pos = hotel->search(name,NIF, type = "Client");
         hotel->getClients()[pos]->checkOut(hotel->getDate());
     }
     catch(ClientDoesNotExist& msg){
@@ -359,11 +391,6 @@ void staff(Hotel *hotel){
         system("pause");
         system("CLS");
     }
-}
-
-void Reservations(){
-    //should display current reservations, allow to edit, remove or make make new reservations
-    //option to sort by date or by client
 }
 
 void Rooms(){

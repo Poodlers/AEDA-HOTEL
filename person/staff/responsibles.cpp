@@ -12,6 +12,11 @@ void Responsible::assignFloor(const unsigned int & floor){
     this->floorsAssigned.push_back(floor);
 }
 
+void Responsible::clearAssignedFloors(){
+    this->numberOfFloorsBeingMonitored ++;
+    this->floorsAssigned.clear();
+}
+
  int Responsible::getNumberOfFloorsBringMonitored() const{
     return this->numberOfFloorsBeingMonitored;
 };

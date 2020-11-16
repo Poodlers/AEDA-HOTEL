@@ -52,3 +52,21 @@ void Janitor::edit() {
 
 
 }*/
+
+void Janitor::janitorModify(const std::string& name, const std::string& NIF, const std::string& shift){
+    if (name != "."){
+        this->name = name;
+    }
+    if(NIF != "."){
+        this->NIF =stoi(NIF);
+    }
+    if(shift != "."){
+        if (shift == "day"){
+            this->shift = true;
+        }
+        else if (shift == "night"){
+            this->shift = false;
+        }
+        else throw InvalidShift();
+    }
+}

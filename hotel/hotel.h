@@ -14,17 +14,9 @@
 class Hotel{
 public:
     Hotel(const std::string &hotelFile);
-    void addRoom(const Room& room);
-    void addStaff(const Staff& staff);
     void saveHotel(const std::string &hotelFile);
 
-    void assignFloorsToResponsibles();
-
-    void sortByStaffPosition();
-    void sortStaffBySalary();
-    void sortReservationsByDay();
-    void sortCurrentReservations();
-    void sortReservationsFromNewClients();
+    void addRoom(const Room& room);
 
     void checkIfFloorIsValid(unsigned int floors);
     int searchForRoom(unsigned int roomId, unsigned int roomNumber);
@@ -39,22 +31,29 @@ public:
     Date getDate() const;
     void incrementDate(const int& i);
 
-    std::vector<Staff*>& getStaff();
     std::vector<Room*>& getRooms();
 
     /*PEOPLE*/
-    int search(const std::string& name, const std::string& NIF,const std::string& type);
+    int search(const std::string& name, const std::string& NIF,std::string& type);
     /**/
 
     /*CLIENTS*/
     std::vector<Client*>& getClients();
 
-    void makeReservation(const Reservation& restart);
-
     void modifyClient(const std::string & name, std::string& NIF, const int& pos);
     void removeClient(const int& pos);
     void addClient(const std::string& name, const std::string& NIF);
     void clientSort(const std::string& input,const std::string& order1);
+    /**/
+
+    /*Staff*/
+    std::vector<Staff*>& getStaff();
+
+    void modifyStaffMember(const std::string & name, std::string& NIF, const int& pos, const std::string& type, const std::string& shift,const std::string& password);
+    void removeStaffMember(const int& pos);
+    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type, const std::string& password, const std::string& shift, const std::string& wage);
+    void staffSort(const std::string& input,const std::string& order1);
+    void assignFloorsToResponsibles();
     /**/
 
     /*LOGIN-LOGOUT*/

@@ -31,6 +31,7 @@ class Responsible : public Receptionist{
 public:
     Responsible(const std::string& name, const unsigned int & NIF, const float& wage);
     void assignFloor(const unsigned int & floor);
+    void clearAssignedFloors();
     int getNumberOfFloorsBringMonitored() const;
     std::vector<int> getFloorsAssigned() const;
     std::string getType();
@@ -49,6 +50,7 @@ public:
     void setShift(const bool& shift);
     std::string getType();
     void print() override;
+    void janitorModify(const std::string& name, const std::string& NIF, const std::string& shift);
     //void edit() override;
 
 private:
@@ -63,6 +65,7 @@ public:
     std::string getType();
     std::string getPassword();
     void print() override;
+    void managerModify(const std::string& name, const std::string& NIF, const std::string & password);
     //void edit() override;
 
 private:

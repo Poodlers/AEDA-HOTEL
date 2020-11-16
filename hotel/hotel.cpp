@@ -275,7 +275,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss >> NIF >> year >> salary1>>type;
         try{
             checkIfValidPriceOrWage(salary1, name);
-            search(name,NIF,"Staff");
+            search(name, NIF, (std::string &) "Staff");
             throw StaffMemberAlreadyExists(name,stoi(NIF));
         }
         catch(NIFIsNotValid& msg){
@@ -345,7 +345,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         name = name + " "+surname;
         ss>>NIF;
         try{
-            search(name,NIF,"Client");
+            search(name, NIF, (std::string &) "Client");
             throw ClientAlreadyExists(name,stoi(NIF));
         }
         catch(NIFIsNotValid& msg){
@@ -451,7 +451,7 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
     throw RoomDoesNotExist(roomId);
 }
 
-int Hotel::search(const std::string& name, const std::string& NIF, const std::string& type){
+int Hotel::search(const std::string& name, const std::string& NIF, std::string& type){
     int pos = 0;
 
     try{
@@ -476,6 +476,22 @@ int Hotel::search(const std::string& name, const std::string& NIF, const std::st
     else if (type == "Staff"){
         for(Staff* staff: staff){
             if (staff->getName() == name && staff->getNIF() == stoi(NIF)){
+                Manager* manager = dynamic_cast<Manager*>(staff);
+                Receptionist* receptionist = dynamic_cast<Receptionist*>(staff);
+                Responsible* responsible = dynamic_cast<Responsible*>(staff);
+                Janitor* janitor = dynamic_cast<Janitor*>(staff);
+                if (manager != nullptr){
+                    type = "manager";
+                }
+                else if (responsible != nullptr){
+                    type = "responsible";
+                }
+                else if (receptionist != nullptr){
+                    type = "receptionist";
+                }
+                else if (janitor != nullptr){
+                    type = "janitor";
+                }
                 return pos;
             }
             if (staff->getName() != name && staff->getNIF() == stoi(NIF)){
@@ -540,8 +556,9 @@ bool Hotel::getLoggedInState() const{
     return this->loggedIn;
 }
 void Hotel::addClient(const std::string& name, const std::string& NIF){
+    std::string type = "Client";
     try{
-        int pos = search(name,NIF, "Client");
+        int pos = search(name, NIF, type);
     }
     catch(ClientDoesNotExist& msg){
         Client* client = new Client(name, stoi(NIF));
@@ -567,8 +584,110 @@ void Hotel::modifyClient(const std::string & name, std::string& NIF, const int& 
     clients[pos]->personModify(name,NIF);
 }
 
+void Hotel::modifyStaffMember(const std::string & name, std::string& NIF, const int& pos, const std::string& type, const std::string& shift,const std::string& password){
+    if (NIF != "."){
+        try{
+            validateNIF(NIF,name);
+        }
+        catch(...){
+            throw;
+        }
+    }
+    if (type == "janitor"){
+        Janitor* janitor = dynamic_cast<Janitor*> (staff[pos]);
+        staff.erase(staff.begin()+pos);
+        try{
+            janitor->janitorModify(name,NIF,shift);
+        }
+        catch(InvalidShift& msg){
+            throw;
+        }
+        staff.insert(staff.begin()+pos,janitor);
+    }
+    else if(type == "manager"){
+        Manager* manager = dynamic_cast<Manager*> (staff[pos]);
+        staff.erase(staff.begin()+pos);
+        manager->managerModify(name,NIF,password);
+        staff.insert(staff.begin()+pos,manager);
+
+    }
+    else {
+        staff[pos]->personModify(name,NIF);
+    }
+}
+
+void Hotel::addStaffMember(const std::string& name, const std::string& NIF, const std::string& type, const std::string& password, const std::string& shift, const std::string& wage){
+    std::string type1;
+    bool shf;
+    try{
+        int pos = search(name, NIF, type1 = "staff");
+        checkIfValidPriceOrWage(wage, "wage");
+    }
+    catch(StaffMemberDoesNotExist& msg){
+        if (type == "manager"){
+            for (Staff* staff: staff){
+                Manager* manager = dynamic_cast<Manager*>(staff);
+                if (manager != nullptr){
+                    throw ManagerAlreadyExists(manager->getName(),manager->getNIF());
+                }
+            }
+            Manager* manager = new Manager(name, stoi(NIF), stof(wage), password);
+            this->staff.push_back(manager);
+        }
+        else if (type == "janitor"){
+            if(shift == "day"){
+                shf = true;
+            }
+            else if (shift == "night"){
+                shf = false;
+            }
+            else throw InvalidShift();
+
+            Janitor* janitor = new Janitor(shf,name, stoi(NIF), stof(wage));
+            this->staff.push_back(janitor);
+        }
+        else if (type == "responsible"){
+            Responsible* responsible = new Responsible(name, stoi(NIF), stof(wage));
+            this->staff.push_back(responsible);
+        }
+        else if (type == "receptionist"){
+            Receptionist* receptionist = new Receptionist(name, stoi(NIF), stof(wage));
+            this->staff.push_back(receptionist);
+        }
+        else throw InvalidPosition(type,name);
+        return;
+    }
+    catch(...){
+        throw;
+    }
+    throw StaffMemberAlreadyExists(name, stoi(NIF));
+}
+
+void Hotel::removeStaffMember(const int &pos) {
+    staff.erase(staff.begin() + pos);
+}
+
 void Hotel::removeClient(const int& pos){
     clients.erase(clients.begin() + pos);
+}
+
+void Hotel::assignFloorsToResponsibles(){
+    std::vector<Responsible*> responsibles;
+    for (Staff* staff: staff){
+        Responsible* responsible = dynamic_cast<Responsible*> (staff);
+        if (responsible != nullptr){
+            responsible->clearAssignedFloors();
+            responsibles.push_back(responsible);
+        }
+    }
+    int floors = numberOfFloors;
+    while (floors != 0){
+        for (Responsible* responsible: responsibles){
+            responsible->assignFloor(floors);
+            floors--;
+        }
+    }
+
 }
 
 void Hotel::clientSort(const std::string& input,const std::string& order1){
@@ -721,6 +840,113 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
                     }
                 }
                 return min1 < min2;
+            });
+        }
+    }
+    else throw SortingError();
+}
+
+void Hotel::staffSort(const std::string& input,const std::string& order1){
+    bool order;
+    if (order1 == "Ascending"){
+        order = true;
+    }
+    else if (order1 == "Descending"){
+        order = false;
+    }
+    else throw SortingError();
+
+    if (input == "name"){
+        if (order){
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getName() < c2->getName();
+            });
+        }
+        else{
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getName() > c2->getName();
+            });
+        }
+    }
+    else if (input == "NIF"){
+        if (order){
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getNIF() < c2->getNIF();
+            });
+        }
+        else{
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getNIF() > c2->getNIF();
+            });
+        }
+    }
+    else if (input == "wage"){
+        if (order){
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getWage() < c2->getWage();
+            });
+        }
+        else{
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getWage() > c2->getWage();
+            });
+        }
+    }
+    else if (input == "years of service"){
+        if (order){
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getYearsOfService() < c2->getYearsOfService();
+            });
+        }
+        else{
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                return c1->getYearsOfService() > c2->getYearsOfService();
+            });
+        }
+    }
+    else if(input == "position"){
+        if (order){
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                Manager* manager1 = dynamic_cast<Manager*> (c1);
+                Receptionist* receptionist1 = dynamic_cast<Receptionist*> (c1);
+                Responsible* responsible1 = dynamic_cast<Responsible*> (c1);
+                Janitor* janitor1 = dynamic_cast<Janitor*> (c1);
+                Manager* manager2 = dynamic_cast<Manager*> (c2);
+                Receptionist* receptionist2 = dynamic_cast<Receptionist*> (c2);
+                Responsible* responsible2 = dynamic_cast<Responsible*> (c2);
+                Janitor* janitor2 = dynamic_cast<Janitor*> (c2);
+                if (manager1 == nullptr && manager2 != nullptr){
+                    return true;
+                }
+                if (manager1 == nullptr && responsible1 == nullptr && receptionist2 == nullptr && janitor2 == nullptr){
+                    return true;
+                }
+                if(janitor1 != nullptr && janitor2 == nullptr){
+                    return true;
+                }
+                else return false;
+            });
+        }
+        else{
+            sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
+                Manager* manager1 = dynamic_cast<Manager*> (c1);
+                Receptionist* receptionist1 = dynamic_cast<Receptionist*> (c1);
+                Responsible* responsible1 = dynamic_cast<Responsible*> (c1);
+                Janitor* janitor1 = dynamic_cast<Janitor*> (c1);
+                Manager* manager2 = dynamic_cast<Manager*> (c2);
+                Receptionist* receptionist2 = dynamic_cast<Receptionist*> (c2);
+                Responsible* responsible2 = dynamic_cast<Responsible*> (c2);
+                Janitor* janitor2 = dynamic_cast<Janitor*> (c2);
+                if (manager2 == nullptr && manager1 != nullptr){
+                    return true;
+                }
+                if (manager2 == nullptr && responsible2 == nullptr && receptionist1 == nullptr && janitor1 == nullptr){
+                    return true;
+                }
+                if(janitor2 != nullptr && janitor1 == nullptr){
+                    return true;
+                }
+                else return false;
             });
         }
     }

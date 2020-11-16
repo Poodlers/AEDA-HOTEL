@@ -77,6 +77,7 @@ void clients(Hotel *hotel){
     string input;
     string name;
     string NIF;
+    string type;
     while(true){
         cout << "Date: " << hotel->getDate() <<endl;
         for(Client* client: hotel->getClients()){
@@ -87,7 +88,7 @@ void clients(Hotel *hotel){
         cin >> input;
         try{
             if (input == "Help"){
-                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, CheckIn, CheckOut Back and Help "<<endl;
+                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, CheckIn, CheckOut, Back and Help "<<endl;
             }
             else if(input == "Modify"){
 
@@ -99,7 +100,7 @@ void clients(Hotel *hotel){
                 cout << "Insert the NIF of the client you wish to modify:"<<endl;
                 cin >> NIF;
 
-                pos = (hotel->search(name, NIF, "Client"));
+                pos = (hotel->search(name, NIF, type ="Client"));
 
                 cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
                      << endl;
@@ -123,7 +124,7 @@ void clients(Hotel *hotel){
                 cout << "Insert the NIF of the client you wish to remove:"<<endl;
                 cin >> NIF;
 
-                pos = hotel->search(name,NIF,"Client");
+                pos = hotel->search(name,NIF,type="Client");
                 hotel->removeClient(pos);
             }
             else if (input == "Add"){
@@ -145,7 +146,7 @@ void clients(Hotel *hotel){
                 string sorting,order;
                 cleanCinBuffer();
                 getline(cin,sorting);
-                cout <<"Should the order by ascending or descending?"<<endl;
+                cout <<"Should the order by Ascending or Descending?"<<endl;
                 cin>> order;
 
                 hotel->clientSort(sorting,order);
@@ -159,9 +160,7 @@ void clients(Hotel *hotel){
                 cout << "Insert the NIF of the client you wish to find:"<<endl;
                 cin >> NIF;
 
-                validateNIF(NIF, name);
-
-                pos = (hotel->search(name,NIF,"Client"));
+                pos = (hotel->search(name,NIF,type="Client"));
 
                 hotel->getClients()[pos]->printConsole();
             }
@@ -195,6 +194,167 @@ void clients(Hotel *hotel){
         }
         catch(SortingError& msg){
             cout << msg;
+        }
+        system("pause");
+        system("CLS");
+    }
+}
+
+void staff(Hotel *hotel){
+    if(!hotel->getLoggedInState()){
+        throw AccessRestricted();
+    }
+    system("CLS");
+    cout << endl;
+    int pos;
+    string input;
+    string name;
+    string NIF;
+    string type;
+    string password, shift, wage;
+    while(true){
+        cout << "Date: " << hotel->getDate() <<endl;
+        for(Staff* staff: hotel->getStaff()){
+            staff->print();
+        }
+        cout << "Write Help to see possible commands."<<endl;
+
+        cin >> input;
+        try{
+            if (input == "Help"){
+                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, DistributeFloors, Back and Help "<<endl;
+            }
+            else if(input == "Modify"){
+
+                cout << "Insert the name of the staff member you wish to modify:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the staff member you wish to modify:"<<endl;
+                cin >> NIF;
+
+                pos = (hotel->search(name, NIF, type = "Staff"));
+
+                cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
+                     << endl;
+
+                cout << "New Name: " << endl;
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "New NIF: " << endl;
+                cin >> NIF;
+
+                if (type == "manager"){
+                    cout << "New Password: " << endl;
+                    cin >> password;
+                }
+                if (type == "janitor"){
+                    cout << "New Shift: " << endl;
+                    cin >> shift;
+                }
+                hotel->modifyStaffMember(name,NIF,pos,type,shift,password);
+
+            }
+            else if(input == "Remove"){
+                cout << "Insert the name of the staff member you wish to remove:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the staff member you wish to remove:"<<endl;
+                cin >> NIF;
+
+                pos = hotel->search(name,NIF,type = "Staff");
+                hotel->removeStaffMember(pos);
+            }
+            else if (input == "Add"){
+                cout << "Insert the name of the staff member you wish to add:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the staff member you wish to add:"<<endl;
+                cin >> NIF;
+
+                cout << "Insert the position of the staff member you wish to add:"<<endl;
+                cin >> type;
+
+                cout << "Insert the wage of the staff member you wish to add:"<<endl;
+                cin >> wage;
+
+                if (type == "janitor"){
+                    cout << "Insert the shift of the janitor you wish to add:"<<endl;
+                    cin >> shift;
+                }
+                else if (type == "manager"){
+                    cout << "Insert the password of the manager you wish to add:"<<endl;
+                    cin >> shift;
+                }
+                hotel->addStaffMember(name,NIF,type,password,shift,wage);
+
+            }
+            else if (input == "Sort"){
+                cout << "Insert the type of sorting to be done. Options are: name, NIF, wage, position and years of service"<<endl;
+                string sorting,order;
+                cleanCinBuffer();
+                getline(cin,sorting);
+                cout <<"Should the order by Ascending or Descending?"<<endl;
+                cin >> order;
+
+                hotel->staffSort(sorting,order);
+            }
+            else if (input == "Search"){
+                cout << "Insert the name of the staff member you wish to find:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the staff member you wish to find:"<<endl;
+                cin >> NIF;
+
+                pos = (hotel->search(name,NIF,type="Staff"));
+
+                hotel->getStaff()[pos]->print();
+            }
+            else if(input == "Back"){
+                return;
+            }
+            else if(input == "Time"){
+                hotel->incrementDate(1);
+            }
+            else if(input == "DistributeFloors"){
+                hotel->assignFloorsToResponsibles();
+                cout<< "Floors reassigned."<<endl;
+            }
+            else{
+                cout << "Invalid command. Write Help to see possible commands."<<endl;
+            }
+        }
+        catch(NIFIsNotValid& msg){
+            cout << msg;
+        }
+        catch(StaffMemberWithThisNIFAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(StaffMemberDoesNotExist& msg){
+            cout << msg;
+        }
+        catch(StaffMemberAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(SortingError& msg){
+            cout << msg;
+        }
+        catch(InvalidShift& msg){
+            cout <<msg;
+        }
+        catch(ManagerAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(InvalidPosition& msg){
+            cout<<msg;
         }
         system("pause");
         system("CLS");
@@ -258,7 +418,12 @@ void system(Hotel* hotel){
             }
         }
         else if(input == "Staff"){
-
+            try{
+                staff(hotel);
+            }
+            catch(AccessRestricted& msg){
+                cout << msg;
+            }
         }
         else if (input =="Providers"){
 

@@ -123,26 +123,38 @@ public:
     }
 };
 
-class InvalidType{
+class InvalidRoomType{
 private:
-    int Id;
+    unsigned int Id;
     std::string type;
-    std::string name;
+
 public:
-    InvalidType(const unsigned int &Id, const std::string& type,const std::string& name){
+    InvalidRoomType(const unsigned int &Id, const std::string& type){
         this->Id = Id;
         this->type = type;
-        this->name = name;
     }
 
     unsigned int getId() const{ return this->Id; }
     std::string  getType() const{ return this->type; }
+    friend std::ostream& operator <<(std::ostream& o, InvalidRoomType& exception){
+        return o << "Room with Id " << exception.getId() << " has the invalid type "<< exception.getType()<< ". Type must be 'Suite', 'ViewRoom' or 'NoViewRoom'."<< std::endl;
+    }
+};
+
+class InvalidPosition{
+private:
+    std::string type;
+    std::string name;
+public:
+    InvalidPosition(const std::string& type,const std::string& name){
+        this->type = type;
+        this->name = name;
+    }
+
+    std::string getType() const{ return this->type; }
     std::string getName() const {return this->name;}
-    friend std::ostream& operator <<(std::ostream& o, InvalidType& exception){
-        if (exception.getId() != -1)
-            return o << "Room with Id " << exception.getId() << " has the invalid type "<< exception.getType()<< ". Type must be 'Suite', 'ViewRoom' or 'NoViewRoom'."<< std::endl;
-        else
-            return o << "Staff member " << exception.getName() << " has the invalid position "<< exception.getType()<< ". Position must be 'Receptionist', 'Responsible', 'Janitor' or 'Manager'."<< std::endl;
+    friend std::ostream& operator <<(std::ostream& o, InvalidPosition& exception){
+        return o << "Staff member " << exception.getName() << " has the invalid position "<< exception.getType()<< ". Position must be 'Receptionist', 'Responsible', 'Janitor' or 'Manager'."<< std::endl;
     }
 };
 
@@ -217,6 +229,29 @@ public:
     }
 };
 
+class ManagerAlreadyExists{
+private:
+    std::string name;
+    unsigned int NIF;
+public:
+    ManagerAlreadyExists(const std::string &name, const unsigned int& NIF){
+        this->name = name;
+        this->NIF = NIF;
+    }
+    std::string getName() const{ return this->name; }
+    unsigned int getNIF() const{ return this->NIF; }
+    friend std::ostream& operator <<(std::ostream& o, ManagerAlreadyExists& exception){
+        return o << "There already exists a manager. Name: "<<exception.getName()<<" NIF: " << exception.getNIF() <<std::endl;
+    }
+};
+
+class InvalidShift{
+public:
+    InvalidShift(){};
+    friend std::ostream& operator <<(std::ostream& o, InvalidShift& exception){
+        return o << "Shift must be night or day;"<<std::endl;
+    }
+};
 /*CLIENT*/
 
 class ClientAlreadyExists{
@@ -367,6 +402,14 @@ public:
     IncorrectCredentials(){}
     friend std::ostream & operator << (std::ostream& o,const IncorrectCredentials& exception){
         return o<<"Password or username are incorrect."<<std::endl;
+    }
+};
+
+class AccessRestricted{
+public:
+    AccessRestricted(){}
+    friend std::ostream & operator << (std::ostream& o,const AccessRestricted& exception){
+        return o<<"Only the manager has access to this area, log in to access it."<<std::endl;
     }
 };
 

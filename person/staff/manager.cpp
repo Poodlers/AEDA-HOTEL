@@ -54,3 +54,15 @@ void Manager::edit() {
     if (edit != ".") this->setEvaluation(std::stoi(edit));
 
 }*/
+
+void Manager::managerModify(const std::string& name, const std::string& NIF, const std::string& password){
+    if (name != "."){
+        this->name = name;
+    }
+    if(NIF != "."){
+        this->NIF =stoi(NIF);
+    }
+    if(password != "."){
+        this->password = password;
+    }
+}

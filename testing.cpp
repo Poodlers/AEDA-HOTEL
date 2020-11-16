@@ -10,8 +10,8 @@
 #include <iostream>
 using namespace std;
 
-void Reservation(Hotel * hotel){
-    string name, NIF;
+void reservation(Hotel * hotel){
+    string name, NIF, capacity, roomId,date;
     int pos;
     string type;
 
@@ -24,7 +24,19 @@ void Reservation(Hotel * hotel){
 
     try{
         pos = hotel->search(name,NIF, type ="Client");
-        cout << ""
+        cout << "Insert the reservation size: "<<endl;
+        cin>>capacity;
+        checkIfPositiveInteger(capacity, "capacity");
+        cout << "Choose Room (type in room ID): "<<endl;
+        cin>>roomId;
+        checkIfPositiveInteger(roomId, "roomId");
+        cout << "Choose Check In date (in format day-month-year): "<<endl;
+        cin>>date;
+        Date* checkIn = new Date(date);
+        cout << "Choose Check Out date (in format day-month-year): "<<endl;
+        cin>>date;
+        Date* checkOut = new Date(date);
+        hotel->makeReservation(stoi(roomId),checkIn,checkOut,stoi(capacity),pos,-1,false);
     }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
@@ -35,7 +47,16 @@ void Reservation(Hotel * hotel){
     catch(ClientWithThisNIFAlreadyExists& msg){
         cout <<msg;
     }
-    catch(NoReservationsToCheckIn& msg){
+    catch(NotAPositiveInt& msg){
+        cout << msg;
+    }
+    catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
+        cout << msg;
+    }
+    catch(AnotherReservationForThisRoomAlreadyExistsAtThisTime& msg){
+        cout << msg;
+    }
+    catch(ReservationHasInvalidDates& msg){
         cout << msg;
     }
 }
@@ -459,7 +480,7 @@ void system(Hotel* hotel){
 
         }
         else if (input == "Reservation"){
-
+            reservation(hotel);
         }
         else if (input == "Exit"){
             string filename;

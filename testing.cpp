@@ -143,7 +143,8 @@ void clients(Hotel *hotel){
                 cout << "Insert the type of sorting to be done. Options are: name, NIF, Amount of future reservations, Amount of past reservations, Current reservations,"
                         " Amount of reservations, Most Recent Reservation"<<endl;
                 string sorting,order;
-                cin >> sorting;
+                cleanCinBuffer();
+                getline(cin,sorting);
                 cout <<"Should the order by ascending or descending?"<<endl;
                 cin>> order;
 
@@ -195,8 +196,7 @@ void clients(Hotel *hotel){
         catch(SortingError& msg){
             cout << msg;
         }
-        cout<<"Wait a second ..."<<endl;
-        Sleep(1000);
+        system("pause");
         system("CLS");
     }
 }
@@ -230,11 +230,10 @@ void system(Hotel* hotel){
             try{
                 string username, password;
                 cout << "Insert Username"<<endl;
-                cin >> username;
                 cleanCinBuffer();
+                getline(cin,username);
                 cout << "Insert Password"<<endl;
                 cin >> password;
-                cleanCinBuffer();
                 hotel->logIn(username,password);
             }
             catch(IncorrectCredentials& msg){
@@ -271,11 +270,17 @@ void system(Hotel* hotel){
 
         }
         else if (input == "Exit"){
+            string filename;
+            cout << "Input the name of the file to save the current hotel!"<<endl;
+            cleanCinBuffer();
+            getline(cin,filename);
+            hotel->saveHotel(filename);
             break;
         }
         else{
             cout << "Invalid command. Write Help to see possible commands."<<endl;
         }
+        system("pause");
         system("CLS");
     }
 }

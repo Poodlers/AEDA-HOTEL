@@ -47,17 +47,21 @@ int Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
 
 void Hotel::saveHotel(const std::string &hotelFile){
     std::ofstream file;
+    std::stringstream ss;
+    std::string f;
     file.open(hotelFile+ ".txt");
     if(!file.is_open()){
 
     }
     file << "Hotel-File\n";
-    file << date.getDay()<<"-"<<date.getMonth()<<"-"<<date.getYear();
+    file << date.getDay()<<"-"<<date.getMonth()<<"-"<<date.getYear()<<"\n";
     file << this->numberOfFloors<<"\n";
     file << this->firstFloor<<"\n";
     file << "Rooms"<<"\n";
     for (Room* room: rooms){
-        file << room->getFloor() << " " <<room->getRoomNumber() << " " << room->getRoomId() << " " << room->getCapacity() << " " <<room->getPricePerNight() << " ";
+        ss<<room->getPricePerNight();
+        ss>>f;
+        file << room->getFloor() << " " <<room->getRoomNumber() << " " << room->getRoomId() << " " << room->getCapacity() << " " << f << " ";
         Suite* suite = dynamic_cast<Suite*>(room);
         NoViewRoom* noViewRoom = dynamic_cast<NoViewRoom*>(room);
         ViewRoom* ViewRoom = dynamic_cast<class ViewRoom*>(room);
@@ -73,7 +77,9 @@ void Hotel::saveHotel(const std::string &hotelFile){
     }
     file << "Staff\n";
     for(Staff* staff: staff){
-        file << staff->getName()<< " " << staff->getNIF() << " " << staff->getWage() << " ";
+        ss<<staff->getWage();
+        ss>>f;
+        file << staff->getName()<< " " << staff->getNIF() << " "<<date.getYear() - staff->getYearsOfService()<<" "<<f<<" ";
         Receptionist* receptionist = dynamic_cast<Receptionist*>(staff);
         Responsible* responsible = dynamic_cast<Responsible*>(staff);
         Janitor* janitor = dynamic_cast<Janitor*>(staff);
@@ -99,13 +105,13 @@ void Hotel::saveHotel(const std::string &hotelFile){
     for (Client* client: clients){
         file << client->getName()<< " " << client->getNIF()<< " ";
         for (Reservation* reservation: client->getHistory()){
-            file << reservation->getRoomId() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn().getDay()<<"-"<<reservation->getCheckIn().getMonth()<<"-"<<reservation->getCheckIn().getYear()<<","<<reservation->getCheckOut().getDay()<<"-"<<reservation->getCheckOut().getMonth()<<"-"<<reservation->getCheckOut().getYear()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
         }
         for (Reservation* reservation: client->getCurrentReservations()){
-            file << reservation->getRoomId() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",1 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn().getDay()<<"-"<<reservation->getCheckIn().getMonth()<<"-"<<reservation->getCheckIn().getYear()<<","<<reservation->getCheckOut().getDay()<<"-"<<reservation->getCheckOut().getMonth()<<"-"<<reservation->getCheckOut().getYear()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",1 ";
         }
         for (Reservation* reservation: client->getFutureReservations()){
-            file << reservation->getRoomId() <<","<<reservation->getCheckIn()<<","<<reservation->getCheckOut()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn().getDay()<<"-"<<reservation->getCheckIn().getMonth()<<"-"<<reservation->getCheckIn().getYear()<<","<<reservation->getCheckOut().getDay()<<"-"<<reservation->getCheckOut().getMonth()<<"-"<<reservation->getCheckOut().getYear()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
         }
         file<<"\n";
     }
@@ -184,19 +190,19 @@ Hotel::Hotel(const std::string &hotelFile) {
     std::string roomNumber;
     std::string roomId;
     std::string capacity;
-    std::string price;
+    std::string price1;
     std::string type;
 
     while(std::getline(file,getData) && getData!="Staff"){
         ss<<getData;
-        ss >> floor >> roomNumber >> roomId >> capacity>> price >> type;
+        ss >> floor >> roomNumber >> roomId >> capacity>> price1 >> type;
         try{
             checkIfInteger(floor,"Room Floor");
             checkIfFloorIsValid(stoi(floor));
             checkIfPositiveInteger(roomNumber,"Room Number");
             checkIfPositiveInteger(roomId,"Room ID");
             checkIfPositiveInteger(capacity,"Capacity");
-            checkIfValidPriceOrWage(price, "Price");
+            checkIfValidPriceOrWage(price1, "Price");
             searchForRoom(stoi(roomId),stoi(roomNumber));
             throw HotelFileHasWrongFormat("Room Already Exists! Must not repeat rooms.");
         }
@@ -222,18 +228,19 @@ Hotel::Hotel(const std::string &hotelFile) {
         }
         catch(RoomDoesNotExist){}
 
+        float price = stof(price1);
         if (type == "Suite"){
-            Suite* suite = new Suite(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stoi(price));
+            Suite* suite = new Suite(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),price);
             rooms.push_back(suite);
             freeSuits ++;
         }
         else if(type == "ViewRoom"){
-            ViewRoom* viewRoom = new ViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stoi(price));
+            ViewRoom* viewRoom = new ViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),price);
             rooms.push_back(viewRoom);
             freeRoomsWithView ++;
         }
         else if (type == "NoViewRoom"){
-            NoViewRoom* noViewRoom = new NoViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stoi(price));
+            NoViewRoom* noViewRoom = new NoViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),price);
             rooms.push_back(noViewRoom);
             freeRoomsWithOutView++;
         }
@@ -252,12 +259,10 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("Line should be 'Staff'");
     }
 
-    std::getline(file,getData);
-
     std::string name;
     std::string surname;
     std::string NIF;
-    std::string salary;
+    std::string salary1;
     std::string shift;
     int year;
     bool shift1;
@@ -267,9 +272,9 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss<<getData;
         ss >> name>>surname;
         name = name + " " + surname;
-        ss >> NIF >> year >> salary>>type;
+        ss >> NIF >> year >> salary1>>type;
         try{
-            checkIfValidPriceOrWage(salary, name);
+            checkIfValidPriceOrWage(salary1, name);
             search(name,NIF,"Staff");
             throw StaffMemberAlreadyExists(name,stoi(NIF));
         }
@@ -287,14 +292,17 @@ Hotel::Hotel(const std::string &hotelFile) {
         }
         catch(StaffMemberDoesNotExist& msg){}
 
+        float salary = stof(salary1);
 
         if (type == "Receptionist"){
-            Receptionist* receptionist = new Receptionist(name,stoi(NIF),stoi(salary));
+            Receptionist* receptionist = new Receptionist(name,stoi(NIF),salary);
+            receptionist->setYearsOfService(date.getYear()-year);
             staff.push_back(receptionist);
 
         }
         else if(type == "Responsible"){
-            Responsible* responsible = new Responsible(name,stoi(NIF),stoi(salary));
+            Responsible* responsible = new Responsible(name,stoi(NIF),salary);
+            responsible->setYearsOfService(date.getYear()-year);
             staff.push_back(responsible);
         }
         else if (type == "Janitor"){
@@ -304,13 +312,15 @@ Hotel::Hotel(const std::string &hotelFile) {
             else if (shift == "day") shift1 = true;
             else { throw HotelFileHasWrongFormat("Invalid shift for janitor "+ name + ". Should be 'night' or 'day'.");}
 
-            Janitor* janitor = new Janitor(shift1,name,stoi(NIF),stoi(salary));
+            Janitor* janitor = new Janitor(shift1,name,stoi(NIF),salary);
+            janitor->setYearsOfService(date.getYear()-year);
             staff.push_back(janitor);
         }
         else if (type == "Manager"){
             ss >> password;
 
-            Manager* manager = new Manager(name,stoi(NIF),stoi(salary),password);
+            Manager* manager = new Manager(name,stoi(NIF),salary,password);
+            manager->setYearsOfService(date.getYear()-year);
             staff.push_back(manager);
         }
         else{
@@ -483,6 +493,8 @@ void Hotel::logIn(const std::string &name, const std::string &password) {
             throw AlreadyLoggedIn();
         }
         loggedIn = true;
+        std::cout << "Logged in successfully."<<std::endl;
+        return;
     }
     throw IncorrectCredentials();
 }
@@ -686,13 +698,14 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
                         }
                     }
                 }
-                else{
+                else if (!c1->getHistory().empty()){
                     for(Reservation* reservation: c1->getHistory()){
                         if (reservation->getCheckIn() > min1){
                             min1 = reservation->getCheckIn();
                         }
                     }
                 }
+
                 if(!c2->getCurrentReservations().empty()) {
                     for (Reservation *reservation: c2->getCurrentReservations()) {
                         if (reservation->getCheckIn() > min2) {
@@ -700,7 +713,7 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
                         }
                     }
                 }
-                else{
+                else if (!c2->getHistory().empty()){
                     for(Reservation* reservation: c2->getHistory()){
                         if (reservation->getCheckIn() > min2){
                             min2 = reservation->getCheckIn();

@@ -315,7 +315,7 @@ void staff(Hotel *hotel){
     system("CLS");
     cout << endl;
     int pos;
-    string input;
+    string input, c;
     string name;
     string NIF;
     string type;
@@ -389,6 +389,14 @@ void staff(Hotel *hotel){
 
                 cout << "Insert the position of the staff member you wish to add:"<<endl;
                 cin >> type;
+
+                if (type == "manager"){
+                    cout << "This action will replace the manager. Write yes to proceed, and anything else to cancel" << endl;
+                    cin >> c;
+                    if (c != "yes"){
+                        continue;
+                    }
+                }
 
                 cout << "Insert the wage of the staff member you wish to add:"<<endl;
                 cin >> wage;

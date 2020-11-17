@@ -632,15 +632,16 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
     std::string type1;
     bool shf;
     try{
-        int pos = search(name, NIF, type1 = "staff");
+        int pos = search(name, NIF, type1 = "Staff");
         checkIfValidPriceOrWage(wage, "wage");
     }
     catch(StaffMemberDoesNotExist& msg){
         if (type == "manager"){
-            for (Staff* staff: staff){
-                Manager* manager = dynamic_cast<Manager*>(staff);
+            for (int i= 0; i< this->staff.size();i++){
+                Manager* manager = dynamic_cast<Manager*>(staff[i]);
                 if (manager != nullptr){
-                    throw ManagerAlreadyExists(manager->getName(),manager->getNIF());
+                    this->staff.erase(this->staff.begin()+ i);
+                    break;
                 }
             }
             Manager* manager = new Manager(name, stoi(NIF), stof(wage), password);
@@ -660,6 +661,7 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
         }
         else if (type == "responsible"){
             Responsible* responsible = new Responsible(name, stoi(NIF), stof(wage));
+            this->assignFloorsToResponsibles();
             this->staff.push_back(responsible);
         }
         else if (type == "receptionist"){
@@ -789,70 +791,87 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
         if (order){
             sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
                 Date min1(31,12,9999), min2(31,12,9999);
-                if(!c1->getCurrentReservations().empty()){
-                    for(Reservation* reservation: c1->getCurrentReservations()){
-                        if (reservation->getCheckIn() > min1){
-                            min1 = reservation->getCheckIn();
+                if(c1->getCurrentReservations().empty() && c2->getCurrentReservations().empty()&& c1->getHistory().empty() && c2->getHistory().empty()){
+                    return false;
+                }
+                else if ((!c1->getCurrentReservations().empty()||!c1->getHistory().empty()) && c2->getCurrentReservations().empty() && c2->getHistory().empty()){
+                    return false;
+                }
+                else if ((!c2->getCurrentReservations().empty()||!c2->getHistory().empty()) && c1->getCurrentReservations().empty() && c1->getHistory().empty()){
+                    return true;
+                }
+                else {
+                    if (!c1->getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c1->getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c1->getHistory()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
                         }
                     }
-                }
-                else{
-                    for(Reservation* reservation: c1->getHistory()){
-                        if (reservation->getCheckIn() > min1){
-                            min1 = reservation->getCheckIn();
+                    if (!c2->getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c2->getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c2->getHistory()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
                         }
                     }
+                    return min1 < min2;
                 }
-                if(!c2->getCurrentReservations().empty()) {
-                    for (Reservation *reservation: c2->getCurrentReservations()) {
-                        if (reservation->getCheckIn() > min2) {
-                            min2 = reservation->getCheckIn();
-                        }
-                    }
-                }
-                else{
-                    for(Reservation* reservation: c2->getHistory()){
-                        if (reservation->getCheckIn() > min2){
-                            min2 = reservation->getCheckIn();
-                        }
-                    }
-                }
-                return min1 < min2;
             });
         }
-        else{
-            sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
-                Date min1(31,12,9999), min2(31,12,9999);
-                if(!c1->getCurrentReservations().empty()){
-                    for(Reservation* reservation: c1->getCurrentReservations()){
-                        if (reservation->getCheckIn() > min1){
-                            min1 = reservation->getCheckIn();
+        else {
+            sort(clients.begin(), clients.end(), [](Client *c1, Client *c2) {
+                Date min1(31, 12, 9999), min2(31, 12, 9999);
+                if (c1->getCurrentReservations().empty() && c2->getCurrentReservations().empty() &&
+                    c1->getHistory().empty() && c2->getHistory().empty()) {
+                    return false;
+                } else if ((!c1->getCurrentReservations().empty() || !c1->getHistory().empty()) &&
+                           c2->getCurrentReservations().empty() && c2->getHistory().empty()) {
+                    return true;
+                } else if ((!c2->getCurrentReservations().empty() || !c2->getHistory().empty()) &&
+                           c1->getCurrentReservations().empty() && c1->getHistory().empty()) {
+                    return false;
+                } else {
+                    if (!c1->getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c1->getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c1->getHistory()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
                         }
                     }
-                }
-                else if (!c1->getHistory().empty()){
-                    for(Reservation* reservation: c1->getHistory()){
-                        if (reservation->getCheckIn() > min1){
-                            min1 = reservation->getCheckIn();
+                    if (!c2->getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c2->getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c2->getHistory()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
                         }
                     }
+                    return min1 > min2;
                 }
-
-                if(!c2->getCurrentReservations().empty()) {
-                    for (Reservation *reservation: c2->getCurrentReservations()) {
-                        if (reservation->getCheckIn() > min2) {
-                            min2 = reservation->getCheckIn();
-                        }
-                    }
-                }
-                else if (!c2->getHistory().empty()){
-                    for(Reservation* reservation: c2->getHistory()){
-                        if (reservation->getCheckIn() > min2){
-                            min2 = reservation->getCheckIn();
-                        }
-                    }
-                }
-                return min1 < min2;
             });
         }
     }

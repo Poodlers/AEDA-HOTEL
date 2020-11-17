@@ -18,8 +18,8 @@ public:
     void addNewReservation(Reservation *reservation);
     void addCurrentReservation(Reservation *reservation);
 
-    void checkOut( Date date);
-    void checkIn( Date date);
+    std::vector<int> checkOut (Date* date);
+    std::vector<int> checkIn (Date* date);
     void archiveExpiredReservations(Date date);
     void printConsole();
     bool operator==(Client* client);

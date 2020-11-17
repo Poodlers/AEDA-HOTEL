@@ -18,7 +18,7 @@ void Hotel::incrementDate(const int& i){
     }
 }
 
-void Hotel::checkIfFloorIsValid(unsigned int floor){
+void Hotel::checkIfFloorIsValid(const unsigned int& floor){
     for (int i = firstFloor; i <= firstFloor + numberOfFloors; i++){
         if (i == floor){
             break;
@@ -28,21 +28,40 @@ void Hotel::checkIfFloorIsValid(unsigned int floor){
         }
     }
 }
-int Hotel::searchForRoom(unsigned int roomId, unsigned int roomNumber){
+int Hotel::searchForRoom(const std::string& roomId, const std::string& roomNumber){
+    try{
+        checkIfPositiveInteger(roomId, "Room Id");
+        checkIfPositiveInteger(roomNumber, "Room Number");
+    }
+    catch(...){
+        throw;
+    }
     int pos = 0;
     for (Room* room: rooms){
-        if(room->getRoomNumber() == roomNumber && room->getRoomId() == roomId){
+        if(room->getRoomNumber() == stoi(roomNumber) && room->getRoomId() == stoi(roomId)){
             return pos;
         }
-        if(room->getRoomNumber() == roomNumber && room->getRoomId() != roomId){
-            throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(roomNumber,roomId,"Room Number");
+        if(room->getRoomNumber() == stoi(roomNumber) && room->getRoomId() != stoi(roomId)){
+            throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(stoi(roomNumber),stoi(roomId),"Room Number");
         }
-        if(room->getRoomNumber() != roomNumber && room->getRoomId() == roomId){
-            throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(roomNumber,roomId,"Room Id");
+        if(room->getRoomNumber() != stoi(roomNumber) && room->getRoomId() == stoi(roomId)){
+            throw RoomWithThisRoomIdOrRoomNumberAlreadyExists(stoi(roomNumber),stoi(roomId),"Room Id");
         }
         pos++;
     }
-    throw RoomDoesNotExist(roomNumber, roomId);
+    throw RoomDoesNotExist(stoi(roomNumber), stoi(roomId));
+}
+
+int Hotel::searchForRoomByRoomId(const int &roomId) {
+
+    int pos = 0;
+    for (Room* room: rooms){
+        if(room->getRoomId() == roomId){
+            return pos;
+        }
+        pos++;
+    }
+    throw RoomDoesNotExist(roomId);
 }
 
 void Hotel::saveHotel(const std::string &hotelFile){
@@ -199,11 +218,9 @@ Hotel::Hotel(const std::string &hotelFile) {
         try{
             checkIfInteger(floor,"Room Floor");
             checkIfFloorIsValid(stoi(floor));
-            checkIfPositiveInteger(roomNumber,"Room Number");
-            checkIfPositiveInteger(roomId,"Room ID");
             checkIfPositiveInteger(capacity,"Capacity");
             checkIfValidPriceOrWage(price1, "Price");
-            searchForRoom(stoi(roomId),stoi(roomNumber));
+            searchForRoom(roomId,roomNumber);
             throw HotelFileHasWrongFormat("Room Already Exists! Must not repeat rooms.");
         }
         catch(NotAnInt& msg){
@@ -451,7 +468,7 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
 
                 room->addReservation(reservation);
                 if (in == true){
-                    clients[posClient]->checkIn(date);
+                    this->checkIn(posClient);
                 }
             }
             catch(...){
@@ -512,6 +529,230 @@ int Hotel::search(const std::string& name, const std::string& NIF, std::string& 
             pos ++;
         }
         throw StaffMemberDoesNotExist(name, stoi(NIF));
+    }
+}
+
+void Hotel::checkIn(const int& pos){
+    int pos1;
+    std::vector<int> roomIds;
+    try{
+        roomIds = clients[pos]->checkIn(&date);
+        for (int roomId: roomIds){
+            pos1 = searchForRoomByRoomId(roomId);
+            rooms[pos1]->changeAvailability(false);
+        }
+    }
+    catch(...){
+        throw;
+    }
+}
+
+void Hotel::addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type){
+    int pos;
+    try{
+        checkIfInteger(floor, "Floor");
+        checkIfFloorIsValid(stoi(floor));
+        checkIfPositiveInteger(capacity, "Capacity");
+        checkIfValidPriceOrWage(pricePerNight,"Price per Night");
+        pos = searchForRoom(roomId,roomNumber);
+        throw RoomAlreadyExists(stoi(roomNumber),stoi(roomId));
+    }
+    catch(RoomDoesNotExist){
+        if (type == "ViewRoom"){
+            ViewRoom* viewRoom = new ViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stof(pricePerNight));
+            rooms.push_back(viewRoom);
+        }
+        else if (type == "NoViewRoom"){
+            NoViewRoom* noViewRoom = new NoViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stof(pricePerNight));
+            rooms.push_back(noViewRoom);
+        }
+        else if (type == "Suite"){
+            Suite* suite = new Suite(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),stof(pricePerNight));
+            rooms.push_back(suite);
+        }
+        else throw InvalidRoomType(stoi(roomId),type);
+    }
+    catch(...){
+        throw;
+    }
+}
+
+void Hotel::activateDiscount(const std::string& type){
+    if(!this->loggedIn){
+        throw AccessRestricted();
+    }
+    if (type == "Suite"){
+        for (Room* room : rooms){
+            Suite* suite = dynamic_cast<Suite*> (room);
+            if (suite != nullptr){
+                room->activateDeactivateDiscount();
+            }
+        }
+    }
+    else if (type == "NoViewRoom") {
+        for (Room *room : rooms) {
+            NoViewRoom *noViewRoom = dynamic_cast<NoViewRoom *> (room);
+            if (noViewRoom != nullptr) {
+                room->activateDeactivateDiscount();
+            }
+        }
+    }
+    else if (type == "ViewRoom") {
+        for (Room *room : rooms) {
+            ViewRoom *viewRoom = dynamic_cast<class ViewRoom*> (room);
+            if (viewRoom != nullptr) {
+                room->activateDeactivateDiscount();
+            }
+        }
+    }
+    else throw InvalidRoomType(-1, type);
+}
+
+void Hotel::modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos){
+    try{
+        if(capacity != "."){
+            checkIfPositiveInteger(capacity, "Capacity");
+        }
+        if (pricePerNight != "."){
+            checkIfValidPriceOrWage(pricePerNight, "Price per night");
+        }
+        rooms[pos]->modify(capacity,pricePerNight);
+    }
+    catch(...){
+        throw;
+    }
+}
+
+void Hotel::sortRooms(const std::string& input,const std::string& order1){
+    bool order;
+    if (order1 == "Ascending"){
+        order = true;
+    }
+    else if (order1 == "Descending"){
+        order = false;
+    }
+    else throw SortingError();
+
+    if (input == "Room ID"){
+        if (order){
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                return r1->getRoomId()<r2->getRoomId();
+            });
+        }
+        else{
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                return r1->getRoomId()> r2->getRoomId();
+            });
+        }
+    }
+    else if (input == "Room Number"){
+        if (order){
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                return r1->getRoomNumber()<r2->getRoomNumber();
+            });
+        }
+        else{
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                return r1->getRoomNumber()> r2->getRoomNumber();
+            });
+        }
+    }
+    else if (input == "Floor"){
+        if (order){
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                if (r1->getFloor() == r2->getFloor()) return r1->getRoomNumber()<r2->getRoomNumber();
+                else return r1->getFloor() < r2->getFloor();
+            });
+        }
+        else{
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                if (r1->getFloor() == r2->getFloor()) return r1->getRoomNumber()>r2->getRoomNumber();
+                else return r1->getFloor() > r2->getFloor();
+            });
+        }
+    }
+    else if (input == "Capacity"){
+        if (order){
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                if (r1->getCapacity() == r2->getCapacity()) return r1->getRoomId()<r2->getRoomId();
+                else return r1->getCapacity() < r2->getCapacity();
+            });
+        }
+        else{
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                if (r1->getCapacity() == r2->getCapacity()) return r1->getRoomId()>r2->getRoomId();
+                else return r1->getCapacity() > r2->getCapacity();
+            });
+        }
+    }
+    else if (input == "Price"){
+        if (order){
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                if (r1->getCapacity() == r2->getCapacity()) return r1->getRoomId()<r2->getRoomId();
+                else return r1->getCapacity() < r2->getCapacity();
+            });
+        }
+        else{
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                if (r1->getPricePerNight() == r2->getPricePerNight()) return r1->getRoomId()>r2->getRoomId();
+                else return r1->getPricePerNight() > r2->getPricePerNight();
+            });
+        }
+    }
+    else if (input == "Type"){
+        if (order){
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                Suite* suite1 = dynamic_cast<Suite*> (r1);
+                NoViewRoom* noViewRoom1 = dynamic_cast<NoViewRoom*> (r1);
+                ViewRoom* viewRoom1 = dynamic_cast<class ViewRoom*> (r1);
+                Suite* suite2 = dynamic_cast<Suite*> (r2);
+                NoViewRoom* noViewRoom2 = dynamic_cast<NoViewRoom*> (r2);
+                ViewRoom* viewRoom2 = dynamic_cast<class ViewRoom*> (r2);
+
+                if (suite1 == nullptr && suite2 != nullptr){
+                    return true;
+                }
+                if (noViewRoom1 != nullptr && viewRoom2 != nullptr){
+                    return true;
+                }
+                else return false;
+            });
+        }
+        else{
+            sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
+                Suite* suite1 = dynamic_cast<Suite*> (r1);
+                NoViewRoom* noViewRoom1 = dynamic_cast<NoViewRoom*> (r1);
+                ViewRoom* viewRoom1 = dynamic_cast<class ViewRoom*> (r1);
+                Suite* suite2 = dynamic_cast<Suite*> (r2);
+                NoViewRoom* noViewRoom2 = dynamic_cast<NoViewRoom*> (r2);
+                ViewRoom* viewRoom2 = dynamic_cast<class ViewRoom*> (r2);
+
+                if (suite2 == nullptr && suite1 != nullptr){
+                    return true;
+                }
+                if (noViewRoom2 == nullptr && viewRoom1 != nullptr){
+                    return true;
+                }
+                else return false;
+            });
+        }
+    }
+    else throw SortingError();
+}
+
+
+void Hotel::checkOut(const int& pos){
+    int pos1;
+    std::vector<int> roomIds;
+    try{
+        roomIds = clients[pos]->checkOut(&date);
+        for (int roomId: roomIds){
+            pos1 = searchForRoomByRoomId(roomId);
+            rooms[pos1]->changeAvailability(true);
+        }
+    }
+    catch(...){
+        throw;
     }
 }
 

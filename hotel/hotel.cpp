@@ -931,6 +931,9 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
                 if (manager1 == nullptr && manager2 != nullptr){
                     return true;
                 }
+                if (receptionist1 !=nullptr && responsible1 == nullptr && responsible2 != nullptr){
+                    return true;
+                }
                 if (manager1 == nullptr && responsible1 == nullptr && receptionist2 == nullptr && janitor2 == nullptr){
                     return true;
                 }
@@ -951,6 +954,9 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
                 Responsible* responsible2 = dynamic_cast<Responsible*> (c2);
                 Janitor* janitor2 = dynamic_cast<Janitor*> (c2);
                 if (manager2 == nullptr && manager1 != nullptr){
+                    return true;
+                }
+                if (receptionist2 !=nullptr && responsible2 == nullptr && responsible1 != nullptr){
                     return true;
                 }
                 if (manager2 == nullptr && responsible2 == nullptr && receptionist1 == nullptr && janitor1 == nullptr){

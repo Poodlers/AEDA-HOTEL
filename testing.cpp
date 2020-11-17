@@ -444,6 +444,9 @@ void staff(Hotel *hotel){
         catch(NIFIsNotValid& msg){
             cout << msg;
         }
+        catch(NotAPositiveFloat& msg){
+            cout << msg;
+        }
         catch(StaffMemberWithThisNIFAlreadyExists& msg){
             cout << msg;
         }

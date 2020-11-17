@@ -227,6 +227,7 @@ std::ostream& operator<<(std::ostream &o, std::vector<int> v){
 void validateNIF(const std::string& NIF,const std:: string& name) {
     try{
         checkIfPositiveInteger(NIF,"NIF");
+        if (NIF.size() != 9) throw  NIFIsNotValid(name, NIF);
     }
     catch(...){
         throw NIFIsNotValid(name, NIF);

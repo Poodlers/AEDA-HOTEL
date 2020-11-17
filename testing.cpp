@@ -61,7 +61,7 @@ void rooms(Hotel * hotel){
         cin >> input;
         try{
             if (input == "Help"){
-                cout << "Valid commands are: Modify, Add, Sort, Search, Time, Back and Help "<<endl;
+                cout << "Valid commands are: Modify, Add, Sort, Search, Time, Discount, Back and Help "<<endl;
             }
             else if (input == "Back"){
                 return;
@@ -126,8 +126,8 @@ void rooms(Hotel * hotel){
                 pos = hotel->searchForRoom(roomId,roomNumber);
                 hotel->getRooms()[pos]->print();
             }
-            else if (input == "ActivateDiscount"){
-                cout << "What type of room should have the discount?"<<endl;
+            else if (input == "Discount"){
+                cout << "What type of room should be or stop being in discount?"<<endl;
                 cin>>type;
                 hotel->activateDiscount(type);
             }
@@ -158,6 +158,9 @@ void rooms(Hotel * hotel){
             cout << msg;
         }
         catch(FloorDosNotExist& msg){
+            cout << msg;
+        }
+        catch(InvalidRoomType& msg){
             cout << msg;
         }
         system("pause");
@@ -564,7 +567,10 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservations, Time and Exit"<<endl;
+        }
+        else if (input == "Reservations"){
+
         }
         else if(input == "Time"){
             hotel->incrementDate(1);

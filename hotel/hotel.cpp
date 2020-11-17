@@ -585,7 +585,10 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room* room : rooms){
             Suite* suite = dynamic_cast<Suite*> (room);
             if (suite != nullptr){
-                room->activateDeactivateDiscount();
+                if (suite->getDiscountState()){
+                    suite->activateDiscount();
+                }
+                else suite->deactivateDiscount();
             }
         }
     }
@@ -593,7 +596,10 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room *room : rooms) {
             NoViewRoom *noViewRoom = dynamic_cast<NoViewRoom *> (room);
             if (noViewRoom != nullptr) {
-                room->activateDeactivateDiscount();
+                if (noViewRoom->getDiscountState()){
+                    noViewRoom->activateDiscount();
+                }
+                else noViewRoom->deactivateDiscount();
             }
         }
     }
@@ -601,7 +607,10 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room *room : rooms) {
             ViewRoom *viewRoom = dynamic_cast<class ViewRoom*> (room);
             if (viewRoom != nullptr) {
-                room->activateDeactivateDiscount();
+                if (viewRoom->getDiscountState()){
+                    viewRoom->activateDiscount();
+                }
+                else viewRoom->deactivateDiscount();
             }
         }
     }

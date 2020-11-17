@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include "../hotel/reservation.h"
+#include "../exceptions/exceptions.h"
 
 class Room{
 public:
@@ -24,7 +25,6 @@ public:
         void setPricePerNight(const float pricePerNight);
         void changeAvailability(const bool& free);
         void modify(const std::string& capacity, const std::string& pricePerNight);
-        virtual void activateDeactivateDiscount() = 0;
         virtual void print() = 0;
 
         //void edit();
@@ -41,7 +41,10 @@ private:
 class Suite: public Room{
 public:
     Suite(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    void activateDeactivateDiscount();
+    void activateDiscount();
+    void deactivateDiscount();
+    bool getDiscountState() const;
+    float getDiscountValue() const;
     void print();
 
 private:
@@ -52,7 +55,10 @@ private:
 class ViewRoom: public Room{
 public:
     ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    void activateDeactivateDiscount();
+    void activateDiscount();
+    void deactivateDiscount();
+    bool getDiscountState() const;
+    float getDiscountValue() const;
     void print();
 
 private:
@@ -63,7 +69,11 @@ private:
 class NoViewRoom: public Room{
 public:
     NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    void activateDeactivateDiscount();
+    void activateDiscount();
+    void deactivateDiscount();
+    bool getDiscountState() const;
+    float getDiscountValue() const;
+
     void print();
 
 

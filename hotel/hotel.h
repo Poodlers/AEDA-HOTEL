@@ -154,7 +154,7 @@ public:
     /// \return date
     Date getDate() const;
 
-    /// Increments the date by i days
+    /// Increments the date by i days and archives expired reservations
     ///
     /// \param i - number of days to increment
     void incrementDate(const int& i);

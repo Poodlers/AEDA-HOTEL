@@ -16,13 +16,12 @@ Date::Date(const std::string& date){
     char ignore;
     ss<<date;
     ss>>this->day>>ignore>>this->month>>ignore>>this->year;
-
 }
 
 std::ostream& operator<<(std::ostream& o, const Date& date){
     char a[19];
     sprintf(a,"%02d-%02d-%02d         ",date.getDay(),date.getMonth(),date.getYear());
-    o << std::setw(11) << a;
+    o << a;
     return o;
 }
 
@@ -118,6 +117,12 @@ Reservation::Reservation(const int &reservationSize,Date* checkIn,Date* checkOut
     if (reservationId == -1) this->reservationId = rand() % 200 + 1;
     else this->reservationId = reservationId;
 
+    this->reservationSize = reservationSize;
+    this->checkIn = *checkIn;
+    this->checkOut = *checkOut;
+    this->getCheckIn() = *checkIn;
+    this->roomId =  roomId;
+
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
@@ -129,7 +134,6 @@ Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&
     this->roomId = roomId;
 
     this->checkIn = checkIn;
-
     this->checkOut = checkOut;
 }
 

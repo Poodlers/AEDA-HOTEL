@@ -31,7 +31,4 @@ void validateNIF(const std::string& NIF,const std:: string& name);
 
 void cleanCinBuffer();
 
-
-
-
 #endif

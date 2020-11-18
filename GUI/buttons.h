@@ -62,6 +62,7 @@ public:
 };
 
 
+
 template<class N>
 class MenuButton : public BaseButton{
 private:
@@ -70,6 +71,8 @@ private:
     int CurrentPage;
     BaseButton* Parent_Button;
     BaseButton* GoBack_Button;
+    int type_id;
+    int order_id;
 public:
     MenuButton(const int x, const int y, const int width,const int height,const std::string &text,const int currentPage,
                Hotel* hotel,BaseButton* ParentButton);
@@ -78,19 +81,42 @@ public:
     void onClick(ButtonHandler& handler) override;
     void EraseObject(N* item);
     void AddObject(N* item);
-    void SetCurrentPage(int page);
+    void ChangeCurrentPage(int page);
     int getCurrentPage();
+    void ChangeTypeId(int i);
+    void ChangeOrderId(int i);
 
 
 };
 
+class SortClientsButton: public BaseButton{
+private:
+    MenuButton<Client>* menu_button;
+    Hotel* hotel;
+    std::string order;
+    std::string type;
+public:
+    SortClientsButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,std::string order,std::string type,MenuButton<Client>* menu_button);
+    void onClick(ButtonHandler& handler) override;
+};
+
 template <class N>
-class ChangePageButton: public BaseButton{
+class ChangeTypeOfSort: public BaseButton{
 private:
     MenuButton<N>* menu_button;
-    int max_page;
+    std::string type;
 public:
-    ChangePageButton(const int x, const int y, const int width,const int height,const std::string text,int max_page, MenuButton<N>* button);
+    ChangeTypeOfSort(const int x, const int y, const int width,const int height,const std::string text,std::string type,MenuButton<N>* menu_button);
+    void onClick(ButtonHandler& handler) override;
+};
+
+
+class ApplyDiscountButton: public BaseButton{
+private:
+    Room* room;
+    MenuButton<Room>* menu_button;
+public:
+    ApplyDiscountButton(const int x, const int y, const int width,const int height,const std::string text, Room* room,MenuButton<Room>* button);
     void onClick(ButtonHandler& handler) override;
 };
 
@@ -103,6 +129,8 @@ public:
     void onClick(ButtonHandler& handler) override;
     ModifyButton(const int x, const int y, const int width,const int height,const std::string text,N* object);
 };
+
+
 
 
 template <class N>

@@ -408,11 +408,11 @@ void staff(Hotel *hotel){
                 cout << "New NIF: " << endl;
                 cin >> NIF;
 
-                if (type == "manager"){
+                if (type == "Manager"){
                     cout << "New Password: " << endl;
                     cin >> password;
                 }
-                if (type == "janitor"){
+                if (type == "Janitor"){
                     cout << "New Shift: " << endl;
                     cin >> shift;
                 }
@@ -443,7 +443,7 @@ void staff(Hotel *hotel){
                 cout << "Insert the position of the staff member you wish to add:"<<endl;
                 cin >> type;
 
-                if (type == "manager"){
+                if (type == "Manager"){
                     cout << "This action will replace the manager. Write yes to proceed, and anything else to cancel" << endl;
                     cin >> c;
                     if (c != "yes"){
@@ -454,13 +454,13 @@ void staff(Hotel *hotel){
                 cout << "Insert the wage of the staff member you wish to add:"<<endl;
                 cin >> wage;
 
-                if (type == "janitor"){
+                if (type == "Janitor"){
                     cout << "Insert the shift of the janitor you wish to add:"<<endl;
                     cin >> shift;
                 }
-                else if (type == "manager"){
+                else if (type == "Manager"){
                     cout << "Insert the password of the manager you wish to add:"<<endl;
-                    cin >> shift;
+                    cin >> password;
                 }
                 hotel->addStaffMember(name,NIF,type,password,shift,wage);
 

@@ -886,7 +886,7 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
         checkIfValidPriceOrWage(wage, "wage");
     }
     catch(StaffMemberDoesNotExist& msg){
-        if (type == "manager"){
+        if (type == "Manager"){
             for (int i= 0; i< this->staff.size();i++){
                 Manager* manager = dynamic_cast<Manager*>(staff[i]);
                 if (manager != nullptr){
@@ -897,7 +897,7 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
             Manager* manager = new Manager(name, stoi(NIF), stof(wage), password);
             this->staff.push_back(manager);
         }
-        else if (type == "janitor"){
+        else if (type == "Janitor"){
             if(shift == "day"){
                 shf = true;
             }
@@ -909,12 +909,12 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
             Janitor* janitor = new Janitor(shf,name, stoi(NIF), stof(wage));
             this->staff.push_back(janitor);
         }
-        else if (type == "responsible"){
+        else if (type == "Responsible"){
             Responsible* responsible = new Responsible(name, stoi(NIF), stof(wage));
             this->assignFloorsToResponsibles();
             this->staff.push_back(responsible);
         }
-        else if (type == "receptionist"){
+        else if (type == "Receptionist"){
             Receptionist* receptionist = new Receptionist(name, stoi(NIF), stof(wage));
             this->staff.push_back(receptionist);
         }

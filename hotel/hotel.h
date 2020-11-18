@@ -46,7 +46,7 @@ public:
     /// Hotel Initializer
     ///
     /// Creates a hotel from a .txt file with the correct format
-    /// \see hotel_structure_example.txt and hotel_exemplo.txt
+    /// \see hotel_exemplo.txt
     /// \param hotelFile - name of the '.txt' file with out the '.txt'
     /// \exception throws FileNotFound if it can't find the file.
     /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
@@ -55,7 +55,7 @@ public:
     /// Save Hotel
     ///
     /// Creates a .txt with the current hotel that can be read by the constructor
-    /// \see hotel_structure_example.txt and hotel_exemplo.txt
+    /// \see hotel_exemplo.txt
     /// \param hotelFile - name of the '.txt' file with out the '.txt'
     void saveHotel(const std::string &hotelFile);
     /**/

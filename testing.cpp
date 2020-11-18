@@ -10,36 +10,112 @@
 #include <iostream>
 using namespace std;
 
+
+
 void reservation(Hotel * hotel){
-    string name, NIF, capacity, roomId, date;
-    int pos;
+    system("CLS");
+    string name, NIF, capacity, roomId, date, input, reservationId;
+    int pos1;
+    vector<int> pos;
     string type;
+    while(true){
+        cout << "Date: " << hotel->getDate() <<endl;
+        cout << "Do you wish to make a reservation (Make) or to search for reservations by date (Search)?"<<std::endl;
+        cin >> input;
+        try{
+            if (input == "Make"){
+                cout << endl << "Input the name and NIF of the client making the reservation."<<endl;
+                cout << "Name: "<<endl;
+                cleanCinBuffer();
+                getline(cin, name);
+                cout << "NIF: "<<endl;
+                cin >>NIF;
 
-    cout << endl << "Input the name and NIF of the client making the reservation."<<endl;
-    cout << "Name: "<<endl;
-    cleanCinBuffer();
-    getline(cin, name);
-    cout << "NIF: "<<endl;
-    cin >>NIF;
+                pos1 = hotel->search(name,NIF, type ="Client");
+                cout << "Insert the reservation size: "<<endl;
+                cin>>capacity;
+                checkIfPositiveInteger(capacity, "capacity");
+                cout << "Choose Room (type in room ID): "<<endl;
+                cin>>roomId;
+                checkIfPositiveInteger(roomId, "roomId");
+                cout << "Choose Check In date (in format day-month-year): "<<endl;
+                cin>>date;
+                Date* checkIn = new Date(date);
+                cout << "Choose Check Out date (in format day-month-year): "<<endl;
+                cin>>date;
+                Date* checkOut = new Date(date);
+                hotel->makeReservation(stoi(roomId),checkIn,checkOut,stoi(capacity),pos1,-1,false);
+            }
+            else if (input == "Search"){
+                cout << "Do you want reservations for/from a specific date (Date), room (Room), a specific Id (ID) or all reservations (All)?"<<endl;
+                cin >> type;
 
-    try{
-        pos = hotel->search(name,NIF, type ="Client");
-        cout << "Insert the reservation size: "<<endl;
-        cin>>capacity;
-        checkIfPositiveInteger(capacity, "capacity");
-        cout << "Choose Room (type in room ID): "<<endl;
-        cin>>roomId;
-        checkIfPositiveInteger(roomId, "roomId");
-        cout << "Choose Check In date (in format day-month-year): "<<endl;
-        cin>>date;
-        Date* checkIn = new Date(date);
-        cout << "Choose Check Out date (in format day-month-year): "<<endl;
-        cin>>date;
-        Date* checkOut = new Date(date);
-        hotel->makeReservation(stoi(roomId),checkIn,checkOut,stoi(capacity),pos,-1,false);
-    }
-    catch(...){
-        throw;
+                if (type == "Date"){
+                    cout << "Insert the date of the reservations you wish to find (dd-mm-yyyy):"<<endl;
+                    cin >> date;
+                    pos = hotel->searchReservations("Date", date);
+                    for (int position: pos){
+                        hotel->getReservations()[position]->print();
+                    }
+                }
+                else if (type == "Room"){
+                    cout << "Insert the room ID of the reservations you wish to find:"<<endl;
+                    cin >> roomId;
+                    pos = hotel->searchReservations("Room", roomId);
+                    for (int position: pos){
+                        hotel->getReservations()[position]->print();
+                    }
+                }
+                else if (type == "All"){
+                    for (Reservation* reservation: hotel->getReservations()){
+                        reservation->print();
+                        cout << endl;
+                    }
+                }
+                else if (type == "ID"){
+                    cout << "Insert the room of the ID of the reservation you wish to find:"<<endl;
+                    cin >> reservationId;
+                    pos = hotel->searchReservations("ID", reservationId);
+                    hotel->getReservations()[pos[0]]->print();
+                }
+                else{
+                    cout << "Invalid command, please retry."<<endl;
+                }
+                pos.clear();
+            }
+            else if (input == "Back"){
+                return;
+            }
+            else{
+                cout << "Invalid command, please retry."<<endl;
+            }
+        }
+        catch(RoomDoesNotExist& msg){
+            cout << msg;
+        }
+        catch(ClientDoesNotExist&msg){
+            cout << msg;
+        }
+        catch(NIFIsNotValid& msg){
+            cout <<msg;
+        }
+        catch(ClientWithThisNIFAlreadyExists& msg){
+            cout <<msg;
+        }
+        catch(ReservationHasInvalidDates& msg){
+            cout << msg;
+        }
+        catch(RoomWithThisRoomIdOrRoomNumberAlreadyExists& msg){
+            cout <<msg;
+        }
+        catch(RoomDoesNotExist& msg){
+            cout << msg;
+        }
+        catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
+            cout << msg;
+        }
+        system("pause");
+        system("CLS");
     }
 }
 
@@ -570,7 +646,7 @@ void system(Hotel* hotel){
             cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservations, Time and Exit"<<endl;
         }
         else if (input == "Reservations"){
-
+            reservation(hotel);
         }
         else if(input == "Time"){
             hotel->incrementDate(1);

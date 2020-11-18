@@ -33,7 +33,6 @@ private:
         unsigned int capacity;
         float pricePerNight; //guarda o preço-base
         bool free = true;
-        std::vector<Reservation*> reservations;
 };
 
 class Suite: public Room{

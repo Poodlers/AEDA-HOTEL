@@ -25,21 +25,24 @@ public:
     void saveHotel(const std::string &hotelFile);
     /**/
 
+    void getCosts();
+    void getProfit();
+
+    void buyProducts();
+
+    /*RESERVATION*/
+    std::vector<Reservation*> getReservations() const;
+    std::vector<int> searchReservations(const std::string& type, const std::string & criteria);
+    void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
+    /**/
     /*ROOMS*/
 
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
     void checkIfFloorIsValid(const unsigned int& floors);
     int searchForRoom(const std::string& roomId, const std::string& roomNumber);
     int searchForRoomByRoomId(const int& roomId);
-    void getCosts();
-    void getProfit();
 
-    void buyProducts();
-
-    std::vector <Client*>& getClients();
-    std::vector <Staff*>& getStaff();
     std::vector <Room*>& getRooms();
-    void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
     void sortRooms(const std::string& input,const std::string& order1);
     void activateDiscount(const std::string& type);
@@ -55,6 +58,7 @@ public:
     /**/
 
     /*CLIENTS*/
+    std::vector <Client*>& getClients();
 
     void checkIn(const int& pos);
     void checkOut(const int& pos);
@@ -65,6 +69,7 @@ public:
     /**/
 
     /*Staff*/
+    std::vector <Staff*>& getStaff();
 
     void modifyStaffMember(const std::string & name, std::string& NIF, const int& pos, const std::string& type, const std::string& shift,const std::string& password);
     void removeStaffMember(const int& pos);
@@ -85,15 +90,11 @@ private:
     std::vector <Client*> clients;
     std::vector<Staff* > staff;
     std::vector<Room*> rooms;
+    std::vector<Reservation*> reservations;
     std::vector<Provider*> providers;
     std::vector<Product*> productsBought;
 
     bool loggedIn = false;
-
-    unsigned int freeRooms;
-    unsigned int freeSuits = 0;
-    unsigned int freeRoomsWithView = 0;
-    unsigned int freeRoomsWithOutView = 0;
 
     unsigned int numberOfFloors;
     unsigned int numberOfRooms;

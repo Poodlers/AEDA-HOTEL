@@ -249,24 +249,20 @@ Hotel::Hotel(const std::string &hotelFile) {
         if (type == "Suite"){
             Suite* suite = new Suite(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),price);
             rooms.push_back(suite);
-            freeSuits ++;
         }
         else if(type == "ViewRoom"){
             ViewRoom* viewRoom = new ViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),price);
             rooms.push_back(viewRoom);
-            freeRoomsWithView ++;
         }
         else if (type == "NoViewRoom"){
             NoViewRoom* noViewRoom = new NoViewRoom(stoi(floor),stoi(roomNumber),stoi(roomId),stoi(capacity),price);
             rooms.push_back(noViewRoom);
-            freeRoomsWithOutView++;
         }
         else{
             throw HotelFileHasWrongFormat("Room type invalid, should be 'Suite', 'ViewRoom' or 'NoViewRoom'");
         }
         ss.clear();
     }
-    this->freeRooms = rooms.size();
     this->numberOfRooms = rooms.size();
 
     if (getData.empty()){
@@ -443,6 +439,11 @@ Hotel::Hotel(const std::string &hotelFile) {
 
 }
 
+std::vector<Reservation*> Hotel::getReservations() const{
+    return reservations;
+}
+
+
 void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in){
     for (Room* room: rooms){
         if (room->getRoomId() == roomId){
@@ -453,8 +454,8 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
             if (room->getCapacity() < capacity){
                 throw RoomDoesNotHaveTheNecessaryCapacity(roomId);
             }
-            for(Reservation* reservation: room->getReservations()){
-                if (reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
+            for(Reservation* reservation: reservations){
+                if (reservation->getRoomId() == roomId && reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
                     throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
                 }
             }
@@ -466,7 +467,8 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
                 else if (in) clients[posClient]->addCurrentReservation(reservation);
                 else clients[posClient]->addNewReservation(reservation);
 
-                room->addReservation(reservation);
+                this->reservations.push_back(reservation);
+
                 if (in == true){
                     this->checkIn(posClient);
                 }
@@ -479,6 +481,37 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
     }
     throw RoomDoesNotExist(roomId);
 }
+
+std::vector<int> Hotel::searchReservations(const std::string& type, const std::string& criteria){
+    std::vector<int> pos;
+    if(type == "ID"){
+        for (int i = 0; i < reservations.size(); i++){
+            if (reservations[i]->getReservationId() == stoi(criteria)){
+                pos.push_back(i);
+                return pos;
+            }
+        }
+    }
+    else if (type == "Room"){
+        for (int i = 0; i < reservations.size(); i++){
+            if (reservations[i]->getRoomId() == stoi(criteria)){
+                pos.push_back(i);
+            }
+        }
+        return pos;
+    }
+    else if (type == "Date"){
+        Date date1(criteria);
+        for (int i = 0; i < reservations.size(); i++){
+            if (reservations[i]->getCheckIn() == date1){
+                pos.push_back(i);
+            }
+        }
+        return pos;
+    }
+}
+
+
 
 int Hotel::search(const std::string& name, const std::string& NIF, std::string& type){
     int pos = 0;
@@ -584,6 +617,7 @@ void Hotel::addRoom(const std::string &floor, const std::string & roomNumber ,co
             rooms.push_back(suite);
         }
         else throw InvalidRoomType(stoi(roomId),type);
+        numberOfRooms++;
     }
     catch(...){
         throw;

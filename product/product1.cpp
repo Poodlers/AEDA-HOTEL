@@ -1,11 +1,23 @@
 #include "product1.h"
 #include <string>
+#include <random>
 
-Product::Product(const unsigned int& quality, const float& price, const std::string & type, const unsigned int& Id){
+int Product::totalId = 0;
+
+Product::Product(){
+    this->quality = rand() % 6;
+    this->price = (rand() % 100) + 0.01 * (rand() % 99 + 1);
+    this->type = (rand() % 2) ? "catering" : "cleaning";
+    this->Id = totalId;
+    this->totalId++;
+}
+
+Product::Product(const unsigned int& quality, const float& price, const std::string & type){
     this->quality = quality;
     this->price = price;
     this->type = type;
-    this->Id = Id;
+    this->Id = totalId;
+    this->totalId++;
 }
 unsigned int Product::getQuality() const{
     return this->quality;

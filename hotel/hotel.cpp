@@ -598,10 +598,14 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room* room : rooms){
             Suite* suite = dynamic_cast<Suite*> (room);
             if (suite != nullptr){
-                if (suite->getDiscountState()){
+                if (!suite->getDiscountState()){
                     suite->activateDiscount();
+                    return;
                 }
-                else suite->deactivateDiscount();
+                else{
+                    suite->deactivateDiscount();
+                    return;
+                }
             }
         }
     }
@@ -609,10 +613,14 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room *room : rooms) {
             NoViewRoom *noViewRoom = dynamic_cast<NoViewRoom *> (room);
             if (noViewRoom != nullptr) {
-                if (noViewRoom->getDiscountState()){
+                if (!noViewRoom->getDiscountState()){
                     noViewRoom->activateDiscount();
+                    return;
                 }
-                else noViewRoom->deactivateDiscount();
+                else{
+                    noViewRoom->deactivateDiscount();
+                    return;
+                }
             }
         }
     }
@@ -620,10 +628,14 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room *room : rooms) {
             ViewRoom *viewRoom = dynamic_cast<class ViewRoom*> (room);
             if (viewRoom != nullptr) {
-                if (viewRoom->getDiscountState()){
+                if (!viewRoom->getDiscountState()){
                     viewRoom->activateDiscount();
+                    return;
                 }
-                else viewRoom->deactivateDiscount();
+                else{
+                    viewRoom->deactivateDiscount();
+                    return;
+                }
             }
         }
     }
@@ -749,10 +761,10 @@ void Hotel::sortRooms(const std::string& input,const std::string& order1){
                 NoViewRoom* noViewRoom2 = dynamic_cast<NoViewRoom*> (r2);
                 ViewRoom* viewRoom2 = dynamic_cast<class ViewRoom*> (r2);
 
-                if (suite2 == nullptr && suite1 != nullptr){
+                if (suite2 == nullptr && suite1!= nullptr){
                     return true;
                 }
-                if (noViewRoom2 == nullptr && viewRoom1 != nullptr){
+                if (noViewRoom2 != nullptr && viewRoom1 != nullptr){
                     return true;
                 }
                 else return false;

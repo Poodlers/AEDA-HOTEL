@@ -61,10 +61,6 @@ int Date::getDaysInMonth() const {
     return 0;
 }
 
-Date operator+(int daysToAdd, const Date& date) {
-    return date + daysToAdd;
-}
-
 bool Date::isInLeapYear() const {
     return this->year % 400 == 0 || (this->year % 4 == 0 && this->year % 100 != 0);
 }

@@ -52,8 +52,7 @@ int Hotel::searchForRoom(const std::string& roomId, const std::string& roomNumbe
     throw RoomDoesNotExist(stoi(roomNumber), stoi(roomId));
 }
 
-int Hotel::searchForRoomByRoomId(const int &roomId) {
-
+int Hotel::searchForRoomByRoomId(const unsigned int &roomId) {
     int pos = 0;
     for (Room* room: rooms){
         if(room->getRoomId() == roomId){
@@ -913,7 +912,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF, const 
             throw;
         }
     }
-    if (type == "janitor"){
+    if (type == "Janitor"){
         Janitor* janitor = dynamic_cast<Janitor*> (staff[pos]);
         staff.erase(staff.begin()+pos);
         try{
@@ -924,7 +923,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF, const 
         }
         staff.insert(staff.begin()+pos,janitor);
     }
-    else if(type == "manager"){
+    else if(type == "Manager"){
         Manager* manager = dynamic_cast<Manager*> (staff[pos]);
         staff.erase(staff.begin()+pos);
         manager->managerModify(name,NIF,password);
@@ -1023,7 +1022,7 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
     }
     else throw SortingError();
 
-    if (input == "name"){
+    if (input == "Name"){
         if (order){
             sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
                 return c1->getName() < c2->getName();
@@ -1095,7 +1094,7 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
             });
         }
     }
-    else if(input == "Most Recent Reservation"){
+    else if(input == "Most recent reservation"){
         if (order){
             sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
                 Date min1(31,12,9999), min2(31,12,9999);
@@ -1196,7 +1195,7 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
     }
     else throw SortingError();
 
-    if (input == "name"){
+    if (input == "Name"){
         if (order){
             sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
                 return c1->getName() < c2->getName();
@@ -1220,7 +1219,7 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
             });
         }
     }
-    else if (input == "wage"){
+    else if (input == "Wage"){
         if (order){
             sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
                 return c1->getWage() < c2->getWage();
@@ -1232,7 +1231,7 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
             });
         }
     }
-    else if (input == "years of service"){
+    else if (input == "Years of service"){
         if (order){
             sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
                 return c1->getYearsOfService() < c2->getYearsOfService();
@@ -1244,7 +1243,7 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
             });
         }
     }
-    else if(input == "position"){
+    else if(input == "Position"){
         if (order){
             sort(staff.begin(),staff.end(),[](Staff* c1, Staff* c2){
                 Manager* manager1 = dynamic_cast<Manager*> (c1);

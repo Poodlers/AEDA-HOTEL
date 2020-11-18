@@ -184,7 +184,7 @@ void checkIfPositiveInteger(std::string input, std::string check){
         checkIfInteger(input,check);
     }
     catch(...){
-        throw;
+        throw NotAPositiveInt(check);
     }
     if (stoi(input) < 0){
         throw NotAPositiveInt(check);

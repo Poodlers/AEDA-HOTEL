@@ -4,6 +4,11 @@
 #include "../GUI/utils.h"
 #include "../exceptions/exceptions.h"
 
+Person::Person() {
+    this->name = "";
+    this->NIF = 0;
+}
+
 Person::Person(const std::string& name, const unsigned int & NIF){
     this->name = name;
     this->NIF = NIF;

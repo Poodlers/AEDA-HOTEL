@@ -19,7 +19,8 @@ void getStringInput(std::string& input, int x, int y);
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input));
 
 
-
+bool CheckIfInteger(std::string input);
+bool CheckIfFloat(std::string input);
 void checkIfInteger(std::string input, std::string check);
 void checkIfPositiveInteger(std::string input, std::string check);
 void checkIfValidPriceOrWage(std::string input, std::string check);
@@ -29,4 +30,8 @@ std::ostream& operator<<(std::ostream &o, std::vector<int> v);
 void validateNIF(const std::string& NIF,const std:: string& name);
 
 void cleanCinBuffer();
+
+
+
+
 #endif

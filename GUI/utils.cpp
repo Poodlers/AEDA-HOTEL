@@ -27,6 +27,14 @@ void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURS
     SetConsoleMode(hin, fdwMode);
     SetConsoleCursorInfo(hout, &cci);
     SetConsoleMode(hin, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
+    HWND consoleWindow = GetConsoleWindow();
+    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+    CONSOLE_SCREEN_BUFFER_INFO SBInfo;
+    GetConsoleScreenBufferInfo(hout, &SBInfo);
+    COORD scrollbar;
+    scrollbar.X = SBInfo.srWindow.Right - SBInfo.srWindow.Left + 1;
+    scrollbar.Y = SBInfo.srWindow.Bottom - SBInfo.srWindow.Top + 1;
+    SetConsoleScreenBufferSize(hout, scrollbar);
 }
 
 void printTime(int day, int month,int year, map<int,string> &map_month){
@@ -111,9 +119,10 @@ void getStringInput(std::string& input, int x, int y){
                 if(InputRecord.Event.KeyEvent.bKeyDown){
                     switch (InputRecord.Event.KeyEvent.wVirtualKeyCode)
                     {
-                        case VK_LEFT: case VK_UP: case VK_RIGHT: case VK_DOWN:
-                        case VK_RCONTROL: case VK_RMENU:
-                        case VK_LWIN: case VK_RWIN: case VK_APPS: case VK_CAPITAL:
+                    case VK_LEFT: case VK_UP: case VK_RIGHT: case VK_DOWN: case VK_TAB:
+                    case VK_RCONTROL: case VK_RMENU: case VK_SHIFT: case VK_CLEAR:
+                    case VK_LWIN: case VK_RWIN: case VK_APPS: case VK_CAPITAL: case VK_PAUSE:
+                    case VK_MENU:
                         case VK_PRIOR: case VK_NEXT:
                         case VK_END: case VK_HOME:
                         case VK_INSERT: case VK_DELETE:
@@ -124,6 +133,7 @@ void getStringInput(std::string& input, int x, int y){
                             return;
                         case VK_SPACE:
                             input += " ";
+                            break;
                         case VK_BACK:
                             input = input.substr(0, input.size()-1);
                             gotoxy(x,y);
@@ -160,6 +170,15 @@ void checkIfInteger(std::string input, std::string check){
     }
 }
 
+bool CheckIfInteger(std::string input){
+    for(int i = 0; i < input.length();i++){
+        if(!isdigit(input[i]) ){
+            return false;
+        }
+    }
+    return true;
+}
+
 void checkIfPositiveInteger(std::string input, std::string check){
     try{
         checkIfInteger(input,check);
@@ -191,6 +210,23 @@ void checkIfValidPriceOrWage(std::string input, std::string check){
     }
 }
 
+bool CheckIfFloat(std::string input){
+    bool isfloat = false;
+    for(int i = 0; i < input.length();i++){
+        if(input[i] == '.'){
+            if(!isfloat){
+                isfloat = true;
+            }else{ //this is the second . and this input is invalid
+                return false;
+            }
+        }
+        else if(!isdigit(input[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input)){
     std::string output;
     while (true) {
@@ -199,6 +235,8 @@ std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input
             return output;
         }
         else{
+            gotoxy(x,y);
+            std::cout << "                                                    ";
             gotoxy(0,y + 2);
             std::cout << "It seems you haven't typed a correct number!" << std::endl;
             gotoxy(0,y+3);
@@ -276,3 +314,4 @@ void cleanCinBuffer(){
     cin.clear();
     cin.ignore(1000000000,'\n');
 }
+

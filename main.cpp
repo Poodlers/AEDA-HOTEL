@@ -2,16 +2,28 @@
 #include <iomanip>
 #include <map>
 #include "GUI/buttons.h"
+#include <algorithm>
 
 using namespace std;
 
 int main(){
     map<int,string> map_month;
-    Hotel hotel("hotel_exemplo");
+    Hotel hotel("hotel_exemplo_2");
     //Authentication(&hotel);
-    BaseButton* ClientsButton = new MenuButton<Client>(10,6,15,3,"Clients",1,hotel.getClients(),NULL);
-    BaseButton* StaffButton = new MenuButton<Staff>(10,10,15,3,"Staff",1,hotel.getStaff(), NULL);
-    BaseButton* RoomsButton = new MenuButton<Room>(10,14,15,3,"Rooms",1,hotel.getRooms(),NULL);
+
+    auto ClientsButton = new MenuButton<Client>(10,6,15,3,"Clients",1,&hotel,
+                                                                 nullptr);
+    auto StaffButton =  new MenuButton<Staff>(10,10,15,3,"Staff",1,&hotel, nullptr);
+    auto RoomsButton =  new MenuButton<Room>(10,14,15,3,"Rooms",1,&hotel, nullptr);
+
+    /*
+    auto ClientsButton = new MenuButton<Client>(10,6,15,3,"Clients",1,hotel.getClients(),NULL);
+    auto StaffButton =  new MenuButton<Staff>(10,10,15,3,"Staff",1,hotel.getStaff(), nullptr);
+    auto RoomsButton =  new MenuButton<Room>(10,14,15,3,"Rooms",1,hotel.getRooms(), nullptr);
+    */
+     ClientsButton->DrawButton();
+    StaffButton->DrawButton();
+    RoomsButton->DrawButton();
     bool unpause;
     fill_month_map(map_month);
     HANDLE hin = GetStdHandle(STD_INPUT_HANDLE);
@@ -26,9 +38,8 @@ int main(){
     day = month = 1;
     SetConsoleDefinitions(fdwMode,hin,hout,cci);
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-    vector<BaseButton *> CurrentButtons = {ClientsButton,StaffButton,RoomsButton}; //vector with the initial menu buttons
-    BaseButton* InitialButton = new ParentButton(0,0,0,0,"",CurrentButtons);
-    InitialButton->onClick(CurrentButtons);
+    vector<BaseButton*> CurrentButtons = {ClientsButton,StaffButton,RoomsButton};
+    ButtonHandler ButtonHandler(CurrentButtons);
     printTime(day,month,year,map_month);
     while(true){
         unpause = false;
@@ -39,14 +50,16 @@ int main(){
             case MOUSE_EVENT: // mouse input 
                  if(InputRecord.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
                 {
-                    for(BaseButton* button: CurrentButtons){
-                        if (ButtonWasPressed(button,InputRecord) ){
-                            button->onClick(CurrentButtons);
+                    for(const auto& button: ButtonHandler.getButtons()){
+                        if (ButtonWasPressed(button,InputRecord) )
+                        {
+                            button->onClick(ButtonHandler);
                             printTime(day,month,year,map_month);
+                            break;
                         } 
                     }
                 }
-                break; 
+                 break;
             case KEY_EVENT: // keyboard input
             if(InputRecord.Event.KeyEvent.bKeyDown){
                 switch (InputRecord.Event.KeyEvent.wVirtualKeyCode)

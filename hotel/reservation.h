@@ -34,6 +34,10 @@ public:
     Reservation(const int &reservationSize,Date* CheckIn,Date* CheckOut, const int & roomId, const int& reservationId);
 
     int getReservationId() const;
+    Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
+    Reservation(const std::string & reservation);
+    Reservation();
+    int getReservationNumber() const;
     int getReservationSize() const;
     Date getCheckIn() const;
     Date getCheckOut() const;
@@ -44,7 +48,7 @@ public:
     void setCheckIn(const Date& checkIn);
     void setCheckOut(const Date& checkOut);
     void setRoomId(const int& roomId);
-    //void edit();
+    void edit();
     void print();
 
 private:

@@ -5,3 +5,7 @@ Receptionist::Receptionist(const std::string& name, const unsigned int & NIF, co
 std::string Receptionist::getType() {
     return "Receptionist";
 }
+
+Receptionist::Receptionist():Staff() {
+
+}

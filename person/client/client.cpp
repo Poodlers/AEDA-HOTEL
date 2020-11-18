@@ -2,6 +2,10 @@
 #include <iostream>
 #include "../../GUI/utils.h"
 #include <iomanip>
+#include <algorithm>
+
+Client::Client():Person() {
+}
 
 Client:: Client(const std::string &name, const unsigned int &NIF) : Person(name,NIF){}
 
@@ -109,18 +113,8 @@ void Client::checkOut( Date date){
     }
 }
 
-/*
-void Client::edit() {
-    std::string edit;
-    std::cout << "Edit the client's information as follows: " << std::endl;
-    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
-    std::cout << "Name: " << std::endl;
-    getStringInput(edit, 6, 3);
-    if (edit != ".") this->setName(edit);
-    gotoxy(0, 5);
-    edit = "";
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if(edit != ".") this->setNIF(std::stoi(edit));
+void Client::removeReservation(Reservation *reservation) {
+    this->history.erase(std::find(this->history.begin(),this->history.end(),reservation));
+    delete reservation;
+}
 
-}*/

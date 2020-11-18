@@ -6,6 +6,7 @@
 
 class Room{
 public:
+        Room();
         Room(const int &floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight );
         int getFloor() const;
         int getRoomNumber() const;
@@ -20,7 +21,7 @@ public:
         void setCapacity(const unsigned int capacity);
         void setPricePerNight(const float pricePerNight);
 
-        virtual void print();
+        virtual void print() = 0;
         //void edit();
 private:
         int floor;
@@ -34,8 +35,10 @@ private:
 
 class Suite: public Room{
 public:
+    Suite();
     Suite(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
     void activateDeactivateDiscount();
+    void print() override;
 
 private:
     static bool discount;
@@ -44,8 +47,10 @@ private:
 
 class ViewRoom: public Room{
 public:
+    ViewRoom();
     ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
     void activateDeactivateDiscount();
+    void print() override;
 
 
 private:
@@ -55,9 +60,10 @@ private:
 
 class NoViewRoom: public Room{
 public:
+    NoViewRoom();
     NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
     void activateDeactivateDiscount();
-
+    void print() override;
 
 private:
     static bool discount;

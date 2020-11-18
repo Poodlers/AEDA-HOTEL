@@ -21,37 +21,6 @@ void Janitor::print() {
     std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
     << std::setw(19) << "" << std::setw(8) << (this->getShift()) ? "day" : "night";
 }
-/*
-void Janitor::edit() {
-    std::string edit;
-    std::cout << "Edit the Janitor's information as follows: " << std::endl;
-    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
-    std::cout << "Name: " << std::endl;
-    getStringInput(edit,6,3);
-    if (edit != ".") this->setName(edit);
-    gotoxy(0,5);
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if (edit != ".") this->setNIF(std::stoi(edit));
-    gotoxy(0,7);
-    std::cout << "Wage: " << std::endl;
-    edit = GetNumberInput(12,7,CheckIfFloat);
-    if (edit != ".") this->setWage(std::stof(edit));
-    gotoxy(0,9);
-    std::cout << "Years of Service: " << std::endl;
-    edit = GetNumberInput(20,9,CheckIfInteger);
-    if (edit != ".") this->setYearsOfService(std::stoi(edit));
-    gotoxy(0,11);
-    std::cout << "Shift: " << std::endl;
-    getStringInput(edit,7,11);
-    if(edit == "day"){
-        this->setShift(true);
-    }else if(edit == "night"){
-        this->setShift(false);
-    }
-
-
-}*/
 
 void Janitor::janitorModify(const std::string& name, const std::string& NIF, const std::string& shift){
     if (name != "."){

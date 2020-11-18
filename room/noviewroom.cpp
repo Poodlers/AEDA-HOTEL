@@ -1,5 +1,6 @@
 #include "room.h"
 #include <iomanip>
+#include <iostream>
 
 NoViewRoom :: NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight) : Room(floor,roomNumber,roomId,capacity,pricePerNight){
 }
@@ -21,19 +22,9 @@ float NoViewRoom::getDiscountValue() const{
 
 bool NoViewRoom::discount = false;
 
-void NoViewRoom::print(){
-    std::cout << std::left <<  std::setw(10) << std::setfill(' ') << this->getRoomId() << std::setw(15)
-              << this->getRoomNumber() << std::setw(8)<< this->getFloor() << std::setw(10) << this->getCapacity();
-    if(this->discount){
-        std::cout << this->getPricePerNight() * this->discountValue << "  " <<std::setw(10)<< this->discountValue *100 << "% Off!";
-    }
-    else std::cout << std::setw(20)
-                   << this->getPricePerNight();
-    if (this->getAvailability()){
-        std::cout << std::setw(10)<<"Free";
-    }
-    else{
-        std::cout <<std::setw(10)<< "Occupied";
-    }
-    std::cout <<std::setw(10)<< "No View Room"<<std::endl;
+
+void NoViewRoom::print() {
+    std::cout << std::left << std::setw(12) << "No View Room" <<  std::setw(10) << std::setfill(' ') << this->getRoomId() << std::setw(15)
+              << this->getRoomNumber() << std::setw(8)<< this->getFloor() << std::setw(10) << this->getCapacity() << std::setw(18)
+              << this->getPricePerNight() << std::endl;
 }

@@ -15,16 +15,30 @@ class Hotel{
 public:
     /*HOTEL-BUILDING-AND-SAVING*/
     Hotel(const std::string &hotelFile);
+    void addRoom(Room* room);
+    void addStaff(Staff* staff);
+    void addClient(Client* client);
+    void eraseClient(Client* client);
+    void eraseStaff(Staff* staff);
+    void eraseRoom(Room* room);
+    void makeReservation(const Reservation& restart);
     void saveHotel(const std::string &hotelFile);
     /**/
 
     /*ROOMS*/
-    std::vector<Room*>& getRooms();
 
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
     void checkIfFloorIsValid(const unsigned int& floors);
     int searchForRoom(const std::string& roomId, const std::string& roomNumber);
     int searchForRoomByRoomId(const int& roomId);
+    void getCosts();
+    void getProfit();
+
+    void buyProducts();
+
+    std::vector <Client*>& getClients();
+    std::vector <Staff*>& getStaff();
+    std::vector <Room*>& getRooms();
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
     void sortRooms(const std::string& input,const std::string& order1);
@@ -34,14 +48,13 @@ public:
     /*DATE*/
     Date getDate() const;
     void incrementDate(const int& i);
-    /**/
+
 
     /*PEOPLE*/
     int search(const std::string& name, const std::string& NIF,std::string& type);
     /**/
 
     /*CLIENTS*/
-    std::vector<Client*>& getClients();
 
     void checkIn(const int& pos);
     void checkOut(const int& pos);
@@ -52,7 +65,6 @@ public:
     /**/
 
     /*Staff*/
-    std::vector<Staff*>& getStaff();
 
     void modifyStaffMember(const std::string & name, std::string& NIF, const int& pos, const std::string& type, const std::string& shift,const std::string& password);
     void removeStaffMember(const int& pos);
@@ -70,8 +82,8 @@ public:
     /**/
 
 private:
-    std::vector<Client*> clients;
-    std::vector<Staff*> staff;
+    std::vector <Client*> clients;
+    std::vector<Staff* > staff;
     std::vector<Room*> rooms;
     std::vector<Provider*> providers;
     std::vector<Product*> productsBought;
@@ -89,5 +101,14 @@ private:
 
     static Date date;
 };
+
+
+void edit(Client* client);
+void edit(Receptionist* receptionist);
+void edit(Responsible* responsible);
+void edit(Manager* manager);
+void edit(Janitor* janitor);
+void edit(Reservation* reservation);
+void edit(Room* room);
 
 #endif

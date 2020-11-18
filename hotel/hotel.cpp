@@ -1,7 +1,7 @@
 #include "hotel.h"
-#include<fstream>
-#include<sstream>
-#include<iostream>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 #include "../GUI/utils.h"
 #include "../exceptions/exceptions.h"
 
@@ -532,6 +532,19 @@ int Hotel::search(const std::string& name, const std::string& NIF, std::string& 
     }
 }
 
+void Hotel::eraseClient(Client* client) {
+    this->clients.erase(std::find(this->clients.begin(),this->clients.end(),client));
+}
+
+void Hotel::eraseRoom(Room* room) {
+    this->rooms.erase(std::find(this->rooms.begin(),this->rooms.end(),room));
+}
+
+void Hotel::eraseStaff(Staff* staff) {
+    this->staff.erase(std::find(this->staff.begin(),this->staff.end(),staff));
+}
+
+
 void Hotel::checkIn(const int& pos){
     int pos1;
     std::vector<int> roomIds;
@@ -785,7 +798,7 @@ void Hotel::logOut(){
 }
 
 std::string Hotel::getManagerName() const{
-    for(Staff* staff_member: this->staff){
+    for(auto& staff_member: this->staff){
         if(staff_member->getType() == "Manager"){
             return staff_member->getName();
         }
@@ -794,7 +807,7 @@ std::string Hotel::getManagerName() const{
 }
 
 std::string Hotel::getManagerPassword() const{
-    for(Staff* staff_member: this->staff){
+    for(auto& staff_member: this->staff){
         if(staff_member->getType() == "Manager"){
             Manager* manager = dynamic_cast<Manager*>(staff_member);
             return manager->getPassword();
@@ -802,16 +815,15 @@ std::string Hotel::getManagerPassword() const{
     }
     return "ERROR";
 }
-
-std::vector<Client *>& Hotel::getClients() {
+std::vector<Client*>& Hotel::getClients()  {
     return this->clients;
 }
 
-std::vector<Room *>& Hotel::getRooms() {
+std::vector<Room*>& Hotel::getRooms() {
     return this->rooms;
 }
 
-std::vector<Staff *>& Hotel::getStaff() {
+std::vector<Staff*>& Hotel::getStaff() {
     return this->staff;
 }
 bool Hotel::getLoggedInState() const{
@@ -1239,4 +1251,182 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
         }
     }
     else throw SortingError();
+}
+void Hotel::addRoom(Room * room) {
+    this->rooms.push_back(room);
+}
+
+void Hotel::addStaff(Staff* staff) {
+    this->staff.push_back(staff);
+}
+
+void Hotel::addClient(Client *client) {
+    this->clients.push_back(client);
+}
+
+void edit(Client* client) {
+    std::string edit;
+    std::cout << "Edit the client's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Name: " << std::endl;
+    getStringInput(edit, 6, 3);
+    if (edit != ".") client->setName(edit);
+    gotoxy(0, 5);
+    edit = "";
+    std::cout << "NIF: " << std::endl;
+    edit = GetNumberInput(5,5,CheckIfInteger);
+    if(edit != ".") client->setNIF(std::stoi(edit));
+
+}
+
+void edit(Receptionist* receptionist) {
+    std::string edit;
+    std::cout << "Edit the Responsible's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Name: " << std::endl;
+    getStringInput(edit,6,3);
+    if (edit != ".") receptionist->setName(edit);
+    gotoxy(0,5);
+    std::cout << "NIF: " << std::endl;
+    edit = GetNumberInput(5,5,CheckIfInteger);
+    if (edit != ".") receptionist->setNIF(std::stoi(edit));
+    gotoxy(0,7);
+    std::cout << "Wage: " << std::endl;
+    edit = GetNumberInput(12,7,CheckIfFloat);
+    if (edit != ".") receptionist->setWage(std::stof(edit));
+    gotoxy(0,9);
+    std::cout << "Years of Service: " << std::endl;
+    edit = GetNumberInput(20,9,CheckIfInteger);
+    if (edit != ".") receptionist->setYearsOfService(std::stoi(edit));
+}
+
+void edit(Responsible* responsible) {
+    std::string edit;
+    std::cout << "Edit the Responsible's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Name: " << std::endl;
+    getStringInput(edit,6,3);
+    if (edit != ".") responsible->setName(edit);
+    gotoxy(0,5);
+    std::cout << "NIF: " << std::endl;
+    edit = GetNumberInput(5,5,CheckIfInteger);
+    if (edit != ".") responsible->setNIF(std::stoi(edit));
+    gotoxy(0,7);
+    std::cout << "Wage: " << std::endl;
+    edit = GetNumberInput(12,7,CheckIfFloat);
+    if (edit != ".") responsible->setWage(std::stof(edit));
+    gotoxy(0,9);
+    std::cout << "Years of Service: " << std::endl;
+    edit = GetNumberInput(20,9,CheckIfInteger);
+    if (edit != ".") responsible->setYearsOfService(std::stoi(edit));
+    gotoxy(0,11);
+    std::vector<int> new_floors;
+    edit = " ";
+    while(edit != "."){
+        std::cout << "Insira um floor para monitorizar: (type '.' para parar)";
+        edit = GetNumberInput(2,12,CheckIfInteger);
+        responsible->assignFloor(std::stoi(edit));
+        gotoxy(2,12);
+        std::cout << "                          ";
+    }
+
+}
+
+void edit(Manager* manager) {
+    std::string edit;
+    std::cout << "Edit the Manager's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Name: " << std::endl;
+    getStringInput(edit,6,3);
+    if (edit != ".") manager->setName(edit);
+    gotoxy(0,5);
+    std::cout << "NIF: " << std::endl;
+    edit = GetNumberInput(5,5,CheckIfInteger);
+    if (edit != ".") manager->setNIF(std::stoi(edit));
+    gotoxy(0,7);
+    std::cout << "Wage: " << std::endl;
+    edit = GetNumberInput(12,7,CheckIfFloat);
+    if (edit != ".") manager->setWage(std::stof(edit));
+    gotoxy(0,9);
+    std::cout << "Years of Service: " << std::endl;
+    edit = GetNumberInput(20,9,CheckIfInteger);
+    if (edit != ".") manager->setYearsOfService(std::stoi(edit));
+    gotoxy(0,11);
+    std::cout << "Evaluation: " << std::endl;
+    edit = GetNumberInput(20,9,CheckIfInteger);
+    if (edit != ".") manager->setEvaluation(std::stoi(edit));
+
+}
+
+void edit(Janitor* janitor) {
+    std::string edit;
+    std::cout << "Edit the Janitor's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Name: " << std::endl;
+    getStringInput(edit,6,3);
+    if (edit != ".") janitor->setName(edit);
+    gotoxy(0,5);
+    std::cout << "NIF: " << std::endl;
+    edit = GetNumberInput(5,5,CheckIfInteger);
+    if (edit != ".") janitor->setNIF(std::stoi(edit));
+    gotoxy(0,7);
+    std::cout << "Wage: " << std::endl;
+    edit = GetNumberInput(12,7,CheckIfFloat);
+    if (edit != ".") janitor->setWage(std::stof(edit));
+    gotoxy(0,9);
+    std::cout << "Years of Service: " << std::endl;
+    edit = GetNumberInput(20,9,CheckIfInteger);
+    if (edit != ".") janitor->setYearsOfService(std::stoi(edit));
+    gotoxy(0,11);
+    std::cout << "Shift: " << std::endl;
+    getStringInput(edit,7,11);
+    if(edit == "day"){
+        janitor->setShift(true);
+    }else if(edit == "night"){
+        janitor->setShift(false);
+    }
+
+}
+
+void edit(Reservation* reservation) {
+    std::string edit;
+    std::cout << "Edit the Reservation's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Reservation Id: " << std::endl;
+    edit = GetNumberInput(22,3,CheckIfInteger);
+    if (edit != ".") reservation->setReservationId(std::stoi(edit));
+    gotoxy(0,5);
+    std::cout << "Check In Date (day/month/year): " << std::endl;
+    getStringInput(edit,30,5);
+    if (edit != ".") reservation->setCheckIn(Date(edit));
+    gotoxy(0,7);
+    std::cout << "Check Out Date (day/month/year): " << std::endl;
+    getStringInput(edit,33,7);
+    if (edit != ".") reservation->setCheckOut(Date(edit));
+    gotoxy(0,9);
+    std::cout << "Room Id: " << std::endl;
+    edit = GetNumberInput(10,9,CheckIfInteger);
+    if (edit != ".") reservation->setRoomId(std::stoi(edit));
+}
+
+void edit(Room* room) {
+    std::string edit;
+    std::cout << "Edit the Room's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "RoomNumber: " << std::endl;
+    edit = GetNumberInput(14,3,CheckIfInteger);
+    if (edit != ".") room->setRoomNumber(std::stoi(edit));
+    gotoxy(0,5);
+    std::cout << "Floor: " << std::endl;
+    edit = GetNumberInput(9,5,CheckIfInteger);
+    if (edit != ".") room->setFloor(std::stoi(edit));
+    gotoxy(0,7);
+    std::cout << "Capacity: " << std::endl;
+    edit = GetNumberInput(12,7,CheckIfInteger);
+    if (edit != ".") room->setCapacity(std::stoi(edit));
+    gotoxy(0,9);
+    std::cout << "Price per Night: " << std::endl;
+    edit = GetNumberInput(20,9,CheckIfFloat);
+    if (edit != ".") room->setPricePerNight(std::stof(edit));
+
 }

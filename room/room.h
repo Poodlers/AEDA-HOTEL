@@ -26,8 +26,6 @@ public:
         void changeAvailability(const bool& free);
         void modify(const std::string& capacity, const std::string& pricePerNight);
         virtual void print() = 0;
-
-        //void edit();
 private:
         int floor;
         unsigned int roomNumber;
@@ -41,11 +39,12 @@ private:
 class Suite: public Room{
 public:
     Suite(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
+    void activateDeactivateDiscount();
+    void print() override;
     void activateDiscount();
     void deactivateDiscount();
     bool getDiscountState() const;
     float getDiscountValue() const;
-    void print();
 
 private:
     static bool discount;
@@ -55,11 +54,13 @@ private:
 class ViewRoom: public Room{
 public:
     ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
+    void activateDeactivateDiscount();
+    void print() override;
+
     void activateDiscount();
     void deactivateDiscount();
     bool getDiscountState() const;
     float getDiscountValue() const;
-    void print();
 
 private:
     static bool discount;
@@ -69,12 +70,12 @@ private:
 class NoViewRoom: public Room{
 public:
     NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
+    void activateDeactivateDiscount();
+    void print() override;
     void activateDiscount();
     void deactivateDiscount();
     bool getDiscountState() const;
     float getDiscountValue() const;
-
-    void print();
 
 
 private:

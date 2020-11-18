@@ -33,9 +33,22 @@ public:
     ///
     /// \param reservation - reservation to add
     void addToHistory(Reservation *reservation);
+
+    ///Adds reservation to new reservations
+    ///
+    /// \param reservation - reservation to add
     void addNewReservation(Reservation *reservation);
+
+    ///Adds reservation to current reservations
+    ///
+    /// \param reservation - reservation to add
     void addCurrentReservation(Reservation *reservation);
+
+    ///Removes reservation from history
+    ///
+    /// \param reservation - reservation to remove
     void removeReservation(Reservation* reservation);
+
 
     std::vector<int> checkOut (Date* date);
     std::vector<int> checkIn (Date* date);

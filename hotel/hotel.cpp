@@ -482,26 +482,26 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
     throw RoomDoesNotExist(roomId);
 }
 
-std::vector<int> Hotel::searchReservations(const std::string& type, const std::string& criteria){
+std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, const std::string& value){
     std::vector<int> pos;
-    if(type == "ID"){
+    if(searchCriteria == "ID"){
         for (int i = 0; i < reservations.size(); i++){
-            if (reservations[i]->getReservationId() == stoi(criteria)){
+            if (reservations[i]->getReservationId() == stoi(value)){
                 pos.push_back(i);
                 return pos;
             }
         }
     }
-    else if (type == "Room"){
+    else if (searchCriteria == "Room"){
         for (int i = 0; i < reservations.size(); i++){
-            if (reservations[i]->getRoomId() == stoi(criteria)){
+            if (reservations[i]->getRoomId() == stoi(value)){
                 pos.push_back(i);
             }
         }
         return pos;
     }
-    else if (type == "Date"){
-        Date date1(criteria);
+    else if (searchCriteria == "Date"){
+        Date date1(value);
         for (int i = 0; i < reservations.size(); i++){
             if (reservations[i]->getCheckIn() == date1){
                 pos.push_back(i);

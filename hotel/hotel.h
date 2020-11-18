@@ -14,6 +14,13 @@
 class Hotel{
 public:
     /*HOTEL-BUILDING-AND-SAVING*/
+
+    /// Hotel Initializer
+    ///
+    /// Creates a hotel from a .txt file with the correct format
+    /// \param hotelFile - name of the '.txt' file with out the '.txt'
+    /// \exception throws FileNotFound if it can't find the file.
+    /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
     Hotel(const std::string &hotelFile);
     void addRoom(Room* room);
     void addStaff(Staff* staff);
@@ -22,6 +29,11 @@ public:
     void eraseStaff(Staff* staff);
     void eraseRoom(Room* room);
     void makeReservation(const Reservation& restart);
+
+    /// Save Hotel
+    ///
+    /// Creates a .txt with the current hotel that can be read by the constructor
+    /// \param hotelFile - name of the '.txt' file with out the '.txt'
     void saveHotel(const std::string &hotelFile);
     /**/
 
@@ -31,8 +43,35 @@ public:
     void buyProducts();
 
     /*RESERVATION*/
+    ///Returns the vector reservations
     std::vector<Reservation*> getReservations() const;
-    std::vector<int> searchReservations(const std::string& type, const std::string & criteria);
+    ///Searches for reservations
+    ///
+    /// searches for reservations by searchCriteria which agree with value.
+    /// \param searchCriteria - criteria used to search for reservations, can be "Date", "ID" or "Room".
+    /// \param value - value that the reservation has to agree with
+    /// \example searchReservations("Date",date1) will search for reservations with check in date equal to date1.
+    /// \example searchReservations("ID",reservationId) will search for the reservation with ID reservationID.
+    /// \example searchReservations("Room",roomID) will search for the reservations for the room with room ID roomId.
+    /// \return list of positions in the vector reservations of the found objects.
+    std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
+
+    ///Makes a reservation
+    ///
+    ///Makes a reservation
+    /// \param roomId - ID of the room to be reserved
+    /// \param checkIn - Check In date for the reservation
+    /// \param checkOut - Check Out date for the reservation
+    /// \param capacity - size of the reservation
+    /// \param posClient - position in the vector clients of the client making the reservation
+    /// \param reservationId - id of the reservation (only a real ID when first building the hotel, when making reservations after should be -1
+    /// \param in - only true when building the hotel, adds the reservation to current reservations right away
+    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations
+    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger then the room's capacity
+    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is reserved at the time intended
+    /// \exception throws ReservationHasInvalidDates if the Check In date is after the Check Out date
+    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId
+    /// \exception
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     /**/
     /*ROOMS*/

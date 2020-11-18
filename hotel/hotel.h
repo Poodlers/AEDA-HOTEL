@@ -154,7 +154,7 @@ public:
     /// \return date
     Date getDate() const;
 
-    /// Increments the date by i days
+    /// Increments the date by i days and archives expired reservations
     ///
     /// \param i - number of days to increment
     void incrementDate(const int& i);
@@ -244,6 +244,15 @@ public:
     ///
     /// \param pos - position of the staff member to remove
     void removeStaffMember(const int& pos);
+    void eraseStaff(Staff* staff);
+    void eraseRoom(Room* room);
+    void eraseClient(Client* client);
+    void addClient(Client *client);
+    void addStaff(Staff* staff);
+    void addRoom(Room * room);
+
+
+
 
     ///Adds a staff member
     ///

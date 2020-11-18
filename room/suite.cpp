@@ -4,12 +4,8 @@
 
 Suite::Suite(const int &floor, const unsigned int &roomNumber ,const unsigned int &roomId, const unsigned int &capacity, const float &pricePerNight):Room(floor,roomNumber,roomId,capacity,pricePerNight){}
 
-void Suite :: activateDiscount(){
-    this->discount = true;
-}
-
-void Suite :: deactivateDiscount(){
-    this->discount = false;
+void Suite :: toggleDiscount(){
+    this->discount = !this->discount;
 }
 
 bool Suite::getDiscountState() const{
@@ -30,13 +26,13 @@ void Suite::print() {
                  << this->getPricePerNight() << " ";
     }
     else{
-        std::cout << this->getPricePerNight() + this->getPricePerNight() * discountValue <<" " << discountValue*100 <<std::setw(11)<< "% Off ";
+        std::cout << std::setw(10) << this->getPricePerNight() - this->getPricePerNight() * discountValue <<" " << std::setw(2) << discountValue*100 <<std::setw(5)<< "% Off ";
     }
 
     if (this->getAvailability()){
-        std::cout << "Available"<<std::endl;
+        std::cout << std::setw(9) << "Available"<<std::endl;
     }
     else{
-        std::cout << "Occupied"<<std::endl;
+        std::cout << std::setw(9) << "Occupied"<<std::endl;
     }
 }

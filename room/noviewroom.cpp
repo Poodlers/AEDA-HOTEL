@@ -5,13 +5,10 @@
 NoViewRoom :: NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight) : Room(floor,roomNumber,roomId,capacity,pricePerNight){
 }
 
-void NoViewRoom :: activateDiscount(){
-    this->discount = true;
+void NoViewRoom ::toggleDiscount(){
+    this->discount = !this->discount;
 }
 
-void NoViewRoom :: deactivateDiscount(){
-    this->discount = false;
-}
 
 bool NoViewRoom::getDiscountState() const{
     return discount;
@@ -32,7 +29,7 @@ void NoViewRoom::print() {
                  << this->getPricePerNight() << " ";
     }
     else{
-        std::cout << this->getPricePerNight() + this->getPricePerNight() * discountValue <<" " << discountValue*100 <<std::setw(10)<< "% Off ";
+        std::cout << std::setw(10) << this->getPricePerNight() - this->getPricePerNight() * discountValue <<" " << std::setw(2) << discountValue*100 <<std::setw(5)<< "% Off ";
     }
 
     if (this->getAvailability()){

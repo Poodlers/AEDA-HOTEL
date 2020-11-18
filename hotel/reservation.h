@@ -150,20 +150,47 @@ public:
     /// \return room ID
     int getRoomId() const;
 
+    /// Changes the reservations ID to reservationID
+    ///
+    /// \param reservationId - new reservation ID;
     void setReservationId(const int & reservationId);
+
+    /// Changes the reservation size to reservationSize
+    ///
+    /// \param reservationSize - new reservation size
     void setReservationSize(const int & reservationSize);
+
+    /// Changes the check in date
+    ///
+    /// \param checkIn - new check in date
     void setCheckIn(const Date& checkIn);
+
+    /// Changes the check ou date
+    ///
+    /// \param checkOut - new check out date
     void setCheckOut(const Date& checkOut);
-    void setRoomId(const int& roomId);
+
+    /// Changes the ID
+    ///
+    /// used after initializing the hotel to make sure we don't repeat reservation IDs
+    /// \param ID - new ID
     void setID(const int& ID) const;
+
+    /// Prints the reservation
     void print();
 
 private:
+    /// Reservation ID
     int reservationId;
+    /// Reservation size
     int reservationSize;
+    ///Check in date
     Date checkIn ;
+    ///Check out date
     Date checkOut;
+    ///Room ID
     int roomId;
+    ///variable to avoid repeating reservation IDs
     static int ID;
 };
 

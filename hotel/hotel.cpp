@@ -14,7 +14,7 @@ Date Hotel::getDate() const{
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){
-        client->archiveExpiredReservations(this->date);
+        client->archiveExpiredReservations(&this->date);
     }
 }
 

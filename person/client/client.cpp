@@ -46,7 +46,7 @@ std::vector<int> Client::checkIn(Date* date) {
     return roomIds;
 }
 
-void Client::archiveExpiredReservations(Date date){
+void Client::archiveExpiredReservations(Date* date){
     for (int i = 0; i < futureReservations.size(); i++){
         if (futureReservations[i]->getCheckOut() < date){
             this->history.push_back(futureReservations[i]);

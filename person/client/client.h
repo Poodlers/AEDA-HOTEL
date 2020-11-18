@@ -8,12 +8,30 @@
 
 class Client: public Person{
 public:
+    ///Client constructor
+    ///
+    /// \param name - client's name
+    /// \param NIF - client's NIF
     Client(const std::string &name, const unsigned int &NIF);
 
+    /// Return the history vector
+    ///
+    /// \return history
     std::vector<Reservation*>& getHistory();
+
+    /// Return the future reservations vector
+    ///
+    /// \return futureReservations
     std::vector<Reservation*> getFutureReservations() const;
+
+    /// Return the current reservations vector
+    ///
+    /// \return currentReservations
     std::vector<Reservation*> getCurrentReservations() const;
 
+    /// Adds a reservation to history vector
+    ///
+    /// \param reservation - reservation to add
     void addToHistory(Reservation *reservation);
     void addNewReservation(Reservation *reservation);
     void addCurrentReservation(Reservation *reservation);
@@ -21,7 +39,7 @@ public:
 
     std::vector<int> checkOut (Date* date);
     std::vector<int> checkIn (Date* date);
-    void archiveExpiredReservations(Date date);
+    void archiveExpiredReservations(Date* date);
     void printConsole();
     bool operator==(Client* client);
 

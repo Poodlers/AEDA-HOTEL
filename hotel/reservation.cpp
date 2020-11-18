@@ -110,21 +110,25 @@ bool Date::operator >(const Date& date){
 Reservation::Reservation(const int &reservationSize,Date* checkIn,Date* checkOut, const int & roomId, const int& reservationId) {
     if (*checkOut < *checkIn) { throw ReservationHasInvalidDates(); }
 
-    if (reservationId == -1) this->reservationId = rand() % 200 + 1;
+    if (reservationId == -1){
+        this->reservationId = this->ID;
+        ID++;
+    }
     else this->reservationId = reservationId;
 
     this->reservationSize = reservationSize;
     this->checkIn = *checkIn;
     this->checkOut = *checkOut;
-    this->getCheckIn() = *checkIn;
     this->roomId =  roomId;
 
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
     Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
-    reservationId++;
-    this->reservationId = reservationId;
+
+    this->reservationId = this->ID;
+    ID++;
+
     this->reservationSize = reservationSize;
 
     this->roomId = roomId;
@@ -190,3 +194,8 @@ void Reservation::setRoomId(const int& roomId){
 }
 
 
+void Reservation::setID(const int& ID) const{
+    this->ID = ID;
+}
+
+int Reservation::ID = 0;

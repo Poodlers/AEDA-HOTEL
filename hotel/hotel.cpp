@@ -416,6 +416,13 @@ Hotel::Hotel(const std::string &hotelFile) {
         pos++;
         ss.clear();
     }
+    int max =0;
+    for (Reservation* reservation: reservations){
+        if (reservation->getReservationId() > max){
+            max = reservation->getReservationId();
+        }
+    }
+    reservations[0]->setID(max);
     this->assignFloorsToResponsibles();
 
     /*

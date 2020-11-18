@@ -33,3 +33,12 @@ void Provider::setName(const std::string &n) {
 void Provider::setProducts(const std::vector<Product *> &p) {
     this->products = p;
 }
+
+void Provider::addProduct() {
+    Product * n = new Product();
+    this->products.push_back(n);
+}
+
+void Provider::removeProduct(unsigned &index){
+    this->products.erase(products.begin() + index);
+}

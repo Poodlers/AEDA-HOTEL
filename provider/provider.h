@@ -39,6 +39,11 @@ public:
     ///
     /// \param p - vector of products to set
     void setProducts(const std::vector<Product *> &p);
+    /// add product to vector
+    void addProduct();
+    ///
+    /// \param index - element to remove from products vector
+    void removeProduct(unsigned &index);
 private:
     /// name of provider
     std::string name;

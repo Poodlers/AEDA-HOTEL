@@ -26,23 +26,27 @@ void Client::addNewReservation(Reservation *reservation){
 
 }
 
-void Client::checkIn( Date date) {
+std::vector<int> Client::checkIn(Date* date) {
+    std::vector<int> roomIds;
     int numberOfFutureReservations = this->futureReservations.size();
     for (int i = 0; i < futureReservations.size(); i++) {
-        if (futureReservations[i]->getCheckIn() == date) {
+        if (futureReservations[i]->getCheckIn() == *date) {
             this->currentReservations.push_back(futureReservations[i]);
+            roomIds.push_back(futureReservations[i]->getRoomId());
             this->futureReservations.erase(futureReservations.begin()+i);
             std::cout << "The checkIn for room " << futureReservations[i]->getRoomId() << " was completed."<<std::endl;
         }
-        else if ((futureReservations[i]->getCheckIn() < date) && (futureReservations[i]->getCheckOut() > date)) {
+        else if ((futureReservations[i]->getCheckIn() < *date) && (futureReservations[i]->getCheckOut() > *date)) {
             std::cout << "The checkIn for room " << futureReservations[i]->getRoomId() << " was "
-                      << date - futureReservations[i]->getCheckIn() << " days late." << std::endl;
-            futureReservations[i]->setCheckIn(date);
+                      << *date - futureReservations[i]->getCheckIn() << " days late." << std::endl;
+            futureReservations[i]->setCheckIn(*date);
             this->currentReservations.push_back(futureReservations[i]);
+            roomIds.push_back(futureReservations[i]->getRoomId());
             this->futureReservations.erase(futureReservations.begin()+i);
         }
     }
     if (numberOfFutureReservations == this->futureReservations.size()) throw NoReservationsToCheckIn(this->getName(),this->getNIF());
+    return roomIds;
 }
 
 void Client::archiveExpiredReservations(Date date){
@@ -95,22 +99,26 @@ void Client::addCurrentReservation(Reservation *reservation){
     currentReservations.push_back(reservation);
 }
 
-void Client::checkOut( Date date){
+std::vector<int> Client::checkOut( Date* date){
+    std::vector<int> roomIds;
     if (this->currentReservations.size()==0) throw NoReservationsToCheckOut(this->getName(),this->getNIF());
     for (int i = 0; i < currentReservations.size(); i++) {
-        if (currentReservations[i]->getCheckOut() == date) {
+        if (currentReservations[i]->getCheckOut() == *date) {
             this->history.push_back(currentReservations[i]);
+            roomIds.push_back(currentReservations[i]->getRoomId());
             this->currentReservations.erase(currentReservations.begin()+i);
             std::cout << "The checkOut for room " << currentReservations[i]->getRoomId() << " was completed."<<std::endl;
         }
-        if (currentReservations[i]->getCheckOut() > date) {
+        if (currentReservations[i]->getCheckOut() > *date) {
             std::cout << "The checkOut for room " << currentReservations[i]->getRoomId() << " was "
-                      << currentReservations[i]->getCheckOut() - date << " days early." << std::endl;
-            currentReservations[i]->setCheckOut(date);
+                      << currentReservations[i]->getCheckOut() - *date << " days early." << std::endl;
+            currentReservations[i]->setCheckOut(*date);
             this->history.push_back(currentReservations[i]);
+            roomIds.push_back(currentReservations[i]->getRoomId());
             this->currentReservations.erase(currentReservations.begin()+i);
         }
     }
+    return roomIds;
 }
 
 void Client::removeReservation(Reservation *reservation) {

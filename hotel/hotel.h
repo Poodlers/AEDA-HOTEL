@@ -8,10 +8,12 @@
 #include "../provider/provider.h"
 #include "../product/product1.h"
 #include "reservation.h"
+#include "../GUI/utils.h"
 #include <algorithm>
 
 class Hotel{
 public:
+    /*HOTEL-BUILDING-AND-SAVING*/
     Hotel(const std::string &hotelFile);
     void addRoom(Room* room);
     void addStaff(Staff* staff);
@@ -21,12 +23,14 @@ public:
     void eraseRoom(Room* room);
     void makeReservation(const Reservation& restart);
     void saveHotel(const std::string &hotelFile);
+    /**/
 
-    void addRoom(const Room& room);
+    /*ROOMS*/
 
-    void checkIfFloorIsValid(unsigned int floors);
-    int searchForRoom(unsigned int roomId, unsigned int roomNumber);
-
+    void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
+    void checkIfFloorIsValid(const unsigned int& floors);
+    int searchForRoom(const std::string& roomId, const std::string& roomNumber);
+    int searchForRoomByRoomId(const int& roomId);
     void getCosts();
     void getProfit();
 
@@ -36,7 +40,12 @@ public:
     std::vector <Staff*>& getStaff();
     std::vector <Room*>& getRooms();
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
+    void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
+    void sortRooms(const std::string& input,const std::string& order1);
+    void activateDiscount(const std::string& type);
+    /**/
 
+    /*DATE*/
     Date getDate() const;
     void incrementDate(const int& i);
 
@@ -47,6 +56,8 @@ public:
 
     /*CLIENTS*/
 
+    void checkIn(const int& pos);
+    void checkOut(const int& pos);
     void modifyClient(const std::string & name, std::string& NIF, const int& pos);
     void removeClient(const int& pos);
     void addClient(const std::string& name, const std::string& NIF);

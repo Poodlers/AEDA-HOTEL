@@ -4,8 +4,19 @@
 
 Suite::Suite(const int &floor, const unsigned int &roomNumber ,const unsigned int &roomId, const unsigned int &capacity, const float &pricePerNight):Room(floor,roomNumber,roomId,capacity,pricePerNight){}
 
-void Suite :: activateDeactivateDiscount(){
-    this->discount = !(this->discount);
+void Suite :: activateDiscount(){
+    this->discount = true;
+}
+
+void Suite :: deactivateDiscount(){
+    this->discount = false;
+}
+
+bool Suite::getDiscountState() const{
+    return discount;
+}
+float Suite::getDiscountValue() const{
+    return discountValue;
 }
 
 bool Suite::discount = false;

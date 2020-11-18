@@ -44,76 +44,129 @@ void reservation(Hotel * hotel){
 }
 
 
-void Rooms(Hotel * hotel){
-    string input;
-    cout << "Date: " << hotel->getDate() <<endl;
-
-    for (Room* room: hotel->getRooms()){
-        room->print();
-        cout <<endl;
-    }
-
-    cout << "Write Help to see possible commands."<<endl;
-
-    cin >> input;
-
+void rooms(Hotel * hotel){
+    string input, order, sort;
+    int pos;
     string roomId, roomNumber, capacity, type, price, floor;
-    try{
-        if (input == "Help"){
+    while (true){
+        cout << "Date: " << hotel->getDate() <<endl;
 
+        for (Room* room: hotel->getRooms()){
+            room->print();
+            cout <<endl;
         }
-        else if (input == "Back"){
 
-        }
-        else if (input == "Add"){
+        cout << "Write Help to see possible commands."<<endl;
 
-        }
-        else if (input == "Modify"){
+        cin >> input;
+        try{
+            if (input == "Help"){
+                cout << "Valid commands are: Modify, Add, Sort, Search, Time, Discount, Back and Help "<<endl;
+            }
+            else if (input == "Back"){
+                return;
+            }
+            else if (input == "Add"){
+                cout << "Insert the Room ID of the room you wish to add:"<<endl;
+                cin >> roomId;
 
-        }
-        else if (input == "Remove"){
+                cout << "Insert the Room Number of the room you wish to add:"<<endl;
+                cin >> roomNumber;
 
-        }
-        else if (input == "Reservation"){
-            reservation(hotel);
-        }
-        else if (input == "Sort"){
+                cout << "Insert the Floor of the room you wish to add:"<<endl;
+                cin >> floor;
 
-        }
-        else if (input == "Search"){
+                cout << "Insert the Capacity of the room you wish to add:"<<endl;
+                cin >> capacity;
 
-        }
-        else{
+                cout << "Insert the Price of the room you wish to add:"<<endl;
+                cin >> price;
 
+                cout << "Insert the Type of the room you wish to add:"<<endl;
+                cin >> type;
+
+                hotel->addRoom(floor,roomNumber,roomId,capacity,price, type);
+            }
+            else if (input == "Modify"){
+                cout << "Insert the Room ID of the room you wish to modify:"<<endl;
+                cin >> roomId;
+
+                cout << "Insert the Room Number of the room you wish to modify:"<<endl;
+                cin >> roomNumber;
+
+                pos = hotel->searchForRoom(roomId,roomNumber);
+
+                cout << "Insert the Capacity of the room you wish to modify (write '.' to keep as is):"<<endl;
+                cin >> capacity;
+
+                cout << "Insert the Price of the room you wish to modify (write '.' to keep as is):"<<endl;
+                cin >> price;
+
+                hotel->modifyRoom(capacity,price,pos);
+            }
+            else if (input == "Time"){
+                hotel->incrementDate(1);
+            }
+            else if (input == "Sort"){
+                cout << "Insert the type of sorting to be done. Options are: Room ID, Room Number, Capacity, Price, Floor or Type "<<endl;
+                string sorting,order;
+                cleanCinBuffer();
+                getline(cin,sorting);
+                cout <<"Should the order by Ascending or Descending?"<<endl;
+                cin>> order;
+
+                hotel->sortRooms(sorting,order);
+            }
+            else if (input == "Search"){
+                cout << "Insert the Room ID of the room you wish to modify:"<<endl;
+                cin >> roomId;
+
+                cout << "Insert the Room Number of the room you wish to modify:"<<endl;
+                cin >> roomNumber;
+                pos = hotel->searchForRoom(roomId,roomNumber);
+                hotel->getRooms()[pos]->print();
+            }
+            else if (input == "Discount"){
+                cout << "What type of room should be or stop being in discount?"<<endl;
+                cin>>type;
+                hotel->activateDiscount(type);
+            }
+            else{
+                cout << "Invalid command. Write Help to see possible commands."<<endl;
+
+            }
         }
+        catch(NotAPositiveInt& msg){
+            cout << msg;
+        }
+        catch(NotAnInt& msg){
+            cout << msg;
+        }
+        catch(RoomDoesNotExist& msg){
+            cout <<msg;
+        }
+        catch(RoomAlreadyExists& msg){
+            cout <<msg;
+        }
+        catch(RoomWithThisRoomIdOrRoomNumberAlreadyExists& msg){
+            cout <<msg;
+        }
+        catch(SortingError& msg){
+         cout << msg;
+        }
+        catch(AccessRestricted& msg){
+            cout << msg;
+        }
+        catch(FloorDosNotExist& msg){
+            cout << msg;
+        }
+        catch(InvalidRoomType& msg){
+            cout << msg;
+        }
+        system("pause");
+        system("CLS");
     }
-    catch(ClientDoesNotExist& msg){
-        cout <<msg;
-    }
-    catch(NIFIsNotValid& msg){
-        cout << msg;
-    }
-    catch(ClientWithThisNIFAlreadyExists& msg){
-        cout <<msg;
-    }
-    catch(NotAPositiveInt& msg){
-        cout << msg;
-    }
-    catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
-        cout << msg;
-    }
-    catch(AnotherReservationForThisRoomAlreadyExistsAtThisTime& msg){
-        cout << msg;
-    }
-    catch(ReservationHasInvalidDates& msg){
-        cout << msg;
-    }
-    catch(ClientCantMakeThisReservation& msg){
-        cout << msg;
-    }
-    catch(RoomDoesNotExist& msg){
-        cout <<msg;
-    }
+
 }
 
 void checkIn(Hotel* hotel){
@@ -130,7 +183,7 @@ void checkIn(Hotel* hotel){
 
     try{
         pos = hotel->search(name,NIF, type ="Client");
-        hotel->getClients()[pos]->checkIn(hotel->getDate());
+        hotel->checkIn(pos);
     }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
@@ -161,7 +214,7 @@ void checkOut(Hotel* hotel){
 
     try{
         pos = hotel->search(name,NIF, type = "Client");
-        hotel->getClients()[pos]->checkOut(hotel->getDate());
+        hotel->checkOut(pos);
     }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
@@ -315,7 +368,7 @@ void staff(Hotel *hotel){
     system("CLS");
     cout << endl;
     int pos;
-    string input;
+    string input, c;
     string name;
     string NIF;
     string type;
@@ -390,6 +443,14 @@ void staff(Hotel *hotel){
                 cout << "Insert the position of the staff member you wish to add:"<<endl;
                 cin >> type;
 
+                if (type == "manager"){
+                    cout << "This action will replace the manager. Write yes to proceed, and anything else to cancel" << endl;
+                    cin >> c;
+                    if (c != "yes"){
+                        continue;
+                    }
+                }
+
                 cout << "Insert the wage of the staff member you wish to add:"<<endl;
                 cin >> wage;
 
@@ -444,6 +505,9 @@ void staff(Hotel *hotel){
         catch(NIFIsNotValid& msg){
             cout << msg;
         }
+        catch(NotAPositiveFloat& msg){
+            cout << msg;
+        }
         catch(StaffMemberWithThisNIFAlreadyExists& msg){
             cout << msg;
         }
@@ -483,7 +547,7 @@ void system(Hotel* hotel){
             clients(hotel);
         }
         else if (input == "Rooms"){
-
+            rooms(hotel);
         }
         else if (input == "LogIn"){
             try{
@@ -503,7 +567,10 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservations, Time and Exit"<<endl;
+        }
+        else if (input == "Reservations"){
+
         }
         else if(input == "Time"){
             hotel->incrementDate(1);

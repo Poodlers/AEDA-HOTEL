@@ -2,21 +2,17 @@
 #include <iostream>
 #include "../GUI/utils.h"
 #include <iomanip>
-
-Room::Room(){
-    this->roomId = 0;
-    this->roomNumber = 0;
-    this->floor = 0;
-    this->capacity = 0;
-    this->pricePerNight = 0;
-}
-
 Room::Room(const int &floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight ){
+
     this->floor=floor;
     this->roomNumber = roomNumber;
     this->roomId = roomId;
     this->capacity = capacity;
     this->pricePerNight = pricePerNight;
+}
+
+bool Room::getAvailability() const{
+    return free;
 }
 
 int Room::getFloor() const{
@@ -47,10 +43,27 @@ void Room::setPricePerNight(const float pricePerNight){
     this->pricePerNight = pricePerNight;
 }
 
+void Room::print() {
+    std::cout << std::left <<  std::setw(10) << std::setfill(' ') << this->roomId << std::setw(15)
+              << this->roomNumber << std::setw(8)<< this->floor << std::setw(10) << this->capacity << std::setw(18)
+              << this->pricePerNight << std::endl;
+}
 
 std::vector<Reservation*> Room::getReservations() const{
     return reservations;
 }
 void Room::addReservation(Reservation* reservation){
     reservations.push_back(reservation);
+}
+void Room::changeAvailability(const bool& free){
+    this->free = free;
+}
+
+void Room::modify(const std::string& capacity, const std::string& pricePerNight){
+    if (capacity != "."){
+        this->capacity = stoi(capacity);
+    }
+    if (pricePerNight != "."){
+        this->pricePerNight = stof(pricePerNight);
+    }
 }

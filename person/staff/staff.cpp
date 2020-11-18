@@ -31,7 +31,7 @@ void Staff::setYearsOfService(const int yearsOfService){
 }
 
 void Staff::print() {
-    std::cout << std::left << std::setw(13) << this->getType() <<  std::setw(20) << std::setfill(' ') << this->getName() <<
+    std::cout << std::left << std::setw(13) << this->getType() <<  std::setw(22) << std::setfill(' ') << this->getName() <<
               std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService();
 
 }

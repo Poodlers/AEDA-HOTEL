@@ -6,8 +6,19 @@ ViewRoom :: ViewRoom(const int & floor, const unsigned int & roomNumber ,const u
 }
 
 
-void ViewRoom :: activateDeactivateDiscount(){
-    this->discount = !(this->discount);
+void ViewRoom :: activateDiscount(){
+    this->discount = true;
+}
+
+void ViewRoom :: deactivateDiscount(){
+    this->discount = false;
+}
+
+bool ViewRoom::getDiscountState() const{
+    return discount;
+}
+float ViewRoom::getDiscountValue() const{
+    return discountValue;
 }
 
 bool ViewRoom::discount = false;

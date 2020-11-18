@@ -9,7 +9,7 @@
 class Client: public Person{
 public:
     Client(const std::string &name, const unsigned int &NIF);
-    Client();
+
     std::vector<Reservation*>& getHistory();
     std::vector<Reservation*> getFutureReservations() const;
     std::vector<Reservation*> getCurrentReservations() const;
@@ -20,6 +20,9 @@ public:
     void removeReservation(Reservation* reservation);
     void checkOut( Date date);
     void checkIn( Date date);
+
+    std::vector<int> checkOut (Date* date);
+    std::vector<int> checkIn (Date* date);
     void archiveExpiredReservations(Date date);
     void printConsole();
     bool operator==(Client* client);

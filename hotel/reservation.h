@@ -3,7 +3,9 @@
 #include <string>
 
 
-
+///Date
+///
+///Class represents a date
 class Date{
 private:
     ///year
@@ -98,6 +100,10 @@ public:
 
 };
 
+
+///Reservation
+///
+///Class which represents a reservation
 class Reservation{
 public:
     ///Reservation constructor

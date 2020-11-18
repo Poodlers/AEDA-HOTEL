@@ -6,6 +6,10 @@
 #include "../person.h"
 #include "../../exceptions/exceptions.h"
 
+
+///Client
+///
+///Class which represents a client
 class Client: public Person{
 public:
     ///Client constructor

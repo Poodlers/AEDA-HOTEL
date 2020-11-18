@@ -11,10 +11,34 @@
 #include "../GUI/utils.h"
 #include <algorithm>
 
+/**
+  \file "C:\Users\Joana\Documents\Uni\Algoritmos e Estruturas de dados\Projeto\aeda_hotel_projeto\cmake-build-debug\hotel_exemplo.txt"
+  File used to build a hotel, must have the following format:
+  ### Example
+  ~~~~~~~~~~~~~~~~~~~.cpp
+      //Hotel-File
+      //#biggining date
+      //#number of floors
+      //#first floor with rooms
+      //Rooms
+      //#floor #room number #capacity #price #type (can be Suite, NoViewRoom or ViewRoom [case sensitive])
+      //...
+      //Staff
+      //#name[can have spaces, only two names] #NIF[must be valid] #first year of work #wage #position (can be Janitor, Responsible, Receptionist or Manager[only one manager per hotel] [case sensitive]) if Janitor #shift (can be night or day [case sensitive]) else if Manager #password
+      //...
+      //Client
+      //#name[can have spaces, only two names] #NIF[must be valid] #reservations[separated by a space]
+      //                                                          (#room ID,#Check In date[dd-mm-yyyy],#Check Out date[dd-mm-yyyy],#Reservation ID,#Reservation Size,#0 if in history or future 1 if in current reservations[client is currently at the hotel])-> no spaces in between
+      //                                                           [-Can have no reservations]
+      //...
+      //End
+  ~~~~~~~~~~~~~~~~~~~
+ */
 
-///Hotel
+
+/// Class which represents a hotel
 ///
-///Class which represents a hotel
+/// Holds the all the information of a hotel (clients, staff members, reservations, providers, rooms, products bought, floors, ...)
 class Hotel{
 public:
     /*HOTEL-BUILDING-AND-SAVING*/
@@ -22,6 +46,7 @@ public:
     /// Hotel Initializer
     ///
     /// Creates a hotel from a .txt file with the correct format
+    /// \see hotel_structure_example.txt and hotel_exemplo.txt
     /// \param hotelFile - name of the '.txt' file with out the '.txt'
     /// \exception throws FileNotFound if it can't find the file.
     /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
@@ -30,6 +55,7 @@ public:
     /// Save Hotel
     ///
     /// Creates a .txt with the current hotel that can be read by the constructor
+    /// \see hotel_structure_example.txt and hotel_exemplo.txt
     /// \param hotelFile - name of the '.txt' file with out the '.txt'
     void saveHotel(const std::string &hotelFile);
     /**/
@@ -68,11 +94,11 @@ public:
     /// \param posClient - position in the vector clients of the client making the reservation
     /// \param reservationId - id of the reservation (only a real ID when first building the hotel, when making reservations after should be -1
     /// \param in - only true when building the hotel, adds the reservation to current reservations right away
-    /// \exception throws <ClientCantMakeThisReservation> when client is trying to make a reservation for a Suite with no previous reservations
-    /// \exception throws <RoomDoesNotHaveTheNecessaryCapacity> if the reservation size is bigger then the room's capacity
-    /// \exception throws <AnotherReservationForThisRoomAlreadyExistsAtThisTime> if the room is reserved at the time intended
-    /// \exception throws <ReservationHasInvalidDates> if the Check In date is after the Check Out date
-    /// \exception throws <RoomDoesNotExist> is there is no room with room ID roomId
+    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations
+    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger then the room's capacity
+    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is reserved at the time intended
+    /// \exception throws ReservationHasInvalidDates if the Check In date is after the Check Out date
+    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     /**/
 
@@ -87,17 +113,17 @@ public:
     /// \param capacity - room capacity
     /// \param pricePerNight - price per night of the room
     /// \param type - room type
-    /// \exception throws <RoomAlreadyExists> if the room already exist
-    /// \exception throws <NotAnInt> if floor is not an integer
-    /// \exception throws <NotAPositiveInt> if capacity is a not a positive integer
-    /// \exception throws <FloorDosNotExist> if floor is not a floor of the hotel
-    /// \exception throws <NotAPositiveFloat> if price is not a positive float
+    /// \exception throws RoomAlreadyExists> if the room already exist
+    /// \exception throws NotAnInt if floor is not an integer
+    /// \exception throws NotAPositiveInt if capacity is a not a positive integer
+    /// \exception throws FloorDosNotExist if floor is not a floor of the hotel
+    /// \exception throws NotAPositiveFloat if price is not a positive float
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
 
     ///Checks if floor is valid
     ///
     /// \param floor - floor to check
-    /// \exception throws <FloorDosNotExist> if floor doesn't exist in the hotel
+    /// \exception throws FloorDosNotExist if floor doesn't exist in the hotel
     void checkIfFloorIsValid(const unsigned int& floor);
 
     ///Searches for a specific room
@@ -105,16 +131,16 @@ public:
     /// \param roomId - room ID of the room to find
     /// \param roomNumber - room Number of the room to find
     /// \return position of the room found
-    /// \exception throws <NotAPositiveInt> if capacity is a not a positive integer if roomId or roomNumber
-    /// \exception throws <RoomWithThisRoomIdOrRoomNumberAlreadyExists> if has only the same ID or only the same number
-    /// \exception throws <RoomDoesNotExist> is room does not exist
+    /// \exception throws NotAPositiveInt if capacity is a not a positive integer if roomId or roomNumber
+    /// \exception throws RoomWithThisRoomIdOrRoomNumberAlreadyExists if has only the same ID or only the same number
+    /// \exception throws RoomDoesNotExist is room does not exist
     int searchForRoom(const std::string& roomId, const std::string& roomNumber);
 
     ///Searches for room by its roomID
     ///
     /// \param roomId - room ID of the room to find
     /// \return position of the room found
-    /// \exception throws <RoomDoesNotExist> if no room with RoomId exists
+    /// \exception throws RoomDoesNotExist if no room with RoomId exists
     int searchForRoomByRoomId(const unsigned int& roomId);
 
     ///Returns rooms vector
@@ -128,22 +154,22 @@ public:
     /// \param capacity - room capacity, if '.' doesn't change
     /// \param pricePerNight - price per night, if '.' doesn't change
     /// \param pos - position of the room to modify in the vector rooms
-    /// \exception throws <NotAPositiveInt> if capacity is a not a positive integer
-    /// \exception throws <NotAPositiveFloat> if price is not a positive float
+    /// \exception throws NotAPositiveInt if capacity is a not a positive integer
+    /// \exception throws NotAPositiveFloat if price is not a positive float
     void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
 
     ///Sorts Rooms
     ///
     /// \param criteria - sorting criteria can be: Room ID, Room Number, Floor, Capacity, Price and Type
     /// \param order - sorting order can be: Ascending or Descending
-    /// \exception throws <SortingError> if order or criteria is wrong
+    /// \exception throws SortingError if order or criteria is wrong
     void sortRooms(const std::string& criteria,const std::string& order);
 
     ///Activate Discount
     ///
     /// \param type - room type to activate the discount
-    /// \exception throws <AccessRestricted> if someone not logged in tries to activate it
-    /// \exception throws <InvalidRoomType> if type is not a valid room type
+    /// \exception throws AccessRestricted if someone not logged in tries to activate it
+    /// \exception throws InvalidRoomType if type is not a valid room type
     void activateDiscount(const std::string& type);
     /**/
 
@@ -157,6 +183,7 @@ public:
     /// Increments the date by i days and archives expired reservations
     ///
     /// \param i - number of days to increment
+    /// \see Client#archiveExpiredReservations
     void incrementDate(const int& i);
 
     /*PEOPLE*/
@@ -167,11 +194,11 @@ public:
     /// \param type - can be "Client" for finding a client or "Staff" for finding a staff member
     /// \return position of the person in its vector
     /// \note for staff members return their position in the type variable
-    /// \exception throws <NIFIsNotValid> if NIF is not valid
-    /// \exception throws <ClientWithThisNIFAlreadyExists> if there is a client with NIF with a different name
-    /// \exception throws <ClientDoesNotExist> if client does not exist
-    /// \exception throws <StaffMemberWithThisNIFAlreadyExists> if is a staff member with NIF with a different name
-    /// \exception throws <StaffMemberDoesNotExist> if staff member does not exist
+    /// \exception throws NIFIsNotValid if NIF is not valid
+    /// \exception throws ClientWithThisNIFAlreadyExists if there is a client with NIF with a different name
+    /// \exception throws ClientDoesNotExist if client does not exist
+    /// \exception throws StaffMemberWithThisNIFAlreadyExists if is a staff member with NIF with a different name
+    /// \exception throws StaffMemberDoesNotExist if staff member does not exist
     int search(const std::string& name, const std::string& NIF, std::string& type);
     /**/
 
@@ -184,13 +211,15 @@ public:
     ///Check In
     ///
     /// \param pos - position of the client who wants to check In
-    /// \exception throws <NoReservationsToCheckIn> if there are no reservations of client in position pos to check In
+    /// \see Client#checkIn
+    /// \exception throws NoReservationsToCheckIn if there are no reservations of client in position pos to check In
     void checkIn(const int& pos);
 
     ///Check Out
     ///
     /// \param pos - position of the client who wants to check Out
-    /// \exception throws <NoReservationsToCheckOut> if there are no reservations to check Out
+    /// \see Client#checkOut
+    /// \exception throws NoReservationsToCheckOut if there are no reservations to check Out
     void checkOut(const int& pos);
 
     ///Modifies a client
@@ -199,7 +228,7 @@ public:
     /// \param name - name to change to, if '.' then doesn't change
     /// \param NIF  - NIF to change to, if '.' then doesn't change
     /// \param pos - position of the client in the vector clients
-    /// \exception throws <NIFIsNotValid> if NIF is invalid
+    /// \exception throws NIFIsNotValid if NIF is invalid
     void modifyClient(const std::string & name, std::string& NIF, const int& pos);
 
     ///Removes a client
@@ -211,15 +240,15 @@ public:
     ///
     /// \param name - name of the new client
     /// \param NIF  - NIF of the new client
-    /// \exception throws <ClientAlreadyExists> if client already exists
-    /// \exception throws <ClientWithThisNIFAlreadyExists> if a client already exists with the same NIF
+    /// \exception throws ClientAlreadyExists if client already exists
+    /// \exception throws ClientWithThisNIFAlreadyExists if a client already exists with the same NIF
     void addClient(const std::string& name, const std::string& NIF);
 
     ///Sorts vector clients
     ///
     /// \param criteria - sorting criteria can be: name, NIF, Amount of future reservations, Amount of past reservations, Current reservations, Amount of reservations and Most Recent Reservation
     /// \param order - ascending and descending can be: Ascending or Descending
-    /// \exception throws <SortingError> if criteria or order is incorrect
+    /// \exception throws SortingError if criteria or order is incorrect
     void clientSort(const std::string& criteria,const std::string& order);
     /**/
 
@@ -237,7 +266,7 @@ public:
     /// \param type - type of staff member, can be: Janitor, Manager or something else if something else will act as if modifying a receptionist or a responsible
     /// \param shift - for Janitor, can be: night or day
     /// \param password - for manager
-    /// \exception throws <NIFIsNotValid> if NIF is invalid
+    /// \exception throws NIFIsNotValid if NIF is invalid
     void modifyStaffMember(const std::string & name, std::string& NIF, const int& pos, const std::string& type, const std::string& shift,const std::string& password);
 
     ///Removes a staff member
@@ -260,17 +289,17 @@ public:
     /// \param password - password for a manager
     /// \param shift - shift for a Janitor
     /// \param wage - wage of the new staff member
-    /// \exception throws <NotAPositiveFloat> if wage is invalid
-    /// \exception throws <InvalidShift> if the new staff member is a janitor and the shift isn't either night or day
-    /// \exception throws <InvalidPosition> if type isn't one of the possible ones
-    /// \exception throws <StaffMemberAlreadyExists> if staff member already exists
+    /// \exception throws NotAPositiveFloat if wage is invalid
+    /// \exception throws InvalidShift if the new staff member is a janitor and the shift isn't either night or day
+    /// \exception throws InvalidPosition if type isn't one of the possible ones
+    /// \exception throws StaffMemberAlreadyExists if staff member already exists
     void addStaffMember(const std::string& name, const std::string& NIF, const std::string& position, const std::string& password, const std::string& shift, const std::string& wage);
 
     ///Sorts vector staff
     ///
     /// \param criteria - sorting criteria can be: Name, NIF, Wage, Years of service and Position
     /// \param order - ascending and descending can be: Ascending or Descending
-    /// \exception throws <SortingError> if criteria or order is incorrect
+    /// \exception throws SortingError if criteria or order is incorrect
     void staffSort(const std::string& input,const std::string& order1);
 
     ///Reassigns or assigns for the first time floors between responsibles
@@ -282,13 +311,13 @@ public:
     ///
     /// \param name - name to log In
     /// \param password - password to log in
-    /// \exception throws <IncorrectCredentials> if name is not the mangers name and/or password is not the managers password
-    /// \exception throws <AlreadyLoggedIn> if user is already logged in
+    /// \exception throws IncorrectCredentials if name is not the mangers name and/or password is not the managers password
+    /// \exception throws AlreadyLoggedIn if user is already logged in
     void logIn(const std::string& name, const std::string& password);
 
     ///Log Out
     ///
-    ///\exception throws <NotLoggedIn> if user is not logged in
+    ///\exception throws NotLoggedIn if user is not logged in
     void logOut();
 
     ///Gets the manager's name

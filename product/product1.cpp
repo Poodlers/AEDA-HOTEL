@@ -28,6 +28,9 @@ float Product::getPrice() const{
 unsigned int Product::getId() const{
     return this->Id;
 }
+std::string Product::getType() const{
+    return this->type;
+}
 
 void Product::setQuality(const unsigned int& quality) {
     this->quality = quality;
@@ -35,14 +38,6 @@ void Product::setQuality(const unsigned int& quality) {
 void Product::setPrice(const float& price) {
     this->price = price;
 }
-void Product::setId(const unsigned int& Id){
-    this->Id = Id;
-}
-
-std::string Product::getType() const{
-    return this->type;
-}
-
 void Product::setType(const std::string & type){
     this->type = type;
 }

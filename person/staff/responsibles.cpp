@@ -5,10 +5,6 @@
 
 Responsible::Responsible(const std::string& name, const unsigned int & NIF, const float& wage) : Receptionist(name,NIF,wage){numberOfFloorsBeingMonitored = 0;}
 
-Responsible::Responsible(): Receptionist() {
-    this->numberOfFloorsBeingMonitored = 0;
-}
-
 void Responsible::assignFloor(const unsigned int & floor){
     //check if floor exists and throw exception if it doesn't
 

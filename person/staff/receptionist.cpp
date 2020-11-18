@@ -6,6 +6,3 @@ std::string Receptionist::getType() {
     return "Receptionist";
 }
 
-Receptionist::Receptionist():Staff() {
-
-}

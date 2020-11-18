@@ -4,9 +4,6 @@
 #include <iomanip>
 #include <algorithm>
 
-Client::Client():Person() {
-}
-
 Client:: Client(const std::string &name, const unsigned int &NIF) : Person(name,NIF){}
 
 std::vector<Reservation*>& Client::getHistory(){

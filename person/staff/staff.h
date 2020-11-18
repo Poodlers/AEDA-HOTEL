@@ -7,7 +7,6 @@
 class Staff: public Person {
 public:
     Staff(const std::string& name, const unsigned int & NIF, const float& wage);
-    Staff();
     float getWage() const;
     int getYearsOfService() const;
     virtual std::string getType();
@@ -24,14 +23,12 @@ protected:
 class Receptionist : public  Staff{
 public:
     Receptionist(const std::string& name, const unsigned int & NIF, const float& wage);
-    Receptionist();
     std::string getType() override;
 };
 
 class Responsible : public Receptionist{
 public:
     Responsible(const std::string& name, const unsigned int & NIF, const float& wage);
-    Responsible();
     void assignFloor(const unsigned int & floor);
     void clearAssignedFloors();
     int getNumberOfFloorsBringMonitored() const;
@@ -47,7 +44,6 @@ private:
 class Janitor : public Staff{
 public:
     Janitor(const bool & shift,const std::string& name, const unsigned int & NIF, const float& wage);
-    Janitor();
     bool getShift() const;
     void setShift(const bool& shift);
     std::string getType() override;
@@ -61,7 +57,6 @@ private:
 class Manager : public Staff{
 public:
     Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password);
-    Manager();
     unsigned int getEvaluation() const;
     void setEvaluation(const unsigned int &evaluation);
     std::string getType() override;

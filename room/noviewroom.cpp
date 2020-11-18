@@ -22,7 +22,6 @@ float NoViewRoom::getDiscountValue() const{
 
 bool NoViewRoom::discount = false;
 
-NoViewRoom::NoViewRoom():Room() {}
 
 void NoViewRoom::print() {
     std::cout << std::left << std::setw(12) << "No View Room" <<  std::setw(10) << std::setfill(' ') << this->getRoomId() << std::setw(15)

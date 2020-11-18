@@ -9,11 +9,6 @@ Staff::Staff(const std::string& name, const unsigned int & NIF, const float& wag
     this-> yearsOfService = 0;
 }
 
-Staff::Staff():Person() {
-    this->wage = 0;
-    this->yearsOfService = 0;
-}
-
 float Staff::getWage() const{
     return this->wage;
 }

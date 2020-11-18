@@ -6,7 +6,6 @@
 class Person{
 public:
     Person(const std::string& name, const unsigned int & NIF);
-    Person();
     std::string getName() const;
     unsigned int getNIF() const;
     void setName(const std::string& name);

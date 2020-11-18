@@ -6,10 +6,6 @@ Janitor ::Janitor(const bool & shift,const std::string& name, const unsigned int
     this->shift = shift;
 }
 
-Janitor::Janitor():Staff() {
-    this->shift = false;
-}
-
 bool Janitor:: getShift() const{
     return this->shift;
 }

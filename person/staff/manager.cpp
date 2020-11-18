@@ -7,10 +7,6 @@ Manager::Manager(const std::string& name, const unsigned int & NIF, const float&
     this->password = password;
 };
 
-Manager::Manager():Staff() {
-    this->evaluation = 0;
-    this->password = "";
-}
 
 unsigned int Manager :: getEvaluation() const{
     return this->evaluation;

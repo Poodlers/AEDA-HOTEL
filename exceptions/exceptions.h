@@ -379,7 +379,7 @@ public:
         if (exception.getMsg() == "Room Id"){
             return o << "A room exists under this room number ("<<exception.getRoomNumber()<<  ")with a different room ID" << std::endl;
         }
-        if (exception.getMsg() == "Room Number"){
+        else if (exception.getMsg() == "Room Number"){
             return o << "A room exists under this ID ("<<exception.getRoomId()<<  ")with a different room number" << std::endl;
         }
     }

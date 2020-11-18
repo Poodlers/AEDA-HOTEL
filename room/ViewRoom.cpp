@@ -6,13 +6,10 @@ ViewRoom :: ViewRoom(const int & floor, const unsigned int & roomNumber ,const u
 }
 
 
-void ViewRoom :: activateDiscount(){
-    this->discount = true;
+void ViewRoom :: toggleDiscount(){
+    this->discount = !this->discount;
 }
 
-void ViewRoom :: deactivateDiscount(){
-    this->discount = false;
-}
 
 bool ViewRoom::getDiscountState() const{
     return discount;
@@ -32,7 +29,7 @@ void ViewRoom::print() {
                  << this->getPricePerNight() << " ";
     }
     else{
-        std::cout << this->getPricePerNight() + this->getPricePerNight() * discountValue <<" " << discountValue*100 <<std::setw(11)<< "% Off ";
+        std::cout << std::setw(10) << this->getPricePerNight() - this->getPricePerNight() * discountValue <<" " << std::setw(2) << discountValue*100 <<std::setw(5)<< "% Off ";
     }
 
     if (this->getAvailability()){

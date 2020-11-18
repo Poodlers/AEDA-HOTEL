@@ -627,18 +627,11 @@ void Hotel::activateDiscount(const std::string& type){
     if(!this->loggedIn){
         throw AccessRestricted();
     }
-    if (type == "Suite"){
-        for (Room* room : rooms){
-            Suite* suite = dynamic_cast<Suite*> (room);
-            if (suite != nullptr){
-                if (!suite->getDiscountState()){
-                    suite->activateDiscount();
-                    return;
-                }
-                else{
-                    suite->deactivateDiscount();
-                    return;
-                }
+    if (type == "Suite") {
+        for (Room *room : rooms) {
+            Suite *suite = dynamic_cast<Suite *> (room);
+            if (suite != nullptr) {
+                suite->toggleDiscount();
             }
         }
     }
@@ -646,14 +639,7 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room *room : rooms) {
             NoViewRoom *noViewRoom = dynamic_cast<NoViewRoom *> (room);
             if (noViewRoom != nullptr) {
-                if (!noViewRoom->getDiscountState()){
-                    noViewRoom->activateDiscount();
-                    return;
-                }
-                else{
-                    noViewRoom->deactivateDiscount();
-                    return;
-                }
+                noViewRoom->toggleDiscount();
             }
         }
     }
@@ -661,14 +647,7 @@ void Hotel::activateDiscount(const std::string& type){
         for (Room *room : rooms) {
             ViewRoom *viewRoom = dynamic_cast<class ViewRoom*> (room);
             if (viewRoom != nullptr) {
-                if (!viewRoom->getDiscountState()){
-                    viewRoom->activateDiscount();
-                    return;
-                }
-                else{
-                    viewRoom->deactivateDiscount();
-                    return;
-                }
+                viewRoom->toggleDiscount();
             }
         }
     }
@@ -984,13 +963,6 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
     throw StaffMemberAlreadyExists(name, stoi(NIF));
 }
 
-void Hotel::removeStaffMember(const int &pos) {
-    staff.erase(staff.begin() + pos);
-}
-
-void Hotel::removeClient(const int& pos){
-    clients.erase(clients.begin() + pos);
-}
 
 void Hotel::assignFloorsToResponsibles(){
     std::vector<Responsible*> responsibles;
@@ -1046,7 +1018,7 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
             });
         }
     }
-    else if (input == "Amount of future reservations"){
+    else if (input == "Future reservations"){
         if (order){
             sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
                 return c1->getFutureReservations().size() < c2->getFutureReservations().size();
@@ -1058,7 +1030,7 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
             });
         }
     }
-    else if (input == "Amount of past reservations"){
+    else if (input == "Past reservations"){
         if (order){
             sort(clients.begin(),clients.end(),[](Client* c1, Client* c2){
                 return c1->getHistory().size() < c2->getHistory().size();

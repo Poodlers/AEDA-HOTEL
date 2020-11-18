@@ -37,14 +37,13 @@ void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURS
     SetConsoleScreenBufferSize(hout, scrollbar);
 }
 
-void printTime(int day, int month,int year, map<int,string> &map_month){
+void printTime(Date date, map<int,string> &map_month){
     gotoxy(100,0);
     cout << "Current Time: ";
     gotoxy(100,1);
     cout << "                                            ";
     gotoxy(100,1);
-    cout << day << " " << map_month[month] << " " << year;
-
+    cout << date.getDay() << " " << map_month[date.getMonth()] << " " << date.getYear();
 }
 
 void clearscreen(){ 
@@ -69,26 +68,6 @@ void gotoxy(int x, int y)
   coord.Y = y;
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 };
-
-void runTime(float rate, chrono::steady_clock::time_point begin, double &prev_time, int &day, int &month, int &year, map<int,string> &map_month){
-    double seconds;
-    chrono::steady_clock::time_point end = chrono::steady_clock::now();
-    seconds = chrono::duration<double>(end - begin).count();
-    if(seconds >= prev_time + rate){
-        prev_time = seconds;
-        day++;
-        if(day == 31){
-            day = 1;
-            month++;
-            if(month == 13){
-                month = 1;
-                year++;
-            }
-        }
-        printTime(day,month,year,map_month);
-    }
-    
-}
 
 void fill_month_map(map<int,string> &map_month){
     map_month.insert(pair<int,string>(1,"January"));

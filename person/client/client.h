@@ -49,17 +49,54 @@ public:
     /// \param reservation - reservation to remove
     void removeReservation(Reservation* reservation);
 
-
+    /// Check Out
+    ///
+    /// Goes through the vector current reservations and if the date is bigger or equal to the check out date proceeds
+    /// to remove it from the current reservations vector and put it in the client's history.
+    /// \param date - current date
+    /// \return positions of the reservations that were checked out
+    /// \exception throws <NoReservationsToCheckOut> if there are no reservations from the client to check out currently
     std::vector<int> checkOut (Date* date);
+
+    /// Check In
+    ///
+    /// Goes through the vector future reservations and if the date is bigger or equal to the check in date proceeds
+    /// to remove it from the future reservations vector and put it in the client's current reservations vector.
+    /// \param date - current date
+    /// \return positions of the reservations that were checked in
+    /// \exception throws <NoReservationsToCheckIn> if there are no reservations from client to check in
     std::vector<int> checkIn (Date* date);
+
+    /// Archives expired reservations
+    ///
+    /// If a reservation in future reservations expires on date (i.e. check out date <= current date) it is removed from
+    /// the future reservations vector and appended to the client's history
+    /// \param date - current sate
     void archiveExpiredReservations(Date* date);
+
+    /// Prints clients in the format:
+    ///
+    ///NIF: nif Name: name
+    ///Client History: (if empty does not print)
+    ///...
+    ///Current Reservations: (if empty does not print)
+    ///...
+    ///Future Reservations: (if empty does not print)
+    ///...
     void printConsole();
+
+    ///overload for ==
+    ///
+    /// \param client
+    /// \return this-> == client
     bool operator==(Client* client);
 
-
 private:
+    /// Vector with past reservations
     std::vector<Reservation*> history;
+    /// Vector with future reservations
     std::vector<Reservation*> futureReservations;
+    /// Vector with current reservation i.e. the person is currently staying at the hotel
     std::vector<Reservation*> currentReservations;
 };
 #endif

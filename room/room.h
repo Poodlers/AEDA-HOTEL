@@ -9,6 +9,7 @@
 
 class Room{
 public:
+    /// Room constructor
     ///
     /// \param floor - floor of the room
     /// \param roomNumber - number of the room
@@ -31,6 +32,8 @@ public:
     ///
     /// \return id of the room
     unsigned int getRoomId() const;
+
+    ///Checks if the room is available
     ///
     /// \return availability of the room: true means the room is free; false means otherwise
     bool getAvailability() const;
@@ -53,6 +56,8 @@ public:
     ///
     /// \param free - new state of room's availability
     void changeAvailability(const bool& free);
+
+    ///Modifies the rooms capacity and/ot pricePerNight
     ///
     /// \param capacity - room's capacity in string form
     /// \param pricePerNight - room's price per night in string form

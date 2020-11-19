@@ -4,7 +4,7 @@
 #include <string>
 #include "../product/product1.h"
 #include <iostream>
-
+#include "../hotel/reservation.h"
 
 ///Provider
 ///
@@ -48,6 +48,12 @@ public:
 
     ///Prints the provider
     void print();
+
+    ///Restocks if it's the first day of the month
+    ///
+    /// \param date - current date
+    void restock(Date* date);
+
 private:
     /// name of provider
     std::string name;
@@ -55,6 +61,7 @@ private:
     std::vector<Product *> products;
     /// number of products
     unsigned numProducts;
+
 };
 
 #endif

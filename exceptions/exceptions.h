@@ -447,7 +447,7 @@ public:
     FileNotFound(const std::string & fileName){this->fileName = fileName;}
     std::string getFileName() const {return fileName;}
     friend std::ostream & operator << (std::ostream& o,const FileNotFound& exception){
-        return     o << "File not found. Make sure that the name " << exception.getFileName() << " is spelled correctly, that it does not include .txt and that the file is in the cmake-build-debug folder."<<std::endl;
+        return o << "File not found. Make sure that the name " << exception.getFileName() << " is spelled correctly, that it does not include .txt and that the file is in the same folder as the executable or that otherwise thw file path is written correctly (make sure none of the directories have spaces)."<<std::endl;
     }
 };
 
@@ -472,6 +472,18 @@ public:
     friend std::ostream & operator << (std::ostream& o,const DateIsNotValid& exception){
         return     o << "Date is invalid, because "<< exception.getIssue()<<"."<<std::endl;
 
+    }
+};
+
+
+class ProductDoesNotExist{
+private:
+    unsigned int productId;
+public:
+    ProductDoesNotExist(const unsigned int& productId){this->productId = productId;}
+    unsigned int getProductId() const{return productId;};
+    friend std::ostream & operator << (std::ostream& o,const ProductDoesNotExist& exception){
+        return     o << "Product with productId "<< exception.getProductId()<<"."<<std::endl;
     }
 };
 #endif

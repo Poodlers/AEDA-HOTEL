@@ -17,12 +17,8 @@
   ### Example
   ~~~~~~~~~~~~~~~~~~~.cpp
       //Hotel-File
-      //#biggining date
       //#number of floors
       //#first floor with rooms
-      //Providers
-      //#provider's name #number of products
-      //(...) more providers
       //Rooms
       //#floor #room number #capacity #price #type (can be Suite, NoViewRoom or ViewRoom [case sensitive])
       //(...) more rooms
@@ -50,7 +46,7 @@ public:
     ///
     /// Creates a hotel from a .txt file with the correct format
     /// \see hotel_exemplo.txt
-    /// \param hotelFile - name of the '.txt' file with out the '.txt'
+    /// \param hotelFile - name of the '.txt' file with out the '.txt', if it's not in the same directory as the .exe needs to be path\file
     /// \exception throws FileNotFound if it can't find the file.
     /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
     Hotel(const std::string &hotelFile);
@@ -71,7 +67,14 @@ public:
     /// \param provider to add
     void addProvider(Provider* provider);
 
+    ///Returns the providers' vector
+    ///
+    /// \return providers
     std::vector<Provider*> getProviders () const;
+
+    ///Auto buys a random number of the cheapest products
+    void autoBuy();
+    void buy(const unsigned int &productId);
 
     /**/
 
@@ -193,10 +196,12 @@ public:
     /// \return date
     Date getDate() const;
 
-    /// Increments the date by i days and archives expired reservations
+    /// Increments the date by i days
     ///
+    /// Archives expired reservations
+    /// Restocks providers if it's the first day of the month
     /// \param i - number of days to increment
-    /// \see Client#archiveExpiredReservations
+    /// \see Client#archiveExpiredReservations and Provider#restock
     void incrementDate(const int& i);
 
     /*PEOPLE*/

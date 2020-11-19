@@ -18,27 +18,44 @@ void providers(Hotel* hotel){
         provider->print();
     }
     while(true){
-        std::string input;
+        std::string input, Id;
+        cout << "Date: " << hotel->getDate() <<endl;
+        cout << "Write Help to see possible commands."<<endl;
+
+        cin >> input;
         try{
             if (input == "Back"){
                 break;
             }
             else if (input == "Auto-buy"){
-
+                hotel->autoBuy();
             }
             else if (input == "Buy"){
+                cout << "Insert the ID of the product you wish to buy."<<endl;
+                cin >> Id;
+                checkIfPositiveInteger(Id,"product ID");
 
+                hotel->buy(stoi(Id));
             }
             else if (input == "Help"){
+                cout << "Valid commands are: Buy, Auto-buy, Time and Help "<<endl;
 
+            }
+            else if (input == "Time"){
+                hotel->incrementDate(1);
             }
             else{
-
+                cout << "Invalid command. Write Help to see possible commands."<<endl;
             }
         }
-        catch(...){
-
+        catch(NotAPositiveInt& msg){
+            cout << msg;
         }
+        catch(ProductDoesNotExist& msg){
+            cout <<msg;
+        }
+        system("pause");
+        system("CLS");
     }
 
 
@@ -719,7 +736,12 @@ void system(Hotel* hotel){
             }
         }
         else if (input =="Providers"){
-
+            try{
+                providers(hotel);
+            }
+            catch(AccessRestricted& msg){
+                cout << msg;
+            }
         }
         else if (input == "Countability"){
 
@@ -764,7 +786,14 @@ Hotel* createHotel(){
 }
 
 int main(){
+
     Hotel* hotel = createHotel();
+    Provider* provider1 = new Provider("provider1", 50);
+    Provider* provider2 = new Provider("provider 2", 55);
+    Provider* provider3 = new Provider("provider 3", 65);
+    hotel->addProvider(provider1);
+    hotel->addProvider(provider2);
+    hotel->addProvider(provider3);
     system(hotel);
 
     return 0;

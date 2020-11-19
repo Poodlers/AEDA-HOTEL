@@ -7,7 +7,18 @@ int Product::totalId = 0;
 Product::Product(){
     this->quality = rand() % 6;
     this->price = (rand() % 100) + 0.01 * (rand() % 99 + 1);
-    this->type = (rand() % 2) ? "catering" : "cleaning";
+    int n = rand() % 3;
+    switch(n){
+        case 2:
+            this->type == "Cleaning";
+            break;
+        case 1:
+            this->type == "Catering";
+            break;
+        case 0:
+            this->type == "Other";
+            break;
+    }
     this->Id = totalId;
     this->totalId++;
 }
@@ -43,6 +54,6 @@ void Product::setType(const std::string & type){
 }
 
 std::ostream& operator<<(std::ostream& o, Product& product){
-    return o << std::setfill(' ') << std::setw(10) << product.getType()<< std::setw(7) << product.getId() <<std::setw(5) <<product.getPrice()<< std::setw(4) << product.getQuality() <<std::endl;
+    return o <<std::left<< std::setfill(' ') << std::setw(10) << product.getType()<< std::setw(9) << product.getId() <<std::setw(5) <<product.getPrice()<< std::setw(4) << product.getQuality() <<std::endl;
 }
 

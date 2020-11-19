@@ -5,7 +5,7 @@
 #include "../GUI/utils.h"
 #include "../exceptions/exceptions.h"
 
-Date Hotel::date(10,11,2020);
+Date Hotel::date(9,11,2020);
 
 Date Hotel::getDate() const{
     return date;
@@ -19,11 +19,70 @@ std::vector<Provider*> Hotel::getProviders () const{
     return providers;
 }
 
+void Hotel::buy(const unsigned int &productId){
+    for (Provider* provider: providers){
+        for (unsigned int i = 0; i < provider->getProducts().size(); i++){
+            if (productId == provider->getProducts()[i]->getId()){
+                productsBought.push_back(provider->getProducts()[i]);
+                provider->removeProduct(i);
+            }
+        }
+    }
+    throw ProductDoesNotExist(productId);
+}
+
+void Hotel::autoBuy(){
+    std::vector<Product*> products;
+    int numberCleaning = rand()%10, numberCatering = rand()%10, numberOther= rand()%10;
+    for (Provider* provider: providers){
+        for (Product* product: provider->getProducts()){
+            products.push_back(product);
+        }
+    }
+    sort(products.begin(),products.end(),[](Product* p1, Product* p2){
+        if (p1->getType() == p2->getType()){
+            return p1->getPrice() < p2->getPrice();
+        }
+        else{
+            if (p1->getType() == "Cleaning" && p2->getType() != "Cleaning"){
+                return false;
+            }
+            if (p1->getType() == "Catering" && p2->getType() != "Cleaning" && p2->getType() != "Catering"){
+                return false;
+            }
+            return true;
+        }
+    });
+
+    for (Product* product: products){
+        if (product->getType() == "Cleaning" && numberCleaning != 0){
+            buy(product->getId());
+            numberCleaning++;
+        }
+        if (product->getType() == "Catering" && numberCatering != 0){
+            buy(product->getId());
+            numberCatering++;
+        }
+        if (product->getType() == "Other" && numberOther != 0){
+            buy(product->getId());
+            numberOther++;
+        }
+    }
+}
+
 
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
+    }
+    if (date.getDaysInMonth(date.getMonth()) == date.getMonth() + 1 && this->productsBought.empty()){
+        std::cout << "If no products are brought today, the cheaper ones will be bought automatically."<<std::endl;
+    }
+
+    providers[0]->restock(&date);
+    if (date.getDay() == 1){
+        productsBought.clear();
     }
 }
 
@@ -81,13 +140,8 @@ void Hotel::saveHotel(const std::string &hotelFile){
 
     }
     file << "Hotel-File\n";
-    file << date.getDay()<<"-"<<date.getMonth()<<"-"<<date.getYear()<<"\n";
     file << this->numberOfFloors<<"\n";
     file << this->firstFloor<<"\n";
-    file << "Providers"<<"\n";
-    for (Provider* provider: providers){
-        file << provider->getName() << " " << provider->getNumProducts() << "\n";
-    }
     file << "Rooms"<<"\n";
     for (Room* room: rooms){
         ss<<room->getPricePerNight();
@@ -168,17 +222,6 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
 
-    std::getline(file,getData);
-    if (getData.empty()){
-        throw HotelFileHasWrongFormat("File ends prematurely.");
-    }
-    try{
-        date = Date(getData);
-    }
-    catch(DateIsNotValid& msg){
-        std::cout << msg;
-        throw HotelFileHasWrongFormat("The date from the hotel is wrong.");
-    }
 
     std::getline(file,getData);
     if (getData.empty()){
@@ -214,37 +257,6 @@ Hotel::Hotel(const std::string &hotelFile) {
     this->firstFloor = stoi(getData);
 
     std::getline(file,getData);
-    if (getData.empty()){
-        throw HotelFileHasWrongFormat("File ends prematurely.");
-    }
-    if (getData != "Providers"){
-        throw HotelFileHasWrongFormat("Line should be 'Providers'");
-    }
-
-
-    while (std::getline(file,getData) && getData !="Rooms"){
-        std::string name="", number="";
-        ss << getData;
-        ss >> name >> number;
-        try{
-            checkIfPositiveInteger(number, "number of products");
-            for (Provider* provider: providers){
-                if (name == provider->getName()){
-                    provider->print();
-                    std::cout << name;
-                    throw HotelFileHasWrongFormat("two providers can't have the same name");
-                }
-            }
-        }
-        catch(NotAPositiveInt){
-            throw HotelFileHasWrongFormat("Number of products should be a positive integer");
-        }
-
-        Provider* provider = new Provider(name,stoi(number));
-        providers.push_back(provider);
-        ss.clear();
-    }
-
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
@@ -475,6 +487,10 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
     reservations[0]->setID(max);
     this->assignFloorsToResponsibles();
+
+
+
+
 
     file.close();
 

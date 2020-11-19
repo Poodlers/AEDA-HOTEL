@@ -20,14 +20,14 @@ public:
     /// \param day
     /// \param month
     /// \param year
-    /// \execption throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers or the number of days is
+    /// \exception throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers or the number of days is
     /// bigger then the number of days the month has
     Date(const int &day, const int &month, const int &year);
 
     /// Date's constructor from a string
     ///
     /// \param date - must have format dd(char)mm(char)yyyy
-    /// \execption throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers, not numbers or the number of days is
+    /// \exception throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers, not numbers or the number of days is
     /// bigger then the number of days the month has
     Date(const std::string& date);
 

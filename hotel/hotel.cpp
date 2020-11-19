@@ -21,7 +21,7 @@ std::vector<Provider*> Hotel::getProviders () const{
 
 int Hotel::getCosts() const{
     int money = 0;
-    for (Transaction* transaction: accountability){
+    for (Transaction* transaction: accounting){
         if (transaction->value < 0) money += transaction->value;
     }
     return money;
@@ -29,7 +29,7 @@ int Hotel::getCosts() const{
 
 int Hotel::getProfit() const{
     int money = 0;
-    for (Transaction* transaction: accountability){
+    for (Transaction* transaction: accounting){
         money += transaction->value;
     }
     return money;
@@ -37,7 +37,7 @@ int Hotel::getProfit() const{
 
 int Hotel::getMoneyEarned() const{
     int money = 0;
-    for (Transaction* transaction: accountability){
+    for (Transaction* transaction: accounting){
         if (transaction->value > 0) money += transaction->value;
     }
     return money;
@@ -51,8 +51,7 @@ void Hotel::buy(const unsigned int &productId){
                 Transaction* transaction = new Transaction;
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
-                accountability.push_back(transaction);
-                productsBought.push_back(provider->getProducts()[i]);
+                accounting.push_back(transaction);
                 provider->getProducts()[i]->reduceStock();
                 return;
             }
@@ -105,26 +104,21 @@ void Hotel::autoBuy(){
     }
 }
 
-std::vector<Product*> Hotel::getProductsBought() const{
-    return productsBought;
-}
-
 
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
     }
-    if (date.getDay() == 5 && this->productsBought.empty()){
+    if (date.getDay() % 5 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
         std::cout << "If no products are brought today, the cheaper ones will be bought automatically tomorrow as to meet the hotel's necessities."<<std::endl;
     }
-    if (date.getDay() == 6 && this->productsBought.empty()){
+    if (date.getDay() % 6 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
         autoBuy();
     }
     if (date.getDay() == 1){
-        productsBought.clear();
         for (Provider* provider: providers){
-            provider->restock(&date);
+            provider->restock();
         }
     }
     if (date.getDay() == date.getDaysInMonth(date.getMonth())){
@@ -142,7 +136,7 @@ void Hotel::payStaff(){
         Transaction* transaction = new Transaction;
         transaction->value = -  8 * staff->getWage() * date.getDaysInMonth(date.getMonth());
         transaction->description = "Wage of staff member " + staff->getName();
-        accountability.push_back(transaction);
+        accounting.push_back(transaction);
     }
 }
 
@@ -261,7 +255,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
         file<<"\n";
     }
     file<<"Transactions\n";
-    for (Transaction* transaction: accountability){
+    for (Transaction* transaction: accounting){
         file << transaction->value << " " << transaction->description<<"\n";
     }
 
@@ -603,14 +597,15 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
                 if(*checkOut < date){
                     clients[posClient]->addToHistory(reservation);
                 }
-                else if (in) clients[posClient]->addCurrentReservation(reservation);
+                else if (in){
+                    if (*checkOut > date && (*checkIn > date || *checkIn == date)){
+                        clients[posClient]->addCurrentReservation(reservation);
+                    }
+                    else throw NoReservationsToCheckIn(clients[posClient]->getName(),clients[posClient]->getNIF());
+                }
                 else clients[posClient]->addNewReservation(reservation);
 
                 this->reservations.push_back(reservation);
-
-                if (in == true){
-                    this->checkIn(posClient);
-                }
             }
             catch(...){
                 throw;
@@ -649,13 +644,18 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
         return pos;
     }
     else if (searchCriteria == "Date"){
-        Date date1(value);
-        for (int i = 0; i < reservations.size(); i++){
-            if (reservations[i]->getCheckIn() == date1){
-                pos.push_back(i);
+        try{
+            Date date1(value);
+            for (int i = 0; i < reservations.size(); i++){
+                if (reservations[i]->getCheckIn() == date1){
+                    pos.push_back(i);
+                }
             }
+            return pos;
         }
-        return pos;
+        catch(...){
+            throw;
+        }
     }
 }
 
@@ -734,7 +734,7 @@ void Hotel::checkIn(const int& pos){
                                                " which was reserved for " +
                                                std::to_string(reservation->getCheckOut() - reservation->getCheckIn()) +
                                                " days.\n";
-                    accountability.push_back(transaction);
+                    accounting.push_back(transaction);
                     cleaningNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                     cateringNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                     otherNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
@@ -1006,8 +1006,8 @@ std::string Hotel::getManagerPassword() const{
     return "ERROR";
 }
 
-std::vector<Transaction*> Hotel::getAccounts() const{
-    return accountability;
+std::vector<Transaction*> Hotel::getAccounting() const{
+    return accounting;
 }
 
 
@@ -1103,12 +1103,14 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
     std::string type1;
     bool shf;
     try{
-        int pos = search(name, NIF, type1 = "Staff");
+
         checkIfValidPriceOrWage(wage, "wage");
         checkIfInteger(evaluation,"manager evaluation");
         if (stoi(evaluation) < 1 || stoi(evaluation)>5){
             throw InvalidEvaluation();
         }
+        int pos = search(name, NIF, type1 = "Staff");
+        throw StaffMemberAlreadyExists(name, stoi(NIF));
     }
     catch(StaffMemberDoesNotExist& msg){
         if (type == "Manager"){
@@ -1149,7 +1151,6 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
     catch(...){
         throw;
     }
-    throw StaffMemberAlreadyExists(name, stoi(NIF));
 }
 
 

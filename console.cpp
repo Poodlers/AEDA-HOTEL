@@ -22,15 +22,12 @@ void accounting(Hotel* hotel){
         throw AccessRestricted();
     }
     cout << "Value     Description"<<endl;
-    for (Transaction* transaction: hotel->getAccounts()){
+    for (Transaction* transaction: hotel->getAccounting()){
         cout << setw(8) << setfill(' ')<< transaction->value << transaction->description<<endl;
     }
     cout << "Costs: " << hotel->getCosts()<<endl;
     cout << "Money earned: " << hotel->getMoneyEarned()<<endl;
     cout << "Profit: " << hotel->getProfit()<<endl;
-    cout << "Cleaning products need: " << hotel->getCleaningNecessity()<<endl;
-    cout << "Catering products need: " << hotel->getCateringNecessity()<<endl;
-    cout << "Other products need: " << hotel->getOtherNecessity()<<endl;
     system("pause");
     system("CLS");
 }
@@ -50,6 +47,9 @@ void providers(Hotel* hotel){
             provider->printConsole();
             cout << endl;
         }
+        cout << "Cleaning products need: " << hotel->getCleaningNecessity()<<endl;
+        cout << "Catering products need: " << hotel->getCateringNecessity()<<endl;
+        cout << "Other products need: " << hotel->getOtherNecessity()<<endl;
         std::string input, Id;
         cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see possible commands."<<endl;
@@ -70,16 +70,11 @@ void providers(Hotel* hotel){
                 hotel->buy(stoi(Id));
             }
             else if (input == "Help"){
-                cout << "Valid commands are: Buy, Auto-buy, Time, BoughtProducts and Help "<<endl;
+                cout << "Valid commands are: Buy, Auto-buy, Time and Help "<<endl;
 
             }
             else if (input == "Time"){
                 hotel->incrementDate(1);
-            }
-            else if (input == "BoughtProducts"){
-                for (Product* product: hotel->getProductsBought()){
-                    cout << *product;
-                }
             }
             else{
                 cout << "Invalid command. Write Help to see possible commands."<<endl;

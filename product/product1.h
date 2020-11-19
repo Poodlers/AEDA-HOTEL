@@ -42,6 +42,7 @@ public:
     void reduceStock();
 
     unsigned int getStock() const;
+    void setStock(const unsigned int& stock);
 
     friend std::ostream& operator <<(std::ostream& o, Product& product);
 

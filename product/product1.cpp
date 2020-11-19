@@ -65,4 +65,8 @@ std::ostream& operator<<(std::ostream& o, Product& product){
 unsigned int Product::getStock() const{
     return stock;
 }
+void Product::setStock(const unsigned int& stock){
+    this->stock = stock;
+}
+
 

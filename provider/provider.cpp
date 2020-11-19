@@ -1,10 +1,11 @@
 #include "provider.h"
 #include <algorithm>
-void Provider::restock(Date* date){
-    if (date->getDay() == 1){
-        while (products.size()!= numProducts){
-            addProduct();
-        }
+void Provider::restock(){
+    while (products.size()!= numProducts){
+        addProduct();
+    }
+    for (Product* product: products){
+        product->setStock(100);
     }
 }
 

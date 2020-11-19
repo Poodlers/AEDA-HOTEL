@@ -52,10 +52,9 @@ public:
     ///Prints the provider (for the console)
     void printConsole();
 
-    ///Restocks if it's the first day of the month
+    ///Restocks its' products'
     ///
-    /// \param date - current date
-    void restock(Date* date);
+    void restock();
 
 
 private:

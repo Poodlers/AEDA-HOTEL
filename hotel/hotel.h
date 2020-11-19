@@ -60,11 +60,21 @@ public:
     void saveHotel(const std::string &hotelFile);
     /**/
 
-    /*PROVIDERS-AND-PRODUCTS*/
+    /*PROVIDERS*/
+    void buyProducts();
+
+    /// Adds a provider to providers
+    ///
+    /// \param provider to add
+    void addProvider(Provider* provider);
+
+    std::vector<Provider*> getProviders () const;
+
+    /**/
+
+    /*PROFIT*/
     void getCosts();
     void getProfit();
-
-    void buyProducts();
     /**/
 
     /*RESERVATION*/

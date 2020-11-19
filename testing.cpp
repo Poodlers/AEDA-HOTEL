@@ -10,7 +10,10 @@
 #include <iostream>
 using namespace std;
 
+void providers(Hotel* hotel){
 
+
+}
 
 void reservation(Hotel * hotel){
     system("CLS");
@@ -713,8 +716,14 @@ Hotel* createHotel(){
 }
 
 int main(){
-
     Hotel* hotel = createHotel();
+    Provider* provider1 = new Provider("provider 1",20);
+    Provider* provider2 = new Provider("provider 2",20);
+    Provider* provider3 = new Provider("provider 3",20);
+    hotel->addProvider(provider1);
+    hotel->addProvider(provider2);
+    hotel->addProvider(provider3);
+
     system(hotel);
 
     return 0;

@@ -13,12 +13,12 @@ public:
     ///
     /// \param n - name of provider
     /// \param p - vector of products available
-    Provider(const std::string &n, std::vector<Product *> &p);
+    Provider(const std::string &n,const std::vector<Product *> &p);
 
     ///
     /// \param n - name of provider
     /// \param size - number of products to create
-    Provider(const std::string &n, unsigned &size);
+    Provider(const std::string &n, const unsigned int &size);
 
     ///
     /// \return name of provider
@@ -44,6 +44,9 @@ public:
     ///
     /// \param index - element to remove from products vector
     void removeProduct(unsigned &index);
+
+    ///Prints the provider
+    void print();
 private:
     /// name of provider
     std::string name;

@@ -11,6 +11,15 @@ Date Hotel::getDate() const{
     return date;
 }
 
+void Hotel::addProvider(Provider* provider){
+    providers.push_back(provider);
+}
+
+std::vector<Provider*> Hotel::getProviders () const{
+    return providers;
+}
+
+
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){

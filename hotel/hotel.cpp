@@ -84,19 +84,19 @@ void Hotel::autoBuy(){
 
     for (Product* product: products){
         if (product->getType() == "Cleaning" && cleaningNecessity != 0){
-            while(product->getStock()!= 0){
+            while(product->getStock()!= 0  && cleaningNecessity != 0){
                 buy(product->getId());
                 cleaningNecessity--;
             }
         }
         if (product->getType() == "Catering" && cateringNecessity != 0){
-            while(product->getStock()!= 0){
+            while(product->getStock()!= 0 && cateringNecessity != 0){
                 buy(product->getId());
                 cateringNecessity--;
             }
         }
         if (product->getType() == "Other" && otherNecessity != 0){
-            while(product->getStock()!= 0){
+            while(product->getStock()!= 0 && otherNecessity != 0){
                 buy(product->getId());
                 otherNecessity--;
             }
@@ -110,11 +110,12 @@ void Hotel::incrementDate(const int& i){
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
     }
-    if (date.getDay() % 5 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
-        std::cout << "If no products are brought today, the cheaper ones will be bought automatically tomorrow as to meet the hotel's necessities."<<std::endl;
+    if ((date.getDay() % 5) == 1 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
+        std::cout << "If no products are brought today, the cheaper ones will be bought automatically after tomorrow as to meet the hotel's necessities."<<std::endl;
     }
-    if (date.getDay() % 6 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
+    if ((date.getDay() % 6) == 1 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
         autoBuy();
+        std::cout << "Products were bought automatically."<<std::endl;
     }
     if (date.getDay() == 1){
         for (Provider* provider: providers){

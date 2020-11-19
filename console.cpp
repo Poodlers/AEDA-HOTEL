@@ -28,8 +28,6 @@ void accounting(Hotel* hotel){
     cout << "Costs: " << hotel->getCosts()<<endl;
     cout << "Money earned: " << hotel->getMoneyEarned()<<endl;
     cout << "Profit: " << hotel->getProfit()<<endl;
-    system("pause");
-    system("CLS");
 }
 
 /// Providers menu for the console application
@@ -195,6 +193,15 @@ void reservation(Hotel * hotel){
         catch(ClientDoesNotExist&msg){
             cout << msg;
         }
+        catch(NotAPositiveInt& msg){
+            cout << msg;
+        }
+        catch(NotAnInt& msg){
+            cout << msg;
+        }
+        catch(DateIsNotValid& msg){
+            cout << msg;
+        }
         catch(NIFIsNotValid& msg){
             cout <<msg;
         }
@@ -209,6 +216,15 @@ void reservation(Hotel * hotel){
         }
         catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
             cout << msg;
+        }
+        catch(ClientCantMakeThisReservation& msg){
+            cout << msg;
+        }
+        catch(AnotherReservationForThisRoomAlreadyExistsAtThisTime& msg){
+            cout << msg;
+        }
+        catch(NoReservationsToCheckIn& msg){
+            cout <<msg;
         }
         system("pause");
         system("CLS");
@@ -342,6 +358,12 @@ void rooms(Hotel * hotel){
         catch(InvalidRoomType& msg){
             cout << msg;
         }
+        catch(RoomAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(NotAPositiveFloat& msg){
+            cout << msg;
+        }
         system("pause");
         system("CLS");
     }
@@ -420,7 +442,7 @@ void checkOut(Hotel* hotel){
 
 /// Clients menu for the console application
 ///
-///\see checkIn and checkOut
+/// \see checkIn and checkOut
 /// Displays clients and allows user to add, remove, modify, sort, search, check in, check out and advance time
 /// \param hotel
 void clients(Hotel *hotel){
@@ -494,8 +516,8 @@ void clients(Hotel *hotel){
 
             }
             else if (input == "Sort"){
-                cout << "Insert the type of sorting to be done. Options are: Name, NIF, Amount of future reservations, Amount of past reservations, Current reservations,"
-                        " Amount of reservations, Most Recent Reservation"<<endl;
+                cout << "Insert the type of sorting to be done. Options are: Name, NIF, Future reservations, Past reservations, Current reservations,"
+                        " Amount of reservations, Most recent reservation"<<endl;
                 string sorting,order;
                 cleanCinBuffer();
                 getline(cin,sorting);
@@ -715,6 +737,9 @@ void staff(Hotel *hotel){
         catch(NotAPositiveFloat& msg){
             cout << msg;
         }
+        catch(NotAnInt& msg){
+            cout <<msg;
+        }
         catch(StaffMemberWithThisNIFAlreadyExists& msg){
             cout << msg;
         }
@@ -734,16 +759,19 @@ void staff(Hotel *hotel){
             cout << msg;
         }
         catch(InvalidPosition& msg){
-            cout<<msg;
+            cout << msg;
+        }
+        catch(InvalidEvaluation& msg){
+            cout << msg;
         }
         system("pause");
         system("CLS");
     }
 }
 
-///System for the hotel
+/// System for the hotel
 ///
-///\see clients, staff, accounting, providers, rooms, reservation, Hotel#logIn, Hotel#logOut and Hotel#incrementDate
+/// \see clients, staff, accounting, providers, rooms, reservation, Hotel#logIn, Hotel#logOut and Hotel#incrementDate
 /// \param hotel
 void system(Hotel* hotel){
 
@@ -834,7 +862,7 @@ void system(Hotel* hotel){
     }
 }
 
-///asks for the name of the Hotel file and creates de hotel
+/// Asks for the name of the Hotel file and creates de hotel
 Hotel* createHotel(){
     while(true){
         string input;
@@ -858,7 +886,7 @@ Hotel* createHotel(){
     }
 }
 
-///Creates the hotel, creates 3 providers (with 50, 55 and 65 products), call System and makes a seed for the random numbers
+/// Creates the hotel, creates 3 providers (with 50, 55 and 65 products), call System and makes a seed for the random numbers
 int main(){
     srand(time(NULL));
 

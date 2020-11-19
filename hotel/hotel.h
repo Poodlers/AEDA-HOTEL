@@ -10,7 +10,7 @@
 #include "reservation.h"
 #include "../GUI/utils.h"
 #include <algorithm>
-/// Class which represents a transaction
+/// Struct which represents a transaction
 ///
 /// Holds the value and the description of the transaction
 typedef struct Transaction{
@@ -20,6 +20,7 @@ typedef struct Transaction{
     std::string description;
 };
 
+/// \class Hotel
 /// Class which represents a hotel
 ///
 ///
@@ -28,6 +29,7 @@ class Hotel{
 public:
     /*HOTEL-BUILDING-AND-SAVING*/
 
+    /// \fn Hotel::Hotel(const std::string &hotelFile)
     /// Hotel Constructor
     ///
     /// Creates a hotel from a .txt file with the correct format
@@ -59,13 +61,12 @@ public:
     std::vector<Provider*> getProviders () const;
 
     /// Auto buys products so that the hotel's necessities are met
-    ///
-    /// \see cleaningNecessity, cateringNecessity and otherNecessity
     void autoBuy();
 
     /// Buys the product with the product ID productId
     ///
     /// \param productId  product ID to find
+    /// \exception throws ProductDoesNotExist is product with productID does not exist
     void buy(const unsigned int &productId);
 
     /**/
@@ -146,7 +147,7 @@ public:
     /// \exception throws RoomAlreadyExists if the room already exist
     /// \exception throws NotAnInt if floor is not an integer
     /// \exception throws NotAPositiveInt if capacity is a not a positive integer
-    /// \exception throws FloorDosNotExist if floor is not a floor of the hotel
+    /// \exception throws FloorDoesNotExist if floor is not a floor of the hotel
     /// \exception throws NotAPositiveFloat if price is not a positive float
     /// \exception throws InvalidRoomType if room type is not valid
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
@@ -295,7 +296,7 @@ public:
 
     /// Sorts vector clients
     ///
-    /// \param criteria  sorting criteria can be: name, NIF, Amount of future reservations, Amount of past reservations, Current reservations, Amount of reservations and Most Recent Reservation
+    /// \param criteria  sorting criteria can be: Name, NIF, Future reservations, Past reservations, Current reservations, Amount of reservations and Most recent Reservation
     /// \param order  ascending and descending can be: Ascending or Descending
     /// \exception throws SortingError if criteria or order is incorrect
     void clientSort(const std::string& criteria,const std::string& order);

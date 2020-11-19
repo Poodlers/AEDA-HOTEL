@@ -321,7 +321,9 @@ public:
     /// \param shift - for Janitor, can be: night or day
     /// \param password - for manager
     /// \exception throws NIFIsNotValid if NIF is invalid
-    void modifyStaffMember(const std::string & name, std::string& NIF, std::string& wage,const int& pos, const std::string& type, const std::string& shift,const std::string& password);
+    /// \exception throws InvalidEvaluation is evaluation is invalid
+    /// \exception throws NotAnInt if evaluation is not an int
+    void modifyStaffMember(const std::string & name, std::string& NIF, std::string& wage,const int& pos, const std::string& type, const std::string& shift,const std::string& password, const std::string& evaluation);
 
     ///Removes a staff member
     ///
@@ -340,7 +342,10 @@ public:
     /// \exception throws InvalidShift if the new staff member is a janitor and the shift isn't either night or day
     /// \exception throws InvalidPosition if type isn't one of the possible ones
     /// \exception throws StaffMemberAlreadyExists if staff member already exists
-    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage);
+    /// \exception throws InvalidEvaluation is evaluation is invalid
+    /// \exception throws NotAnInt if evaluation is not an int
+    /// \warning adding a manager switches out the current manager for the new one
+    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage, const std::string& evaluation);
 
     void addStaff(Staff* staff);
     ///Sorts vector staff
@@ -388,6 +393,10 @@ public:
 
     int getFirstFloor() const;
 
+    unsigned int getCleaningNecessity() const;
+    unsigned int getCateringNecessity() const;
+    unsigned int getOtherNecessity() const;
+
 private:
     ///Vector of the hotel's clients
     std::vector <Client*> clients;
@@ -407,9 +416,9 @@ private:
     ///Logged in state
     ///True if the manager is logged in, false otherwise
     bool loggedIn = false;
-    unsigned int cleaning_necessity;
-    unsigned int catering_necessity;
-    unsigned int other_necessity;
+    unsigned int cleaningNecessity = 0;
+    unsigned int cateringNecessity = 0;
+    unsigned int otherNecessity = 0;
     ///Number of floors of the hotel
     unsigned int numberOfFloors;
     ///Number of rooms of the hotel

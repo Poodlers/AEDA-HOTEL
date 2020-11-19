@@ -2,8 +2,8 @@
 #include <iostream>
 #include <iomanip>
 
-Manager::Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password): Staff(name,NIF,wage){
-    this->evaluation = 0;
+Manager::Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password, const unsigned int & evaluation): Staff(name,NIF,wage){
+    this->evaluation = evaluation;
     this->password = password;
 };
 
@@ -31,7 +31,7 @@ void Manager::print() {
 }
 
 
-void Manager::managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password){
+void Manager::managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password, const std::string& evaluation){
     if (name != "."){
         this->name = name;
     }
@@ -43,5 +43,8 @@ void Manager::managerModify(const std::string& name, const std::string& NIF, con
     }
     if(wage != "."){
         this->wage = stof(wage);
+    }
+    if(evaluation != "."){
+        this->evaluation = stoi(evaluation);
     }
 }

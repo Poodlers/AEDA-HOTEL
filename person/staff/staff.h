@@ -119,7 +119,7 @@ public:
     /// \param NIF - manager's NIF
     /// \param wage - manager's wage
     /// \param password - manager's password
-    Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password);
+    Manager(const std::string& name, const unsigned int & NIF, const float& wage, const std::string & password, const unsigned int & evaluation);
     ///
     /// \return manager's evaluation
     unsigned int getEvaluation() const;
@@ -138,7 +138,7 @@ public:
     /// \param name - manager's name
     /// \param NIF - manager's NIF as string
     /// \param password - manager's password as string
-    void managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password);
+    void managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password, const std::string& evalution);
 
 private:
     /// manager's evaluation: 0 if manager has not been evaluated, else number between 1 and 5 (included)

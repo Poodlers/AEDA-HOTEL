@@ -84,17 +84,23 @@ void Hotel::autoBuy(){
     });
 
     for (Product* product: products){
-        if (product->getType() == "Cleaning" && cleaning_necessity != 0){
-            buy(product->getId());
-            cleaning_necessity--;
+        if (product->getType() == "Cleaning" && cleaningNecessity != 0){
+            while(product->getStock()!= 0){
+                buy(product->getId());
+                cleaningNecessity--;
+            }
         }
-        if (product->getType() == "Catering" && catering_necessity != 0){
-            buy(product->getId());
-            catering_necessity--;
+        if (product->getType() == "Catering" && cateringNecessity != 0){
+            while(product->getStock()!= 0){
+                buy(product->getId());
+                cateringNecessity--;
+            }
         }
-        if (product->getType() == "Hygiene" && other_necessity != 0){
-            buy(product->getId());
-            other_necessity--;
+        if (product->getType() == "Other" && otherNecessity != 0){
+            while(product->getStock()!= 0){
+                buy(product->getId());
+                otherNecessity--;
+            }
         }
     }
 }
@@ -450,7 +456,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         else if (type == "Manager"){
             ss >> password;
 
-            Manager* manager = new Manager(name,stoi(NIF),salary,password);
+            Manager* manager = new Manager(name,stoi(NIF),salary,password,0);
             manager->setYearsOfService(date.getYear()-year);
             staff.push_back(manager);
         }
@@ -729,9 +735,9 @@ void Hotel::checkIn(const int& pos){
                                                std::to_string(reservation->getCheckOut() - reservation->getCheckIn()) +
                                                " days.\n";
                     accountability.push_back(transaction);
-                    cleaning_necessity += 5;
-                    catering_necessity += 5;
-                    other_necessity += 5;
+                    cleaningNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
+                    cateringNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
+                    otherNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                 }
             }
         }
@@ -739,6 +745,16 @@ void Hotel::checkIn(const int& pos){
     catch(...){
         throw;
     }
+}
+
+unsigned int Hotel::getCleaningNecessity() const{
+    return cleaningNecessity;
+}
+unsigned int Hotel::getCateringNecessity() const{
+    return cateringNecessity;
+}
+unsigned int Hotel::getOtherNecessity() const{
+    return otherNecessity;
 }
 
 
@@ -1038,10 +1054,21 @@ void Hotel::modifyClient(const std::string & name, std::string& NIF, const int& 
     clients[pos]->personModify(name,NIF);
 }
 
-void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::string& wage, const int& pos, const std::string& type, const std::string& shift,const std::string& password){
+void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::string& wage, const int& pos, const std::string& type, const std::string& shift,const std::string& password, const std::string& evaluation){
     if (NIF != "."){
         try{
             validateNIF(NIF,name);
+        }
+        catch(...){
+            throw;
+        }
+    }
+    if (evaluation != "." && type == "Manager"){
+        try{
+            checkIfInteger(evaluation,"manager evaluation");
+            if (stoi(evaluation) < 1 || stoi(evaluation)>5){
+                throw InvalidEvaluation();
+            }
         }
         catch(...){
             throw;
@@ -1061,7 +1088,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
     else if(type == "Manager"){
         Manager* manager = dynamic_cast<Manager*> (staff[pos]);
         staff.erase(staff.begin()+pos);
-        manager->managerModify(name,NIF,password,wage);
+        manager->managerModify(name,NIF,wage,password,evaluation);
         staff.insert(staff.begin()+pos,manager);
 
     }
@@ -1072,12 +1099,16 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
 
 
 
-void Hotel::addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage){
+void Hotel::addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage, const std::string& evaluation){
     std::string type1;
     bool shf;
     try{
         int pos = search(name, NIF, type1 = "Staff");
         checkIfValidPriceOrWage(wage, "wage");
+        checkIfInteger(evaluation,"manager evaluation");
+        if (stoi(evaluation) < 1 || stoi(evaluation)>5){
+            throw InvalidEvaluation();
+        }
     }
     catch(StaffMemberDoesNotExist& msg){
         if (type == "Manager"){
@@ -1088,7 +1119,7 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
                     break;
                 }
             }
-            Manager* manager = new Manager(name, stoi(NIF), stof(wage), password);
+            Manager* manager = new Manager(name, stoi(NIF), stof(wage), password,stoi(evaluation));
             this->staff.push_back(manager);
         }
         else if (type == "Janitor"){

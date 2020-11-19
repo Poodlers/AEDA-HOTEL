@@ -28,6 +28,9 @@ void accounting(Hotel* hotel){
     cout << "Costs: " << hotel->getCosts()<<endl;
     cout << "Money earned: " << hotel->getMoneyEarned()<<endl;
     cout << "Profit: " << hotel->getProfit()<<endl;
+    cout << "Cleaning products need: " << hotel->getCleaningNecessity()<<endl;
+    cout << "Catering products need: " << hotel->getCateringNecessity()<<endl;
+    cout << "Other products need: " << hotel->getOtherNecessity()<<endl;
     system("pause");
     system("CLS");
 }
@@ -44,7 +47,7 @@ void providers(Hotel* hotel){
     }
     while(true){
         for (Provider* provider: hotel->getProviders()){
-            provider->print();
+            provider->printConsole();
             cout << endl;
         }
         std::string input, Id;
@@ -572,7 +575,7 @@ void staff(Hotel *hotel){
     string name;
     string NIF;
     string type;
-    string password, shift, wage, yearsOfService;
+    string password, shift, wage, yearsOfService, evaluation;
     while(true){
         cout << "Date: " << hotel->getDate() <<endl;
         std::cout << std::left << std::setw(13) << "Position" <<  std::setw(22) << std::setfill(' ') << "Name" <<
@@ -617,12 +620,15 @@ void staff(Hotel *hotel){
                 if (type == "Manager"){
                     cout << "New Password: " << endl;
                     cin >> password;
+
+                    cout << "New Evaluation: " << endl;
+                    cin >> evaluation;
                 }
                 if (type == "Janitor"){
                     cout << "New Shift: " << endl;
                     cin >> shift;
                 }
-                hotel->modifyStaffMember(name,NIF,wage,pos,type,shift,password);
+                hotel->modifyStaffMember(name,NIF,wage,pos,type,shift,password,evaluation);
 
             }
             else if(input == "Remove"){
@@ -668,7 +674,7 @@ void staff(Hotel *hotel){
                     cout << "Insert the password of the manager you wish to add:"<<endl;
                     cin >> password;
                 }
-                hotel->addStaffMember(name,NIF,type,password,shift,wage);
+                hotel->addStaffMember(name,NIF,type,password,shift,wage,0);
 
             }
             else if (input == "Sort"){
@@ -777,7 +783,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Countability, Reservations, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Reservations, Time and Exit"<<endl;
         }
         else if (input == "Reservations"){
             reservation(hotel);
@@ -809,7 +815,7 @@ void system(Hotel* hotel){
                 cout << msg;
             }
         }
-        else if (input == "Countability"){
+        else if (input == "Accounting"){
             try{
                 accounting(hotel);
             }

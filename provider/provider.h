@@ -49,6 +49,9 @@ public:
     ///Prints the provider
     void print();
 
+    ///Prints the provider (for the console)
+    void printConsole();
+
     ///Restocks if it's the first day of the month
     ///
     /// \param date - current date

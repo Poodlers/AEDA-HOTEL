@@ -796,4 +796,12 @@ public:
         return     o << "Product with productId "<< exception.getProductId()<<" does not exist."<<std::endl;
     }
 };
+
+class InvalidEvaluation{
+public:
+    InvalidEvaluation(){}
+    friend std::ostream & operator << (std::ostream& o,const InvalidEvaluation& exception){
+        return     o << "Evaluation should be between 1 and 5."<<std::endl;
+    }
+};
 #endif

@@ -21,6 +21,7 @@ Product::Product(){
     }
     this->Id = totalId;
     this->totalId++;
+    this->stock = 100;
 }
 
 Product::Product(const unsigned int& quality, const float& price, const std::string & type){
@@ -59,6 +60,9 @@ void Product::setType(const std::string & type){
 }
 
 std::ostream& operator<<(std::ostream& o, Product& product){
-    return o <<std::left<< std::setfill(' ') << std::setw(10) << product.getType()<< std::setw(9) << product.getId() <<std::setw(7) <<product.getPrice()<< std::setw(4) << product.getQuality() <<std::endl;
+    return o <<std::left<< std::setfill(' ') <<std::setw(7)<<product.getStock() << std::setw(10) << product.getType()<< std::setw(9) << product.getId() <<std::setw(7) <<product.getPrice()<< std::setw(4) << product.getQuality() <<std::endl;
+}
+unsigned int Product::getStock() const{
+    return stock;
 }
 

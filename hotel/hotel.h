@@ -34,8 +34,8 @@
   ~~~~~~~~~~~~~~~~~~~
  */
 
-typedef struct Profit{
-    float profit;
+typedef struct Transaction{
+    float value;
     std::string description;
 };
 
@@ -89,8 +89,14 @@ public:
     /**/
 
     /*PROFIT*/
-    void getCosts();
-    void getProfit();
+    int getCosts() const;
+
+    int getProfit() const;
+
+    int getMoneyEarned() const;
+
+
+    void payStaff();
     /**/
 
     /*RESERVATION*/
@@ -302,13 +308,6 @@ public:
     /// \param pos - position of the staff member to remove
     void removeStaffMember(const int& pos);
 
-    void eraseStaff(Staff* staff);
-    void eraseRoom(Room* room);
-    void eraseClient(Client* client);
-    void addClient(Client *client);
-    void addStaff(Staff* staff);
-    void addRoom(Room * room);
-
     ///Adds a staff member
     ///
     /// \param name - name of the new staff member
@@ -377,6 +376,8 @@ private:
     std::vector<Provider*> providers;
     ///Vector of the products bought by the hotel
     std::vector<Product*> productsBought;
+    ///Vector with the transactions make in the hotel
+    std::vector<Transaction*> accountability;
 
     ///Logged in state
     ///True if the manager is logged in, false otherwise

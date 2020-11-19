@@ -27,6 +27,7 @@ public:
         void changeAvailability(const bool& free);
         void modify(const std::string& capacity, const std::string& pricePerNight);
         virtual void print() = 0;
+        virtual float getDiscountValue() const =0;
 private:
         int floor;
         unsigned int roomNumber;

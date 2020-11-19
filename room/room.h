@@ -63,6 +63,8 @@ public:
     /// \param pricePerNight - room's price per night in string form
     void modify(const std::string& capacity, const std::string& pricePerNight);
     ///
+    virtual float getDiscountValue() const = 0;
+    ///
     virtual void print() = 0;
     ///
     /// \return

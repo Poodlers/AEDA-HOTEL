@@ -147,7 +147,7 @@ void Hotel::checkIfFloorIsValid(const unsigned int& floor){
             break;
         }
         if (i == firstFloor + numberOfFloors){
-            throw FloorDosNotExist(floor);
+            throw FloorDoesNotExist(floor);
         }
     }
 }
@@ -351,7 +351,7 @@ Hotel::Hotel(const std::string &hotelFile) {
             std::cout <<msg;
             throw HotelFileHasWrongFormat("Elements room number, room ID and capacity have to be positive integers and appear in this order.");
         }
-        catch(FloorDosNotExist& msg){
+        catch(FloorDoesNotExist& msg){
             std::cout <<msg;
             throw HotelFileHasWrongFormat("The floor must be within the ones declared at the begging of the file.");
         }

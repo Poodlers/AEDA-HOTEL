@@ -322,7 +322,7 @@ void rooms(Hotel * hotel){
         catch(AccessRestricted& msg){
             cout << msg;
         }
-        catch(FloorDosNotExist& msg){
+        catch(FloorDoesNotExist& msg){
             cout << msg;
         }
         catch(InvalidRoomType& msg){

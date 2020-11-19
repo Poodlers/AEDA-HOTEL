@@ -80,16 +80,13 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/buttons.cpp">
-			<Option target="aeda_hotel_projeto"/>
-		</Unit>
-		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/buttons.h">
-			<Option target="aeda_hotel_projeto"/>
-		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/utils.cpp">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/GUI/utils.h">
+			<Option target="aeda_hotel_projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/console.cpp">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/hotel/hotel.cpp">
@@ -102,9 +99,6 @@
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/hotel/reservation.h">
-			<Option target="aeda_hotel_projeto"/>
-		</Unit>
-		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/main.cpp">
 			<Option target="aeda_hotel_projeto"/>
 		</Unit>
 		<Unit filename="C:/Users/Joana/Documents/Uni/Algoritmos e Estruturas de dados/Projeto/aeda_hotel_projeto/person/client/client.cpp">

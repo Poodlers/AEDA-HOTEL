@@ -729,6 +729,9 @@ void Hotel::checkIn(const int& pos){
                                                std::to_string(reservation->getCheckOut() - reservation->getCheckIn()) +
                                                " days.\n";
                     accountability.push_back(transaction);
+                    cleaning_necessity += 5;
+                    catering_necessity += 5;
+                    other_necessity += 5;
                 }
             }
         }

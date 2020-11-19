@@ -159,8 +159,13 @@ Hotel::Hotel(const std::string &hotelFile) {
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
-
-    date = Date(getData);
+    try{
+        date = Date(getData);
+    }
+    catch(DateIsNotValid& msg){
+        std::cout << msg;
+        throw HotelFileHasWrongFormat("The date from the hotel is wrong.");
+    }
 
     std::getline(file,getData);
     if (getData.empty()){
@@ -383,9 +388,9 @@ Hotel::Hotel(const std::string &hotelFile) {
             std::stringstream ss1;
             ss1 << reservation1;
             ss1 >> roomId >>ignore>> dayIn >> ignore>> monthIn >> ignore>> yearIn >> ignore>> dayOut >> ignore>>monthOut >> ignore>> yearOut >> ignore>> reservationId >> ignore >> capacity>>in;
-            Date* checkIn =new Date(dayIn,monthIn,yearIn);
-            Date* checkOut =new Date(dayOut,monthOut,yearOut);
             try{
+                Date* checkIn =new Date(dayIn,monthIn,yearIn);
+                Date* checkOut =new Date(dayOut,monthOut,yearOut);
                 this->makeReservation(roomId,checkIn,checkOut,capacity,pos,reservationId,in);
             }
             catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
@@ -411,6 +416,10 @@ Hotel::Hotel(const std::string &hotelFile) {
             catch(ClientCantMakeThisReservation& msg){
                 std::cout <<msg;
                 throw HotelFileHasWrongFormat(name + "'s first reservation can't be for a suite.");
+            }
+            catch(DateIsNotValid& msg){
+                std::cout<<msg;
+                throw HotelFileHasWrongFormat(name + "'s reservation has an invalid date.");
             }
         }
         pos++;
@@ -487,6 +496,15 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
     }
     throw RoomDoesNotExist(roomId);
 }
+
+void Hotel::removeClient(const int& pos){
+    clients.erase(clients.begin() + pos);
+}
+
+void Hotel::removeStaffMember(const int& pos){
+    staff.erase(staff.begin() + pos);
+}
+
 
 std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, const std::string& value){
     std::vector<int> pos;

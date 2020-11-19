@@ -22,15 +22,15 @@
       //#first floor with rooms
       //Rooms
       //#floor #room number #capacity #price #type (can be Suite, NoViewRoom or ViewRoom [case sensitive])
-      //...
+      //(...) more rooms
       //Staff
       //#name[can have spaces, only two names] #NIF[must be valid] #first year of work #wage #position (can be Janitor, Responsible, Receptionist or Manager[only one manager per hotel] [case sensitive]) if Janitor #shift (can be night or day [case sensitive]) else if Manager #password
-      //...
+      //(...) more staff
       //Client
       //#name[can have spaces, only two names] #NIF[must be valid] #reservations[separated by a space]
       //                                                          (#room ID,#Check In date[dd-mm-yyyy],#Check Out date[dd-mm-yyyy],#Reservation ID,#Reservation Size,#0 if in history or future 1 if in current reservations[client is currently at the hotel])-> no spaces in between
       //                                                           [-Can have no reservations]
-      //...
+      //(...) more clients
       //End
   ~~~~~~~~~~~~~~~~~~~
  */

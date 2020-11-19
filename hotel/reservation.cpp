@@ -7,15 +7,34 @@
 
 
 Date::Date(const int &day, const int &month, const int &year){
+    if (day <= 0 || month <= 0 || year <= 0){
+        throw DateIsNotValid("it can't have a negative day, month or year");
+    }
+    if(day > getDaysInMonth(month)){
+        throw DateIsNotValid("the month doesn't contain that number of days");
+    }
     this->day = day;
     this->month = month;
     this->year = year;
 }
 Date::Date(const std::string& date){
     std::stringstream ss;
+    int day, month, year;
     char ignore;
     ss<<date;
-    ss>>this->day>>ignore>>this->month>>ignore>>this->year;
+    ss>>day>>ignore>>month>>ignore>>year;
+    if (ss.fail()){
+        throw DateIsNotValid("day, month and year have to be integers");
+    }
+    if (day <= 0 || month <= 0 || year <= 0){
+        throw DateIsNotValid("it can't have a negative day, month or year");
+    }
+    if(day > getDaysInMonth(month)){
+        throw DateIsNotValid("the month doesn't contain that number of days");
+    }
+    this->day = day;
+    this->month = month;
+    this->year = year;
 }
 
 std::ostream& operator<<(std::ostream& o, const Date& date){
@@ -25,20 +44,15 @@ std::ostream& operator<<(std::ostream& o, const Date& date){
     return o;
 }
 
-int Date::operator - (const Date& date){
-    if (this-> year == date.getYear() && this->month == date.getMonth())
-        return this->day - date.getDay();
-    else if (this->year == date.getYear()){
-        return (this->month - date.getMonth()) * 30 - this->day + date.day ;
-    }
-    else
-        return 365 * (this->year - date.getYear()) - (this->month - date.getMonth()) * 30 - this->day + date.day;
+int Date::operator - (Date date){
+    return (this->year * (365 +isInLeapYear()) - date.getYear() * ((365 + isInLeapYear()))) + (this->month * getDaysInMonth(this->month) - date.getMonth() * date.getDaysInMonth(date.getMonth())) + (this->day - date.getDay());
 }
-Date Date::operator+(int d) const {
+
+Date Date::operator+(const int& d) const {
     Date result = *this;
     result.day += d;
-    while (result.day > result.getDaysInMonth()) {
-        result.day -= result.getDaysInMonth();
+    while (result.day > result.getDaysInMonth(this->month)) {
+        result.day -= result.getDaysInMonth(this->month);
         ++result.month;
         if (result.month > 12) {
             result.month = 1;
@@ -46,19 +60,18 @@ Date Date::operator+(int d) const {
         }
     }
     return result;
-
 }
 
-int Date::getDaysInMonth() const {
-    switch (this->month) {
-        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+int Date::getDaysInMonth(const int& month) const {
+    switch (month) {
+        case 1:case 3: case 5: case 7: case 8: case 10: case 12:
             return 31;
         case 4: case 6: case 9: case 11:
             return 30;
         case 2:
             return 28 + isInLeapYear();
     }
-    return 0;
+    throw DateIsNotValid("Invalid month");
 }
 
 bool Date::isInLeapYear() const {
@@ -77,11 +90,11 @@ int Date::getYear() const{
     return this->year;
 }
 
-bool Date::operator ==(const Date& date){
+bool Date::operator ==(Date date){
     return ((this->day == date.getDay()) && (this->month == date.getMonth())&& (this->year == date.getYear()));
 
 }
-bool Date::operator <(const Date& date){
+bool Date::operator <(Date date){
     if(this->year == date.getYear()){
         if(this->month == date.getMonth()){
             if (this->day < date.getDay()) return true;
@@ -94,7 +107,7 @@ bool Date::operator <(const Date& date){
     else return false;
 }
 
-bool Date::operator >(const Date& date){
+bool Date::operator >(Date date){
     if(this->year == date.getYear()){
         if(this->month == date.getMonth()){
             if (this->day > date.getDay()) return true;
@@ -124,20 +137,27 @@ Reservation::Reservation(const int &reservationSize,Date* checkIn,Date* checkOut
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
-    Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
+    try{
+        Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
+        if (checkOut < checkIn) { throw ReservationHasInvalidDates(); }
+        this->reservationId = this->ID;
+        ID++;
 
-    this->reservationId = this->ID;
-    ID++;
+        this->reservationSize = reservationSize;
 
-    this->reservationSize = reservationSize;
+        this->roomId = roomId;
 
-    this->roomId = roomId;
+        this->checkIn = checkIn;
+        this->checkOut = checkOut;
+    }
+    catch(...){
+        throw;
+    }
 
-    this->checkIn = checkIn;
-    this->checkOut = checkOut;
 }
 
-bool Date::operator <=(const Date& date){
+
+bool Date::operator <=(Date date){
     if(this->year == date.getYear()){
         if(this->month == date.getMonth()){
             if (this->day <= date.getDay()) return true;
@@ -189,13 +209,14 @@ void Reservation::setCheckIn(const Date& checkIn){
 void Reservation::setCheckOut(const Date& checkOut){
     this->checkOut =checkOut;
 }
-void Reservation::setRoomId(const int& roomId){
-    this->roomId =roomId;
-}
 
 
 void Reservation::setID(const int& ID) const{
     this->ID = ID;
+}
+
+void Reservation::setRoomId(const int& roomId){
+    this->roomId = roomId;
 }
 
 int Reservation::ID = 0;

@@ -3,9 +3,9 @@
 #include <string>
 
 
-///Date
+/// Represents a date structure
 ///
-///Class represents a date
+/// Is made up of a year, a month and a day
 class Date{
 private:
     ///year
@@ -20,11 +20,15 @@ public:
     /// \param day
     /// \param month
     /// \param year
+    /// \execption throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers or the number of days is
+    /// bigger then the number of days the month has
     Date(const int &day, const int &month, const int &year);
 
     /// Date's constructor from a string
     ///
     /// \param date - must have format dd(char)mm(char)yyyy
+    /// \execption throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers, not numbers or the number of days is
+    /// bigger then the number of days the month has
     Date(const std::string& date);
 
     /// Default date constructor
@@ -52,10 +56,12 @@ public:
     /// \return this->year
     int getYear() const;
 
-    ///Returns the number of days in this month
+    ///Returns the number of days in the month
     ///
+    /// \param month - month to check
     /// \return number of days in this month
-    int getDaysInMonth() const;
+    /// \exception throws DateIsNotValid is the month is invalid
+    int getDaysInMonth(const int& month) const;
 
     ///Checks if this year is leap year
     ///
@@ -66,44 +72,44 @@ public:
     ///
     /// \param date
     /// \return true if ==, false if not
-    bool operator ==(const Date& date);
+    bool operator ==(Date date);
 
     ///Operator overload for <
     ///
     /// \param date
     /// \return true if <, false if not
-    bool operator <(const Date& date);
+    bool operator <(Date date);
 
     ///Operator overload for >
     ///
     /// \param date
     /// \return true if >, false if not
-    bool operator >(const Date& date);
+    bool operator >(Date date);
 
     ///Operator overload for - between to dates
     ///
     /// \param date
     /// \return this-> - date
-    int operator -(const Date& date);
+    int operator -(Date date);
 
     ///Operator overload for + between a date and a number
     ///
     /// \param d
     /// \return this-> + d
-    Date operator +(int d) const;
+    Date operator +(const int& d) const;
 
     ///operator overload for <=
     ///
     /// \param date
     /// \return true if <=, false if not
-    bool operator <=(const Date& date);
+    bool operator <=(Date date);
 
 };
 
 
-///Reservation
+/// Represents a reservation
 ///
-///Class which represents a reservation
+/// Is made up of a reservation ID, a reservation size, do room ID of the reserved room, the check in date and the check out date
 class Reservation{
 public:
     ///Reservation constructor
@@ -113,7 +119,7 @@ public:
     /// \param CheckOut - Check Out date
     /// \param roomId - Room ID
     /// \param reservationId - Reservation -> if -1 generates a new random ID
-    /// \exception throws <ReservationHasInvalidDates> if Check Out data < Check In data
+    /// \exception throws ReservationHasInvalidDates if Check Out date < Check In date
     Reservation(const int &reservationSize,Date* CheckIn,Date* CheckOut, const int & roomId, const int& reservationId);
 
     ///Returns the reservation ID
@@ -131,6 +137,8 @@ public:
     /// \param monthOut - Month of the check Out
     /// \param yearOut - Year of the check Out
     /// \param roomId - Id of the reserved room
+    /// \exception throws ReservationHasInvalidDates if Check Out date < Check In date
+    /// \exception throws DateIsNotValid if Check Out date < Check In date or Check Out date are invalid
     Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
 
     ///Default constructor
@@ -170,6 +178,11 @@ public:
     ///
     /// \param checkIn - new check in date
     void setCheckIn(const Date& checkIn);
+
+    /// Changes the RoomID
+    ///
+    /// \param roomId - new room ID
+    void setRoomId(const int& roomId);
 
     /// Changes the check ou date
     ///

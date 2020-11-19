@@ -5,6 +5,7 @@
 
 class Person{
 public:
+
     Person(const std::string& name, const unsigned int & NIF);
     std::string getName() const;
     unsigned int getNIF() const;

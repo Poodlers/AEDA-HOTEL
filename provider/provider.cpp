@@ -6,7 +6,7 @@ Provider::Provider(const std::string &n, std::vector<Product *> &p) {
     this->numProducts = p.size();
 }
 
-Provider::Provider(const std::string &n, unsigned int &size) {//
+Provider::Provider(const std::string &n, unsigned int &size) {
     this->name = n;
     for(size_t i = 0; i < size; i++){
         Product * n = new Product();

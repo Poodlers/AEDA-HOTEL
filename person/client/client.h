@@ -7,9 +7,10 @@
 #include "../../exceptions/exceptions.h"
 
 
-///Client
+/// represents a client
 ///
-///Class which represents a client
+/// Is made up of a NIF, a name, a vector with the history of the client's reservations, a vector with the client's future reservations and a vector
+/// for current reservations i.e. the client is at the hotel at the moment
 class Client: public Person{
 public:
     ///Client constructor
@@ -59,7 +60,7 @@ public:
     /// to remove it from the current reservations vector and put it in the client's history.
     /// \param date - current date
     /// \return positions of the reservations that were checked out
-    /// \exception throws <NoReservationsToCheckOut> if there are no reservations from the client to check out currently
+    /// \exception throws NoReservationsToCheckOut if there are no reservations from the client to check out currently
     std::vector<int> checkOut (Date* date);
 
     /// Check In
@@ -68,7 +69,7 @@ public:
     /// to remove it from the future reservations vector and put it in the client's current reservations vector.
     /// \param date - current date
     /// \return positions of the reservations that were checked in
-    /// \exception throws <NoReservationsToCheckIn> if there are no reservations from client to check in
+    /// \exception throws NoReservationsToCheckIn if there are no reservations from client to check in
     std::vector<int> checkIn (Date* date);
 
     /// Archives expired reservations

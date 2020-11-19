@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../GUI/utils.h"
 
+
 class NoReservationsToCheckIn{
 private:
     std::string name;
@@ -457,9 +458,20 @@ public:
     HotelFileHasWrongFormat(const std::string& issue){this->issue = issue;}
     std::string getIssue() const {return issue;}
     friend std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception){
-        return     o << "File format is wrong, because " << exception.getIssue() << ". Fix the issue and try again.";
+        return     o << "File format is wrong, because " << exception.getIssue() << ". Fix the issue and try again."<<std::endl;
 
     }
 };
 
+class DateIsNotValid{
+private:
+    std::string issue;
+public:
+    DateIsNotValid(const std::string& issue){this->issue=issue;}
+    std::string getIssue() const {return issue;}
+    friend std::ostream & operator << (std::ostream& o,const DateIsNotValid& exception){
+        return     o << "Date is invalid, because "<< exception.getIssue()<<"."<<std::endl;
+
+    }
+};
 #endif

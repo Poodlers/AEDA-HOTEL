@@ -48,12 +48,12 @@ std::vector<int> Client::checkIn(Date* date) {
 
 void Client::archiveExpiredReservations(Date* date){
     for (int i = 0; i < futureReservations.size(); i++){
-        if (futureReservations[i]->getCheckOut() < date){
+        if (futureReservations[i]->getCheckOut() < *date){
             this->history.push_back(futureReservations[i]);
             this->futureReservations.erase(futureReservations.begin()+i);
             i--;
         }
-        if (currentReservations[i]->getCheckOut() < date){
+        if (currentReservations[i]->getCheckOut() < *date){
             this->history.push_back(currentReservations[i]);
             this->currentReservations.erase(currentReservations.begin()+i);
             std::cout << "Reservation " << currentReservations[i]->getReservationId() <<" for client: " << this->name << " with NIF: " << this->NIF << " has expired."<<std::endl;

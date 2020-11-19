@@ -125,6 +125,11 @@ void Hotel::incrementDate(const int& i){
     if (date.getDay() == date.getDaysInMonth(date.getMonth())){
         payStaff();
     }
+    if (date.getDay() == 1 && date.getMonth() == 1){
+        for (Staff* staff: staff){
+            staff->setYearsOfService(staff->getYearsOfService()++);
+        }
+    }
 }
 
 void Hotel::payStaff(){

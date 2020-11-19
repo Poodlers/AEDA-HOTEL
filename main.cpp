@@ -13,9 +13,11 @@ int main(){
     auto ClientsButton = new MenuButton<Client>(10,6,15,3,"Clients",1,&hotel,nullptr);
     auto StaffButton =  new MenuButton<Staff>(10,10,15,3,"Staff",1,&hotel, nullptr);
     auto RoomsButton =  new MenuButton<Room>(10,14,15,3,"Rooms",1,&hotel, nullptr);
-     ClientsButton->DrawButton();
+    auto ReservationsButton = new MenuButton<Reservation>(10,18,15,3,"Reservations",1,&hotel,nullptr);
+    ClientsButton->DrawButton();
     StaffButton->DrawButton();
     RoomsButton->DrawButton();
+    ReservationsButton->DrawButton();
     fill_month_map(map_month);
     HANDLE hin = GetStdHandle(STD_INPUT_HANDLE);
     HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -24,7 +26,7 @@ int main(){
     DWORD Events;
     CONSOLE_CURSOR_INFO cci;
     SetConsoleDefinitions(fdwMode,hin,hout,cci);
-    vector<BaseButton*> CurrentButtons = {ClientsButton,StaffButton,RoomsButton};
+    vector<BaseButton*> CurrentButtons = {ClientsButton,StaffButton,RoomsButton,ReservationsButton};
     ButtonHandler ButtonHandler(CurrentButtons);
     printTime(hotel.getDate(),map_month);
     while(true){

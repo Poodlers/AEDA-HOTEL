@@ -3,12 +3,16 @@
 #include <iostream>
 
 NoViewRoom :: NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight) : Room(floor,roomNumber,roomId,capacity,pricePerNight){
+    this->discount = false;
 }
 
 void NoViewRoom ::toggleDiscount(){
     this->discount = !this->discount;
 }
 
+std::string NoViewRoom::getType() {
+    return "NoViewRoom";
+}
 
 bool NoViewRoom::getDiscountState() const{
     return discount;
@@ -16,8 +20,6 @@ bool NoViewRoom::getDiscountState() const{
 float NoViewRoom::getDiscountValue() const{
     return discountValue;
 }
-
-bool NoViewRoom::discount = false;
 
 
 void NoViewRoom::print() {

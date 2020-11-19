@@ -189,6 +189,7 @@ public:
     /// \param checkOut - new check out date
     void setCheckOut(const Date& checkOut);
 
+    void setRoomId(const int& roomId);
     /// Changes the ID
     ///
     /// used after initializing the hotel to make sure we don't repeat reservation IDs

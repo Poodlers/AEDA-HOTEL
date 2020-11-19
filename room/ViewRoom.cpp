@@ -3,8 +3,8 @@
 #include <iostream>
 
 ViewRoom :: ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight) : Room(floor,roomNumber,roomId,capacity,pricePerNight){
+    this->discount = false;
 }
-
 
 void ViewRoom :: toggleDiscount(){
     this->discount = !this->discount;
@@ -18,7 +18,10 @@ float ViewRoom::getDiscountValue() const{
     return discountValue;
 }
 
-bool ViewRoom::discount = false;
+std::string ViewRoom::getType() {
+    return "ViewRoom";
+}
+
 
 void ViewRoom::print() {
     std::cout << std::left << std::setw(14) << "View Room" <<  std::setw(10) << std::setfill(' ') << this->getRoomId() << std::setw(15)

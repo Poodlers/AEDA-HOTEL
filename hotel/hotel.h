@@ -134,7 +134,7 @@ public:
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     /**/
 
-
+    void deleteReservation(Reservation* reservation);
 
     /*ROOMS*/
     /// Adds a room
@@ -363,6 +363,11 @@ public:
     bool getLoggedInState() const;
     /**/
 
+    int getNumberOfFloors() const;
+
+    int getFirstFloor() const;
+
+    void ReservationQualityControl(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity,const int& reservationId,Client* client);
 private:
     ///Vector of the hotel's clients
     std::vector <Client*> clients;
@@ -397,10 +402,10 @@ private:
 
 void edit(Client* client);
 void edit(Receptionist* receptionist);
-void edit(Responsible* responsible);
+void edit(Responsible* responsible,Hotel* hotel);
 void edit(Manager* manager);
 void edit(Janitor* janitor);
-void edit(Reservation* reservation);
-void edit(Room* room);
+void edit(Reservation* reservation,Hotel* hotel, Client* client);
+void edit(Room* room,Hotel* hotel);
 
 #endif

@@ -111,7 +111,7 @@ std::vector<Product*> Hotel::getProductsBought() const{
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){
-        client->archiveExpiredReservations(&this->date);
+        //client->archiveExpiredReservations(&this->date);
     }
     if (date.getDay() == 5 && this->productsBought.empty()){
         std::cout << "If no products are brought today, the cheaper ones will be bought automatically tomorrow."<<std::endl;
@@ -634,7 +634,6 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
 
 int Hotel::search(const std::string& name, const std::string& NIF, std::string& type){
     int pos = 0;
-
     try{
         validateNIF(NIF, name);
     }
@@ -1274,6 +1273,12 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
+void Hotel::deleteReservation(Reservation *reservation) {
+    auto find = std::find(this->reservations.begin(),this->reservations.end(),reservation);
+    this->reservations.erase(find);
+    delete reservation;
+}
+
 void Hotel::staffSort(const std::string& input,const std::string& order1){
     bool order;
     if (order1 == "Ascending"){
@@ -1387,6 +1392,14 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
+int Hotel::getFirstFloor() const {
+    return this->firstFloor;
+}
+
+int Hotel::getNumberOfFloors() const {
+    return this->numberOfFloors;
+}
+
 void edit(Client* client) {
     std::string edit;
     std::cout << "Edit the client's information as follows: " << std::endl;
@@ -1394,11 +1407,26 @@ void edit(Client* client) {
     std::cout << "Name: " << std::endl;
     getStringInput(edit, 6, 3);
     if (edit != ".") client->setName(edit);
-    gotoxy(0, 5);
     edit = "";
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if(edit != ".") client->setNIF(std::stoi(edit));
+    unsigned long waitNewNIF = 2000;
+    while(edit != ".") {
+        edit = "";
+        gotoxy(0, 5);
+        std::cout << "NIF: " << std::endl;
+        edit = GetNumberInput(5, 5, CheckIfInteger);
+        if (edit != ".") {
+            try {
+                validateNIF(edit, client->getName());
+                client->setNIF(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 7);
+                std::cout << "Sorry, but that isn't a valid NIF. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+            }
+        }
+    }
 
 }
 
@@ -1409,21 +1437,53 @@ void edit(Receptionist* receptionist) {
     std::cout << "Name: " << std::endl;
     getStringInput(edit,6,3);
     if (edit != ".") receptionist->setName(edit);
-    gotoxy(0,5);
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if (edit != ".") receptionist->setNIF(std::stoi(edit));
-    gotoxy(0,7);
-    std::cout << "Wage: " << std::endl;
-    edit = GetNumberInput(12,7,CheckIfFloat);
-    if (edit != ".") receptionist->setWage(std::stof(edit));
+    edit = "";
+    unsigned long waitNewNIF = 2000;
+    while(edit != ".") {
+        edit = "";
+        gotoxy(0, 5);
+        std::cout << "NIF: " << std::endl;
+        edit = GetNumberInput(5, 5, CheckIfInteger);
+        if (edit != ".") {
+            try {
+                validateNIF(edit, receptionist->getName());
+                receptionist->setNIF(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 7);
+                std::cout << "Sorry, but that isn't a valid NIF. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+            }
+        }
+    }
+    edit =  "";
+    while(edit != ".") {
+        gotoxy(0,7);
+        std::cout << "Wage: " << std::endl;
+        edit = GetNumberInput(12,7,CheckIfFloat);
+        if (edit != ".") {
+            try {
+                checkIfValidPriceOrWage(edit,"wage");
+                receptionist->setWage(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 9);
+                std::cout << "Sorry, but that isn't a valid wage. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 9);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
     gotoxy(0,9);
     std::cout << "Years of Service: " << std::endl;
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") receptionist->setYearsOfService(std::stoi(edit));
 }
 
-void edit(Responsible* responsible) {
+void edit(Responsible* responsible,Hotel* hotel) {
     std::string edit;
     std::cout << "Edit the Responsible's information as follows: " << std::endl;
     std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
@@ -1431,28 +1491,91 @@ void edit(Responsible* responsible) {
     getStringInput(edit,6,3);
     if (edit != ".") responsible->setName(edit);
     gotoxy(0,5);
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if (edit != ".") responsible->setNIF(std::stoi(edit));
-    gotoxy(0,7);
-    std::cout << "Wage: " << std::endl;
-    edit = GetNumberInput(12,7,CheckIfFloat);
-    if (edit != ".") responsible->setWage(std::stof(edit));
+    edit = "";
+    unsigned long waitNewNIF = 2000;
+    while(edit != ".") {
+        edit = "";
+        gotoxy(0, 5);
+        std::cout << "NIF: " << std::endl;
+        edit = GetNumberInput(5, 5, CheckIfInteger);
+        if (edit != ".") {
+            try {
+                validateNIF(edit, responsible->getName());
+                responsible->setNIF(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 7);
+                std::cout << "Sorry, but that isn't a valid NIF. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 7);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
+    edit =  "";
+    while(edit != ".") {
+        gotoxy(0,7);
+        std::cout << "Wage: " << std::endl;
+        edit = GetNumberInput(12,7,CheckIfFloat);
+        if (edit != ".") {
+            try {
+                checkIfValidPriceOrWage(edit,"wage");
+                responsible->setWage(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 9);
+                std::cout << "Sorry, but that isn't a valid wage. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 9);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
     gotoxy(0,9);
     std::cout << "Years of Service: " << std::endl;
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") responsible->setYearsOfService(std::stoi(edit));
-    gotoxy(0,11);
-    std::vector<int> new_floors;
     edit = " ";
     while(edit != "."){
+        gotoxy(0,11);
         std::cout << "Insira um floor para monitorizar: (type '.' para parar)";
         edit = GetNumberInput(2,12,CheckIfInteger);
+        if (std::stoi(edit) > hotel->getNumberOfFloors() + hotel->getFirstFloor()){
+            gotoxy(0,13);
+            std::cout << "You typed a floor number that was out of range. Try another please!" << std::endl;
+            gotoxy(0, 13);
+            std::cout << "                                                                    " << std::endl;
+            continue;
+        }
         responsible->assignFloor(std::stoi(edit));
         gotoxy(2,12);
         std::cout << "                          ";
     }
 
+}
+
+void Hotel::ReservationQualityControl(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity,const int& reservationId,Client* client){
+    for (Room* room: rooms){
+        if (room->getRoomId() == roomId){
+            Suite* suite = dynamic_cast<Suite*>(room);
+            if (suite != nullptr && client->getHistory().size() == 0){
+                throw ClientCantMakeThisReservation();
+            }
+            if (room->getCapacity() < capacity){
+                throw RoomDoesNotHaveTheNecessaryCapacity(roomId);
+            }
+            for(Reservation* reservation: reservations){
+                if (reservation->getRoomId() == roomId && reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
+                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
+                }
+            }
+
+            return;
+        }
+    }
+    throw RoomDoesNotExist(roomId);
 }
 
 void edit(Manager* manager) {
@@ -1462,23 +1585,67 @@ void edit(Manager* manager) {
     std::cout << "Name: " << std::endl;
     getStringInput(edit,6,3);
     if (edit != ".") manager->setName(edit);
-    gotoxy(0,5);
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if (edit != ".") manager->setNIF(std::stoi(edit));
+    unsigned long waitNewNIF = 2000;
+    edit = " ";
+    while(edit != ".") {
+        edit = "";
+        gotoxy(0, 5);
+        std::cout << "NIF: " << std::endl;
+        edit = GetNumberInput(5, 5, CheckIfInteger);
+        if (edit != ".") {
+            try {
+                validateNIF(edit, manager->getName());
+                manager->setNIF(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 7);
+                std::cout << "Sorry, but that isn't a valid NIF. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 7);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
+    edit = " ";
     gotoxy(0,7);
     std::cout << "Wage: " << std::endl;
-    edit = GetNumberInput(12,7,CheckIfFloat);
-    if (edit != ".") manager->setWage(std::stof(edit));
+    while(edit != ".") {
+        edit = GetNumberInput(12,7,CheckIfFloat);
+        if (edit != ".") {
+            try {
+                checkIfValidPriceOrWage(edit,"wage");
+                manager->setWage(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 9);
+                std::cout << "Sorry, but that isn't a valid wage. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 9);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
     gotoxy(0,9);
     std::cout << "Years of Service: " << std::endl;
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") manager->setYearsOfService(std::stoi(edit));
     gotoxy(0,11);
-    std::cout << "Evaluation: " << std::endl;
-    edit = GetNumberInput(20,9,CheckIfInteger);
-    if (edit != ".") manager->setEvaluation(std::stoi(edit));
+    std::cout << "Evaluation(0 - 5): " << std::endl;
+    while(edit != "."){
+        edit = GetNumberInput(15,11,CheckIfInteger);
+        if(std::stoi(edit) < 0 || std::stoi(edit) > 5){
+            gotoxy(0,13);
+            std::cout << "Sorry, but that wasn't quite a valid evaluation! Try Again!" << std::endl;
+            Sleep(waitNewNIF);
+            gotoxy(0,13);
+            std::cout << "                                                                     " << std::endl;
+            continue;
+        }
+        if (edit != ".") manager->setEvaluation(std::stoi(edit));
 
+    }
 }
 
 void edit(Janitor* janitor) {
@@ -1488,61 +1655,167 @@ void edit(Janitor* janitor) {
     std::cout << "Name: " << std::endl;
     getStringInput(edit,6,3);
     if (edit != ".") janitor->setName(edit);
-    gotoxy(0,5);
-    std::cout << "NIF: " << std::endl;
-    edit = GetNumberInput(5,5,CheckIfInteger);
-    if (edit != ".") janitor->setNIF(std::stoi(edit));
+    edit = " ";
+    unsigned long waitNewNIF = 2000;
+    while(edit != ".") {
+        edit = "";
+        gotoxy(0, 5);
+        std::cout << "NIF: " << std::endl;
+        edit = GetNumberInput(5, 5, CheckIfInteger);
+        if (edit != ".") {
+            try {
+                validateNIF(edit, janitor->getName());
+                janitor->setNIF(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 7);
+                std::cout << "Sorry, but that isn't a valid NIF. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 7);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
+    edit = " ";
     gotoxy(0,7);
     std::cout << "Wage: " << std::endl;
-    edit = GetNumberInput(12,7,CheckIfFloat);
-    if (edit != ".") janitor->setWage(std::stof(edit));
+    while(edit != ".") {
+        edit = GetNumberInput(12,7,CheckIfFloat);
+        if (edit != ".") {
+            try {
+                checkIfValidPriceOrWage(edit,"wage");
+                janitor->setWage(std::stoi(edit));
+                return;
+            }
+            catch (...) {
+                gotoxy(0, 9);
+                std::cout << "Sorry, but that isn't a valid wage. Please try again, shortly!" << std::endl;
+                Sleep(waitNewNIF);
+                gotoxy(0, 9);
+                std::cout << "                                                                   " << std::endl;
+            }
+        }
+    }
     gotoxy(0,9);
     std::cout << "Years of Service: " << std::endl;
     edit = GetNumberInput(20,9,CheckIfInteger);
     if (edit != ".") janitor->setYearsOfService(std::stoi(edit));
-    gotoxy(0,11);
-    std::cout << "Shift: " << std::endl;
-    getStringInput(edit,7,11);
-    if(edit == "day"){
-        janitor->setShift(true);
-    }else if(edit == "night"){
-        janitor->setShift(false);
+    while(edit != "."){
+        gotoxy(0,11);
+        std::cout << "Shift (day or night): " << std::endl;
+        getStringInput(edit,20,11);
+        if(edit == "day"){
+            janitor->setShift(true);
+        }else if(edit == "night"){
+            janitor->setShift(false);
+        }else{
+            gotoxy(0,13);
+            std::cout << "Please type in a valid shift in a few seconds!" << std::endl;
+            Sleep(waitNewNIF);
+            gotoxy(0,13);
+            std::cout << "                                                " << std::endl;
+        }
     }
 
 }
 
-void edit(Reservation* reservation) {
+void edit(Reservation* reservation,Hotel* hotel, Client* client) {
     std::string edit;
     std::cout << "Edit the Reservation's information as follows: " << std::endl;
     std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    unsigned reservationId = 0;
+    Date CheckIn;
+    Date CheckOut;
+    unsigned roomId;
+    int capacity;
+    gotoxy(0,3);
+    unsigned long waitNewAttempt = 2000;
     std::cout << "Reservation Id: " << std::endl;
     edit = GetNumberInput(22,3,CheckIfInteger);
-    if (edit != ".") reservation->setReservationId(std::stoi(edit));
+    if (edit != ".") reservationId = std::stoi(edit);
     gotoxy(0,5);
-    std::cout << "Check In Date (day/month/year): " << std::endl;
-    getStringInput(edit,30,5);
-    if (edit != ".") reservation->setCheckIn(Date(edit));
+    std::cout << "Check In Date (day.month.year): " << std::endl;
+    edit = " ";
+    while(edit != "."){
+        getStringInput(edit,30,5);
+        if (edit != "."){
+            try{
+                CheckIn = Date(edit);
+            }
+            catch (...) {
+                gotoxy(0,7);
+                std::cout << "Did not type a valid date format! Please try again in a bit!" << std::endl;
+                Sleep(waitNewAttempt);
+                std::cout << "                                                             " << std::endl;
+            }
+        }
+    }
+    edit = " ";
     gotoxy(0,7);
-    std::cout << "Check Out Date (day/month/year): " << std::endl;
-    getStringInput(edit,33,7);
-    if (edit != ".") reservation->setCheckOut(Date(edit));
+    std::cout << "Check Out Date (day.month.year): " << std::endl;
+    while(edit != "."){
+        getStringInput(edit,33,7);
+        if (edit != "."){
+            try{
+                CheckOut = Date(edit);
+            }
+            catch (...) {
+                gotoxy(0,9);
+                std::cout << "Did not type a valid date format! Please try again in a bit!" << std::endl;
+                Sleep(waitNewAttempt);
+                std::cout << "                                                             " << std::endl;
+            }
+        }
+    }
     gotoxy(0,9);
     std::cout << "Room Id: " << std::endl;
     edit = GetNumberInput(10,9,CheckIfInteger);
-    if (edit != ".") reservation->setRoomId(std::stoi(edit));
+    if (edit != ".") roomId = std::stoi(edit);
+    edit = " ";
+    gotoxy(0,11);
+    std::cout << "Capacity : " << std::endl;
+    edit = GetNumberInput(12,11,CheckIfInteger);
+    if (edit != ".") capacity = std::stoi(edit);
+    try{
+        hotel->ReservationQualityControl(roomId,&CheckIn,&CheckOut,capacity,reservationId,client);
+    }
+    catch(...){
+        std::cout << "It seems you have fucked";
+        return;
+    }
+    reservation->setReservationId(reservationId);
+    reservation->setReservationSize(capacity);
+    reservation->setCheckOut(CheckOut);
+    reservation->setCheckIn(CheckIn);
+    reservation->setRoomId(roomId);
+
 }
 
-void edit(Room* room) {
+void edit(Room* room,Hotel* hotel) {
     std::string edit;
+    unsigned waitNewAttempt = 2000;
     std::cout << "Edit the Room's information as follows: " << std::endl;
     std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
     std::cout << "RoomNumber: " << std::endl;
     edit = GetNumberInput(14,3,CheckIfInteger);
     if (edit != ".") room->setRoomNumber(std::stoi(edit));
     gotoxy(0,5);
-    std::cout << "Floor: " << std::endl;
-    edit = GetNumberInput(9,5,CheckIfInteger);
-    if (edit != ".") room->setFloor(std::stoi(edit));
+    std::cout << "Floor (" << hotel->getFirstFloor() << " - " << hotel->getFirstFloor() + hotel->getNumberOfFloors() << std::endl;
+    edit = " ";
+    while(edit != "."){
+        edit = GetNumberInput(15,5,CheckIfInteger);
+        try{
+            hotel->checkIfFloorIsValid(std::stoi(edit));
+            room->setFloor(std::stoi(edit));
+        }catch(...){
+            gotoxy(0,7);
+            std::cout << "Invalid floor! Try another floor in a sec!" << std::endl;
+            Sleep(waitNewAttempt);
+            std::cout << "                                           " << std::endl;
+        }
+    }
+
     gotoxy(0,7);
     std::cout << "Capacity: " << std::endl;
     edit = GetNumberInput(12,7,CheckIfInteger);

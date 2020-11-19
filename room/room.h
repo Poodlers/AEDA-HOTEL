@@ -27,7 +27,8 @@ public:
         void changeAvailability(const bool& free);
         void modify(const std::string& capacity, const std::string& pricePerNight);
         virtual void print() = 0;
-        virtual float getDiscountValue() const =0;
+        virtual std::string getType() = 0;
+
 private:
         int floor;
         unsigned int roomNumber;
@@ -44,9 +45,10 @@ public:
     void toggleDiscount() override;
     bool getDiscountState() const override;
     float getDiscountValue() const;
+    std::string getType() override;
 
 private:
-    static bool discount;
+    bool discount;
     const float discountValue = 0.05;
 };
 
@@ -58,9 +60,10 @@ public:
     void toggleDiscount() override;
     bool getDiscountState() const override;
     float getDiscountValue() const;
+    std::string getType() override;
 
 private:
-    static bool discount;
+    bool discount;
     const float discountValue = 0.08;
 };
 
@@ -71,10 +74,11 @@ public:
     void toggleDiscount() override;
     bool getDiscountState() const override;
     float getDiscountValue() const;
+    std::string getType() override;
 
 
 private:
-    static bool discount;
+    bool discount;
     const float discountValue = 0.12;
 };
 

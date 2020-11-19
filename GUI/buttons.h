@@ -77,10 +77,12 @@ public:
     MenuButton(const int x, const int y, const int width,const int height,const std::string &text,const int currentPage,
                Hotel* hotel,BaseButton* ParentButton);
     MenuButton(const int x, const int y, const int width,const int height,const std::string &text,const int currentPage,
-               Client* client,BaseButton* ParentButton);
+               Client* client,Hotel* hotel,BaseButton* ParentButton);
     void onClick(ButtonHandler& handler) override;
     void EraseObject(N* item);
     void AddObject(N* item);
+    Hotel* getHotel();
+    Client* getClient();
     void ChangeCurrentPage(int page);
     int getCurrentPage();
     void ChangeTypeId(int i);
@@ -89,14 +91,34 @@ public:
 
 };
 
-class SortClientsButton: public BaseButton{
+class ApplyDiscountToTypeOfRoom: public BaseButton{
 private:
-    MenuButton<Client>* menu_button;
+    MenuButton<Room>* GoBackButton;
+    Hotel* hotel;
+public:
+    ApplyDiscountToTypeOfRoom(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,MenuButton<Room>* menu_button);
+    void onClick(ButtonHandler& handler) override;
+};
+
+template <class N>
+class SearchButton: public BaseButton{
+private:
+    MenuButton<N>* GoBackButton;
+    Hotel* hotel;
+public:
+    SearchButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,MenuButton<N>* menu_button);
+    void onClick(ButtonHandler& handler) override;
+};
+
+template <class N>
+class SortButton: public BaseButton{
+private:
+    MenuButton<N>* menu_button;
     Hotel* hotel;
     std::string order;
     std::string type;
 public:
-    SortClientsButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,std::string order,std::string type,MenuButton<Client>* menu_button);
+    SortButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,std::string order,std::string type,MenuButton<N>* menu_button);
     void onClick(ButtonHandler& handler) override;
 };
 
@@ -145,9 +167,9 @@ public:
 template <class N>
 class EditButton: public ModifyButton<N>{
 private:
-    BaseButton* OriginalButton;
+    MenuButton<N>* OriginalButton;
 public:
-    EditButton(const int x, const int y, const int width,const int height,const std::string text,N* object,BaseButton* button);
+    EditButton(const int x, const int y, const int width,const int height,const std::string text,N* object,MenuButton<N>* button);
     void onClick(ButtonHandler& handler) override;
 };
 

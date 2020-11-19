@@ -231,13 +231,13 @@ std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input
 
 
 std::ostream& operator<<(std::ostream &o, std::vector<int> v){
-    o << "{";
+    o << "[";
     for (int i = 0; i < v.size(); ++i) {
         o << v[i];
         if (i != v.size() - 1)
             o << ", ";
     }
-    o << "}";
+    o << "]";
     return o;
 }
 

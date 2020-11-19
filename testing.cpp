@@ -11,6 +11,35 @@
 using namespace std;
 
 void providers(Hotel* hotel){
+    if (!hotel->getLoggedInState()){
+        throw AccessRestricted();
+    }
+    for (Provider* provider: hotel->getProviders()){
+        provider->print();
+    }
+    while(true){
+        std::string input;
+        try{
+            if (input == "Back"){
+                break;
+            }
+            else if (input == "Auto-buy"){
+
+            }
+            else if (input == "Buy"){
+
+            }
+            else if (input == "Help"){
+
+            }
+            else{
+
+            }
+        }
+        catch(...){
+
+        }
+    }
 
 
 }
@@ -57,6 +86,10 @@ void reservation(Hotel * hotel){
                     cout << "Insert the date of the reservations you wish to find (dd-mm-yyyy):"<<endl;
                     cin >> date;
                     pos = hotel->searchReservations("Date", date);
+                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                              << "Check Out"
+                              << std::setw(8) << "Room ID"<<std::endl;
                     for (int position: pos){
                         hotel->getReservations()[position]->print();
                     }
@@ -65,11 +98,19 @@ void reservation(Hotel * hotel){
                     cout << "Insert the room ID of the reservations you wish to find:"<<endl;
                     cin >> roomId;
                     pos = hotel->searchReservations("Room", roomId);
+                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                              << "Check Out"
+                              << std::setw(8) << "Room ID"<<std::endl;
                     for (int position: pos){
                         hotel->getReservations()[position]->print();
                     }
                 }
                 else if (type == "All"){
+                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                              << "Check Out"
+                              << std::setw(8) << "Room ID"<<std::endl;
                     for (Reservation* reservation: hotel->getReservations()){
                         reservation->print();
                         cout << endl;
@@ -79,6 +120,10 @@ void reservation(Hotel * hotel){
                     cout << "Insert the room of the ID of the reservation you wish to find:"<<endl;
                     cin >> reservationId;
                     pos = hotel->searchReservations("ID", reservationId);
+                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                              << "Check Out"
+                              << std::setw(8) << "Room ID"<<std::endl;
                     hotel->getReservations()[pos[0]]->print();
                 }
                 else{
@@ -111,9 +156,6 @@ void reservation(Hotel * hotel){
         catch(RoomWithThisRoomIdOrRoomNumberAlreadyExists& msg){
             cout <<msg;
         }
-        catch(RoomDoesNotExist& msg){
-            cout << msg;
-        }
         catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
             cout << msg;
         }
@@ -129,6 +171,9 @@ void rooms(Hotel * hotel){
     string roomId, roomNumber, capacity, type, price, floor;
     while (true){
         cout << "Date: " << hotel->getDate() <<endl;
+        std::cout << std::left << std::setw(14) << "Type" <<  std::setw(10) << std::setfill(' ') << "Room ID" << std::setw(15)
+                  << "Room Number" << std::setw(8)<< "Floor" << std::setw(10) << "Capacity" <<std::setw(18) << "Price per night"
+                  << " Availability"<<std::endl;
 
         for (Room* room: hotel->getRooms()){
             room->print();
@@ -381,7 +426,7 @@ void clients(Hotel *hotel){
 
             }
             else if (input == "Sort"){
-                cout << "Insert the type of sorting to be done. Options are: name, NIF, Amount of future reservations, Amount of past reservations, Current reservations,"
+                cout << "Insert the type of sorting to be done. Options are: Name, NIF, Amount of future reservations, Amount of past reservations, Current reservations,"
                         " Amount of reservations, Most Recent Reservation"<<endl;
                 string sorting,order;
                 cleanCinBuffer();
@@ -454,6 +499,9 @@ void staff(Hotel *hotel){
     string password, shift, wage;
     while(true){
         cout << "Date: " << hotel->getDate() <<endl;
+        std::cout << std::left << std::setw(13) << "Position" <<  std::setw(22) << std::setfill(' ') << "Name" <<
+                  std::setw(10) << "NIF" << std::setw(7) << "Wage" << std::setw(16) << "Years of work"
+                  << std::setw(16) << "Floors assigned" << std::setw(7) << "Shift" << std::setw(12)<< "Evaluation"<<std::endl;
         for(Staff* staff: hotel->getStaff()){
             staff->print();
             cout<<endl;
@@ -545,7 +593,7 @@ void staff(Hotel *hotel){
 
             }
             else if (input == "Sort"){
-                cout << "Insert the type of sorting to be done. Options are: name, NIF, wage, position and years of service"<<endl;
+                cout << "Insert the type of sorting to be done. Options are: Name, NIF, Wage, Position and Years of Service"<<endl;
                 string sorting,order;
                 cleanCinBuffer();
                 getline(cin,sorting);
@@ -717,13 +765,6 @@ Hotel* createHotel(){
 
 int main(){
     Hotel* hotel = createHotel();
-    Provider* provider1 = new Provider("provider 1",20);
-    Provider* provider2 = new Provider("provider 2",20);
-    Provider* provider3 = new Provider("provider 3",20);
-    hotel->addProvider(provider1);
-    hotel->addProvider(provider2);
-    hotel->addProvider(provider3);
-
     system(hotel);
 
     return 0;

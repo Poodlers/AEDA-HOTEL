@@ -19,7 +19,7 @@ std::string Janitor::getType() {
 void Janitor::print() {
     std::cout << std::left << std::setw(13) << this->getType() <<  std::setw(22) << std::setfill(' ') << this->getName() <<
     std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
-    << std::setw(19) << "" << std::setw(8) << (this->getShift()) ? "day" : "night";
+    << std::setw(16) << "" << std::setw(7) << (this->getShift()) ? "day" : "night";
 }
 
 void Janitor::janitorModify(const std::string& name, const std::string& NIF, const std::string& shift){

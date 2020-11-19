@@ -29,7 +29,7 @@ void ViewRoom::print() {
                  << this->getPricePerNight() << " ";
     }
     else{
-        std::cout << std::setw(10) << this->getPricePerNight() - this->getPricePerNight() * discountValue <<" " << std::setw(2) << discountValue*100 <<std::setw(5)<< "% Off ";
+        std::cout << std::setw(10) << this->getPricePerNight() - this->getPricePerNight() * discountValue <<" " << std::setw(3) << discountValue*100 <<std::setw(5)<< "% Off ";
     }
 
     if (this->getAvailability()){

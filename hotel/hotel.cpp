@@ -84,6 +84,10 @@ void Hotel::saveHotel(const std::string &hotelFile){
     file << date.getDay()<<"-"<<date.getMonth()<<"-"<<date.getYear()<<"\n";
     file << this->numberOfFloors<<"\n";
     file << this->firstFloor<<"\n";
+    file << "Providers"<<"\n";
+    for (Provider* provider: providers){
+        file << provider->getName() << " " << provider->getNumProducts() << "\n";
+    }
     file << "Rooms"<<"\n";
     for (Room* room: rooms){
         ss<<room->getPricePerNight();
@@ -213,11 +217,42 @@ Hotel::Hotel(const std::string &hotelFile) {
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
+    if (getData != "Providers"){
+        throw HotelFileHasWrongFormat("Line should be 'Providers'");
+    }
+
+
+    while (std::getline(file,getData) && getData !="Rooms"){
+        std::string name="", number="";
+        ss << getData;
+        ss >> name >> number;
+        try{
+            checkIfPositiveInteger(number, "number of products");
+            for (Provider* provider: providers){
+                if (name == provider->getName()){
+                    provider->print();
+                    std::cout << name;
+                    throw HotelFileHasWrongFormat("two providers can't have the same name");
+                }
+            }
+        }
+        catch(NotAPositiveInt){
+            throw HotelFileHasWrongFormat("Number of products should be a positive integer");
+        }
+
+        Provider* provider = new Provider(name,stoi(number));
+        providers.push_back(provider);
+        ss.clear();
+    }
+
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
     if (getData != "Rooms"){
         throw HotelFileHasWrongFormat("Line should be 'Rooms'");
     }
 
-
+    std::string name;
     std::string floor;
     std::string roomNumber;
     std::string roomId;
@@ -285,7 +320,6 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("Line should be 'Staff'");
     }
 
-    std::string name;
     std::string surname;
     std::string NIF;
     std::string salary1;
@@ -356,8 +390,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
 
     if (getData.empty()){
-        std::cout << "File ended. Clients must be added manually."<<std::endl;
-        return;
+        throw HotelFileHasWrongFormat("File ends prematurely.");
     }
     if (getData != "Client"){
         throw HotelFileHasWrongFormat("Line should be 'Client'");
@@ -442,22 +475,6 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
     reservations[0]->setID(max);
     this->assignFloorsToResponsibles();
-
-    /*
-    std::string product_types;
-    while(std::getline(file,getData) && getData != "End"){
-        ss<<getData;
-        ss>>name>> product_types;
-
-
-        while(ss>>reservation1){
-            Reservation* reservation = new Reservation(reservation1);
-            client->addToHistory(reservation);
-        }
-        this->clients.push_back(client);
-        ss.clear();
-    }
-     */
 
     file.close();
 

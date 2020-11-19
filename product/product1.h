@@ -1,6 +1,8 @@
 #ifndef PRODUCT_H
 #define PRODUCT_H
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 
 ///Product
@@ -37,6 +39,8 @@ public:
     /// \param type - type to set to product
     void setType(const std::string & type);
 
+    friend std::ostream& operator <<(std::ostream& o, Product& product);
+
 private:
     /// quality of the product
     unsigned int quality;
@@ -47,7 +51,8 @@ private:
     /// variable to keep product ids unique
     static int totalId;
     /// type of product
-    std::string type; // catering, cleaning or other
+    /// can be catering, cleaning or other
+    std::string type;
 };
 
 #endif

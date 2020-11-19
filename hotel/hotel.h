@@ -20,6 +20,9 @@
       //#biggining date
       //#number of floors
       //#first floor with rooms
+      //Providers
+      //#provider's name #number of products
+      //(...) more providers
       //Rooms
       //#floor #room number #capacity #price #type (can be Suite, NoViewRoom or ViewRoom [case sensitive])
       //(...) more rooms

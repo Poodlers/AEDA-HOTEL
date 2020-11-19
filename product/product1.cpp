@@ -42,3 +42,7 @@ void Product::setType(const std::string & type){
     this->type = type;
 }
 
+std::ostream& operator<<(std::ostream& o, Product& product){
+    return o << std::setfill(' ') << std::setw(10) << product.getType()<< std::setw(7) << product.getId() <<std::setw(5) <<product.getPrice()<< std::setw(4) << product.getQuality() <<std::endl;
+}
+

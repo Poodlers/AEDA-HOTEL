@@ -8,6 +8,7 @@ Provider::Provider(const std::string &n, const std::vector<Product *> &p) {
 
 Provider::Provider(const std::string &n,const unsigned int &size) {
     this->name = n;
+    this->numProducts = size;
     for(size_t i = 0; i < size; i++){
         Product * n = new Product();
         this->products.push_back(n);
@@ -15,7 +16,11 @@ Provider::Provider(const std::string &n,const unsigned int &size) {
 }
 
 void Provider::print(){
-
+    std::cout << name<<std::endl;
+    std::cout << std::setfill(' ') << std::setw(10) << "Type" << std::setw(7) << "ID" <<std::setw(5) <<"Price"<< std::setw(4) << "Quality" <<std::endl;
+    for (Product* product: products){
+        std::cout << *product;
+    }
 }
 
 

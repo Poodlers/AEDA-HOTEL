@@ -68,6 +68,10 @@ void Client::printConsole(){
 
     if(!this->history.empty()){
         std::cout<<"Client History:"<<std::endl;
+        std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                             << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                             << "Check Out"
+                             << std::setw(8) << "Room ID"<<std::endl;
     }
     for (Reservation* reservation: this->history){
         reservation->print();
@@ -75,6 +79,10 @@ void Client::printConsole(){
     }
     if(!this->currentReservations.empty()) {
         std::cout << std::endl << "Current Reservations:" << std::endl;
+        std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                  << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                  << "Check Out"
+                  << std::setw(8) << "Room ID"<<std::endl;
     }
     for (Reservation* reservation: this->currentReservations){
         reservation->print();
@@ -82,6 +90,10 @@ void Client::printConsole(){
     }
     if(!this->futureReservations.empty()) {
         std::cout << std::endl << "Future Reservations:" << std::endl;
+        std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                  << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                  << "Check Out"
+                  << std::setw(8) << "Room ID"<<std::endl;
     }
     for (Reservation* reservation: this->futureReservations){
         reservation->print();

@@ -34,6 +34,10 @@
   ~~~~~~~~~~~~~~~~~~~
  */
 
+typedef struct Profit{
+    float profit;
+    std::string description;
+};
 
 /// Class which represents a hotel
 ///

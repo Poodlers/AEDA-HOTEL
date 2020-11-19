@@ -127,7 +127,7 @@ void Hotel::incrementDate(const int& i){
     }
     if (date.getDay() == 1 && date.getMonth() == 1){
         for (Staff* staff: staff){
-            staff->setYearsOfService(staff->getYearsOfService()++);
+            staff->setYearsOfService(staff->getYearsOfService()+ 1);
         }
     }
 }

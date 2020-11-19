@@ -12,12 +12,27 @@
 #include <time.h>
 using namespace std;
 
-void providers(Hotel* hotel){
 
+void profit(Hotel* hotel){
+    if (!hotel->getLoggedInState()){
+        throw AccessRestricted();
+    }
+    cout << "Value     Description"<<endl;
+    for (Transaction* transaction: hotel->getAccounts()){
+        cout << setw(8) << setfill(' ')<< transaction->value << transaction->description<<endl;
+    }
+    cout << "Costs: " << hotel->getCosts()<<endl;
+    cout << "Money earned: " << hotel->getMoneyEarned()<<endl;
+    cout << "Profit: " << hotel->getProfit()<<endl;
+    system("pause");
+    system("CLS");
+}
+
+void providers(Hotel* hotel){
+    if (!hotel->getLoggedInState()){
+        throw AccessRestricted();
+    }
     while(true){
-        if (!hotel->getLoggedInState()){
-            throw AccessRestricted();
-        }
         for (Provider* provider: hotel->getProviders()){
             provider->print();
             cout << endl;
@@ -753,7 +768,12 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Countability"){
-
+            try{
+                profit(hotel);
+            }
+            catch(AccessRestricted& msg){
+                cout << msg;
+            }
         }
         else if (input == "Exit"){
             string filename;

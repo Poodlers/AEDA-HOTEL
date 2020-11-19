@@ -30,12 +30,19 @@
       //                                                          (#room ID,#Check In date[dd-mm-yyyy],#Check Out date[dd-mm-yyyy],#Reservation ID,#Reservation Size,#0 if in history or future 1 if in current reservations[client is currently at the hotel])-> no spaces in between
       //                                                           [-Can have no reservations]
       //(...) more clients
+      //Transactions
+      //#value #description
       //End
   ~~~~~~~~~~~~~~~~~~~
  */
 
+/// Class which represents a transaction
+///
+/// Holds the value and the description of the transaction
 typedef struct Transaction{
+    ///value of the transaction
     float value;
+    ///description of the transaction
     std::string description;
 };
 
@@ -86,16 +93,23 @@ public:
 
     std::vector<Product*> getProductsBought() const;
 
+
+
     /**/
 
     /*PROFIT*/
+    ///Returns the costs of running the hotel
     int getCosts() const;
 
+    ///Returns the profit of running the hotel
     int getProfit() const;
 
+    ///Returns the money earned from running the hotel
     int getMoneyEarned() const;
 
+    std::vector<Transaction*> getAccounts() const;
 
+    ///Pays staff
     void payStaff();
     /**/
 
@@ -241,6 +255,10 @@ public:
     ///
     /// \return vector clients
     std::vector <Client*>& getClients();
+
+    void eraseClient(Client* client);
+    void eraseRoom(Room* room);
+    void eraseStaff(Staff* staff);
 
     ///Check In
     ///

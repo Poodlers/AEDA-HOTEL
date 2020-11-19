@@ -48,8 +48,8 @@ void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
             if (productId == provider->getProducts()[i]->getId()){
-                Transaction* transaction;
-                transaction->value = provider->getProducts()[i]->getPrice();
+                Transaction* transaction = new Transaction;
+                transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accountability.push_back(transaction);
                 productsBought.push_back(provider->getProducts()[i]);
@@ -98,9 +98,6 @@ void Hotel::autoBuy(){
             numberOther--;
         }
     }
-    for (Product* product: productsBought){
-        std::cout << *product<< std::endl;
-    }
 }
 
 std::vector<Product*> Hotel::getProductsBought() const{
@@ -111,7 +108,7 @@ std::vector<Product*> Hotel::getProductsBought() const{
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){
-        //client->archiveExpiredReservations(&this->date);
+        client->archiveExpiredReservations(&this->date);
     }
     if (date.getDay() == 5 && this->productsBought.empty()){
         std::cout << "If no products are brought today, the cheaper ones will be bought automatically tomorrow."<<std::endl;
@@ -121,18 +118,18 @@ void Hotel::incrementDate(const int& i){
     }
     if (date.getDay() == 1){
         productsBought.clear();
+        for (Provider* provider: providers){
+            provider->restock(&date);
+        }
     }
     if (date.getDay() == date.getDaysInMonth(date.getMonth())){
         payStaff();
     }
-        for (Provider* provider: providers){
-            provider->restock(&date);
-        }
 }
 
 void Hotel::payStaff(){
     for (Staff* staff: staff){
-        Transaction *transaction;
+        Transaction* transaction = new Transaction;
         transaction->value = -  8 * staff->getWage() * date.getDaysInMonth(date.getMonth());
         transaction->description = "Wage of staff member " + staff->getName();
         accountability.push_back(transaction);
@@ -253,6 +250,11 @@ void Hotel::saveHotel(const std::string &hotelFile){
         }
         file<<"\n";
     }
+    file<<"Transactions\n";
+    for (Transaction* transaction: accountability){
+        file << transaction->value << " " << transaction->description<<"\n";
+    }
+
     file<<"End\n";
 }
 
@@ -463,7 +465,7 @@ Hotel::Hotel(const std::string &hotelFile) {
 
     std::string reservation1;
     int pos = 0;
-    while(std::getline(file,getData) && getData != "End"){
+    while(std::getline(file,getData) && getData != "Transactions"){
         ss<<getData;
         ss>>name>>surname;
         name = name + " "+surname;
@@ -541,9 +543,26 @@ Hotel::Hotel(const std::string &hotelFile) {
     reservations[0]->setID(max);
     this->assignFloorsToResponsibles();
 
-
-
-
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    if (getData != "Transactions"){
+        throw HotelFileHasWrongFormat("Line should be 'Transactions'");
+    }
+    std::string description;
+    float value;
+    while (std::getline(file,getData) && getData != "End"){
+        ss << getData;
+        ss >> value;
+        if (ss.fail()){
+            throw HotelFileHasWrongFormat("the transaction value has to be a number.");
+        }
+        std::getline(ss,description);
+        Transaction* transaction;
+        transaction->value = value;
+        transaction->description = description;
+        ss.clear();
+    }
 
     file.close();
 
@@ -688,25 +707,38 @@ void Hotel::checkIn(const int& pos){
     int pos1;
     std::vector<int> reservationIds;
     try{
+        std::stringstream ss;
         reservationIds = clients[pos]->checkIn(&date);
         for (int id: reservationIds){
+            ss << id;
             for (Reservation* reservation: reservations){
                 if (reservation->getReservationId() == id){
-                    pos1 = searchForRoomByRoomId(id);
+                    pos1 = searchForRoomByRoomId(reservation->getRoomId());
                     rooms[pos1]->changeAvailability(false);
-                    Transaction* transaction;
+                    Transaction* transaction = new Transaction;
                     transaction->value = (rooms[pos1]->getPricePerNight() - ( rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() * rooms[pos1]->getDiscountState())) * (reservation->getCheckOut()-reservation->getCheckIn());
-                    transaction->description = "Client check in to room " + std::to_string(id) + " which was reserved for " + std::to_string(reservation->getCheckOut()-reservation->getCheckIn()) + " days."<<std::endl;
+                    transaction->description = "Client check in to room " + std::to_string(reservation->getRoomId()) + " which was reserved for " + std::to_string(reservation->getCheckOut()-reservation->getCheckIn()) + " days.\n";
+                    accountability.push_back(transaction);
                 }
             }
         }
-
-
     }
     catch(...){
         throw;
     }
 }
+
+
+void Hotel::eraseClient(Client* client) {
+    this->clients.erase(std::find(this->clients.begin(),this->clients.end(),client));
+}
+void Hotel::eraseRoom(Room* room) {
+    this->rooms.erase(std::find(this->rooms.begin(),this->rooms.end(),room));
+}
+void Hotel::eraseStaff(Staff* staff) {
+    this->staff.erase(std::find(this->staff.begin(),this->staff.end(),staff));
+}
+
 
 void Hotel::addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type){
     int pos;
@@ -955,6 +987,12 @@ std::string Hotel::getManagerPassword() const{
     }
     return "ERROR";
 }
+
+std::vector<Transaction*> Hotel::getAccounts() const{
+    return accountability;
+}
+
+
 std::vector<Client*>& Hotel::getClients()  {
     return this->clients;
 }

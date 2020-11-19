@@ -53,7 +53,7 @@ void Hotel::buy(const unsigned int &productId){
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accountability.push_back(transaction);
                 productsBought.push_back(provider->getProducts()[i]);
-                provider->removeProduct(i);
+                provider->getProducts()[i]->reduceStock();
                 return;
             }
         }
@@ -88,13 +88,13 @@ void Hotel::autoBuy(){
             buy(product->getId());
             cleaning_necessity--;
         }
-        if (product->getType() == "Catering" && cleaning_necessity != 0){
+        if (product->getType() == "Catering" && catering_necessity != 0){
             buy(product->getId());
-            cleaning_necessity--;
+            catering_necessity--;
         }
-        if (product->getType() == "Hygiene" && hygiene_necessity != 0){
+        if (product->getType() == "Hygiene" && other_necessity != 0){
             buy(product->getId());
-            hygiene_necessity--;
+            other_necessity--;
         }
     }
 }
@@ -110,7 +110,7 @@ void Hotel::incrementDate(const int& i){
         client->archiveExpiredReservations(&this->date);
     }
     if (date.getDay() == 5 && this->productsBought.empty()){
-        std::cout << "If no products are brought today, the cheaper ones will be bought automatically tomorrow."<<std::endl;
+        std::cout << "If no products are brought today, the cheaper ones will be bought automatically tomorrow as to meet the hotel's necessities."<<std::endl;
     }
     if (date.getDay() == 6 && this->productsBought.empty()){
         autoBuy();
@@ -1069,7 +1069,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
 
 
 
-void Hotel::addStaffMember(const std::string& name, const std::string& NIF, const std::string& type, const std::string years_of_service, const std::string& password, const std::string& shift, const std::string& wage){
+void Hotel::addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage){
     std::string type1;
     bool shf;
     try{

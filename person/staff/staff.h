@@ -29,6 +29,8 @@ public:
     ///
     virtual void print() override;
 
+    void modifyStaffMember(const std::string& name, const std::string& NIF, const std::string& wage);
+
 protected:
     /// employee's wage
     float wage;
@@ -103,7 +105,7 @@ public:
     /// \param name - janitor's name
     /// \param NIF - janitor's NIF as string
     /// \param shift - janitor's shift
-    void janitorModify(const std::string& name, const std::string& NIF, const std::string& shift);
+    void janitorModify(const std::string& name, const std::string& NIF,const std::string& wage, const std::string& shift);
 
 private:
     /// true for day, false for night
@@ -136,7 +138,7 @@ public:
     /// \param name - manager's name
     /// \param NIF - manager's NIF as string
     /// \param password - manager's password as string
-    void managerModify(const std::string& name, const std::string& NIF, const std::string & password);
+    void managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password);
 
 private:
     /// manager's evaluation: 0 if manager has not been evaluated, else number between 1 and 5 (included)

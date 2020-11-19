@@ -106,12 +106,11 @@ public:
     float getDiscountValue() const;
     ///
     /// \return "Suite"
-    float getDiscountValue() const override;
     std::string getType() override;
 
 private:
     /// discount is true if a discount is to be applied
-    bool discount;
+    bool discount  = false;
     /// discount value
     const float discountValue = 0.05;
 };
@@ -136,12 +135,11 @@ public:
     float getDiscountValue() const;
     ///
     /// \return "ViewRoom"
-    float getDiscountValue() const override;
     std::string getType() override;
 
 private:
     /// discount is true if a discount is to be applied
-    bool discount;
+    bool discount  = false;
     /// discount value
     const float discountValue = 0.08;
 };
@@ -167,13 +165,12 @@ public:
     float getDiscountValue() const;
     ///
     /// \return "NoViewRoom"
-    float getDiscountValue() const override;
     std::string getType() override;
 
 
 private:
     /// discount is true if a discount is to be applied
-    bool discount;
+    bool discount = false;
     /// discount value
     const float discountValue = 0.12;
 };

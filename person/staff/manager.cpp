@@ -31,7 +31,7 @@ void Manager::print() {
 }
 
 
-void Manager::managerModify(const std::string& name, const std::string& NIF, const std::string& password){
+void Manager::managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password){
     if (name != "."){
         this->name = name;
     }
@@ -40,5 +40,8 @@ void Manager::managerModify(const std::string& name, const std::string& NIF, con
     }
     if(password != "."){
         this->password = password;
+    }
+    if(wage != "."){
+        this->wage = stof(wage);
     }
 }

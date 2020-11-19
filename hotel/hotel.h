@@ -340,7 +340,8 @@ public:
     /// \exception throws InvalidShift if the new staff member is a janitor and the shift isn't either night or day
     /// \exception throws InvalidPosition if type isn't one of the possible ones
     /// \exception throws StaffMemberAlreadyExists if staff member already exists
-    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string years_of_service, const std::string& password, const std::string& shift, const std::string& wage);
+    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage);
+
     void addStaff(Staff* staff);
     ///Sorts vector staff
     ///
@@ -408,7 +409,7 @@ private:
     bool loggedIn = false;
     unsigned int cleaning_necessity;
     unsigned int catering_necessity;
-    unsigned int hygiene_necessity;
+    unsigned int other_necessity;
     ///Number of floors of the hotel
     unsigned int numberOfFloors;
     ///Number of rooms of the hotel

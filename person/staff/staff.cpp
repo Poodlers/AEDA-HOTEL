@@ -38,3 +38,14 @@ std::string Staff::getType(){
 }
 /* ------- */
 
+void Staff::modifyStaffMember(const std::string& name, const std::string& NIF, const std::string& wage){
+    if (name != "."){
+        this->name = name;
+    }
+    if(NIF != "."){
+        this->NIF =stoi(NIF);
+    }
+    if(wage != "."){
+        this->wage = stof(wage);
+    }
+}

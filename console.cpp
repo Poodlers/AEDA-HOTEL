@@ -572,7 +572,7 @@ void staff(Hotel *hotel){
     string name;
     string NIF;
     string type;
-    string password, shift, wage;
+    string password, shift, wage, yearsOfService;
     while(true){
         cout << "Date: " << hotel->getDate() <<endl;
         std::cout << std::left << std::setw(13) << "Position" <<  std::setw(22) << std::setfill(' ') << "Name" <<
@@ -611,6 +611,9 @@ void staff(Hotel *hotel){
                 cout << "New NIF: " << endl;
                 cin >> NIF;
 
+                cout << "New wage: " << endl;
+                cin >> wage;
+
                 if (type == "Manager"){
                     cout << "New Password: " << endl;
                     cin >> password;
@@ -619,7 +622,7 @@ void staff(Hotel *hotel){
                     cout << "New Shift: " << endl;
                     cin >> shift;
                 }
-                hotel->modifyStaffMember(name,NIF,pos,type,shift,password);
+                hotel->modifyStaffMember(name,NIF,wage,pos,type,shift,password);
 
             }
             else if(input == "Remove"){
@@ -739,7 +742,7 @@ void staff(Hotel *hotel){
 
 ///System for the hotel
 ///
-///\see clients, staff, accounting, providers, rooms, reservations, Hotel#logIn, Hotel#logOut and Hotel#incrementTime
+///\see clients, staff, accounting, providers, rooms, reservation, Hotel#logIn, Hotel#logOut and Hotel#incrementDate
 /// \param hotel
 void system(Hotel* hotel){
 
@@ -830,6 +833,7 @@ void system(Hotel* hotel){
     }
 }
 
+///asks for the name of the Hotel file and creates de hotel
 Hotel* createHotel(){
     while(true){
         string input;
@@ -853,6 +857,7 @@ Hotel* createHotel(){
     }
 }
 
+///Creates the hotel, creates 3 providers (with 50, 55 and 65 products), call System and makes a seed for the random numbers
 int main(){
     srand(time(NULL));
 

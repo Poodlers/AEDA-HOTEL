@@ -22,7 +22,7 @@ void Janitor::print() {
     << std::setw(16) << "" << std::setw(7) << (this->getShift()) ? "day" : "night";
 }
 
-void Janitor::janitorModify(const std::string& name, const std::string& NIF, const std::string& shift){
+void Janitor::janitorModify(const std::string& name, const std::string& NIF, const std::string& wage, const std::string& shift){
     if (name != "."){
         this->name = name;
     }
@@ -37,5 +37,8 @@ void Janitor::janitorModify(const std::string& name, const std::string& NIF, con
             this->shift = false;
         }
         else throw InvalidShift();
+    }
+    if (wage != "."){
+        this->wage = stof(wage);
     }
 }

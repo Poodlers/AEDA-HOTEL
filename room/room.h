@@ -106,6 +106,7 @@ public:
     float getDiscountValue() const;
     ///
     /// \return "Suite"
+    float getDiscountValue() const override;
     std::string getType() override;
 
 private:
@@ -124,7 +125,6 @@ public:
     /// \param capacity - view room's capacity
     /// \param pricePerNight - view room's price per night
     ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    ///
     void print() override;
     /// changes discount value
     void toggleDiscount() override;
@@ -136,6 +136,7 @@ public:
     float getDiscountValue() const;
     ///
     /// \return "ViewRoom"
+    float getDiscountValue() const override;
     std::string getType() override;
 
 private:
@@ -166,6 +167,7 @@ public:
     float getDiscountValue() const;
     ///
     /// \return "NoViewRoom"
+    float getDiscountValue() const override;
     std::string getType() override;
 
 

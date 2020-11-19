@@ -54,6 +54,7 @@ public:
     /// \param date - current date
     void restock(Date* date);
 
+
 private:
     /// name of provider
     std::string name;

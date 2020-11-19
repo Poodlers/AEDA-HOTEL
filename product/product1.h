@@ -39,6 +39,8 @@ public:
     /// \param type - type to set to product
     void setType(const std::string & type);
 
+    void reduceStock();
+
     friend std::ostream& operator <<(std::ostream& o, Product& product);
 
 private:
@@ -53,6 +55,8 @@ private:
     /// type of product
     /// can be catering, cleaning or other
     std::string type;
+
+    unsigned int stock;
 };
 
 #endif

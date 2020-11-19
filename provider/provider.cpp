@@ -1,5 +1,5 @@
 #include "provider.h"
-
+#include <algorithm>
 void Provider::restock(Date* date){
     if (date->getDay() == 1){
         while (products.size()!= numProducts){
@@ -24,11 +24,7 @@ Provider::Provider(const std::string &n,const unsigned int &size) {
 }
 
 void Provider::print(){
-    std::cout << name<<std::endl;
-    std::cout << std::left<<std::setfill(' ') << std::setw(10) << "Type" << std::setw(9) << "ID" <<std::setw(7) <<"Price"<< std::setw(4) << "Quality" <<std::endl;
-    for (Product* product: products){
-        std::cout << *product;
-    }
+    std::cout <<"Provider: "  << name <<std::endl;
 }
 
 

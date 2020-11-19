@@ -40,7 +40,7 @@ void ButtonHandler::DeleteButton(int index) {
 
 void ButtonHandler::SpecialGoBackClear() {
     for(auto& button: this->CurrentButtons){
-        if(button->getText() != "Clients" && button->getText() != "Search" && button->getText() != "Reservations" && button->getText() != "Rooms" && button->getText() != "Staff" && button->getText() != "Go Back")
+        if(button->getText() != "Clients" && button->getText() != "Providers" && button->getText() != "Search" && button->getText() != "Reservations" && button->getText() != "Rooms" && button->getText() != "Staff" && button->getText() != "Go Back")
             delete button;
     }
     this->CurrentButtons.clear();
@@ -141,22 +141,33 @@ EditButton<N>::EditButton(const int x, const int y, const int width, const int h
 template <class N>
 void EditButton<N>::onClick(ButtonHandler& handler) {
     clearscreen();
+    std::vector<std::string> fields;
     if constexpr (std::is_same_v<N,Staff>){
+        int pos = std::find(this->OriginalButton->getHotel()->getStaff().begin(),this->OriginalButton->getHotel()->getStaff().end(),this->getObject()
+        ) -  this->OriginalButton->getHotel()->getStaff().begin();
         if(this->getObject()->getType() == "Receptionist"){
-            edit(dynamic_cast<Receptionist*>(this->getObject()));
+            fields = askReceptionist();
+            this->OriginalButton->getHotel()->modifyStaffMember(fields[0],fields[1],fields[2],pos,"Receptionist",""," ");
         }else if(this->getObject()->getType() == "Responsible"){
-            edit(dynamic_cast<Responsible*>(this->getObject()),this->OriginalButton->getHotel());
+            fields = askResponsible();
+            this->OriginalButton->getHotel()->modifyStaffMember(fields[0],fields[1],fields[2],pos,"Responsible",""," ");
         }else if(this->getObject()->getType() == "Manager"){
-            edit(dynamic_cast<Manager*>(this->getObject()));
+            fields = askManager();
+            this->OriginalButton->getHotel()->modifyStaffMember(fields[0],fields[1],fields[2],pos,"Manager","",fields[3]);
         }else if(this->getObject()->getType() == "Janitor"){
-            edit(dynamic_cast<Janitor*>(this->getObject()));
+            fields = askManager();
+            this->OriginalButton->getHotel()->modifyStaffMember(fields[0],fields[1],fields[2],pos,"Janitor",fields[3],"");
         }
     }else if constexpr (std::is_same_v<N,Room>){
-        edit(this->getObject(),this->OriginalButton->getHotel());
+        int pos = std::find(this->OriginalButton->getHotel()->getRooms().begin(),this->OriginalButton->getHotel()->getRooms().end(),this->getObject()
+        ) -  this->OriginalButton->getHotel()->getRooms().begin();
+        fields = askRoom();
+        this->OriginalButton->getHotel()->modifyRoom(fields[0],fields[1],pos);
     }else if constexpr (std::is_same_v<N,Client>){
-        edit(this->getObject());
-    }else if constexpr (std::is_same_v<N,Reservation>){
-        edit(this->getObject(),this->OriginalButton->getHotel(),this->OriginalButton->getClient());
+        int pos = std::find(this->OriginalButton->getHotel()->getClients().begin(),this->OriginalButton->getHotel()->getClients().end(),this->getObject()
+        ) -  this->OriginalButton->getHotel()->getClients().begin();
+        fields = askClient();
+        this->OriginalButton->getHotel()->modifyClient(fields[0],fields[1],pos);
     }
     this->OriginalButton->onClick(handler);
 
@@ -219,6 +230,15 @@ MenuButton<N>::MenuButton(const int x, const int y, const int width, const int h
     this->hotel = hotel;
     this->type_id = 0;
     this->order_id = 0;
+}
+
+BuyButton::BuyButton(const int x, const int y, const int width, const int height, const std::string text, Product *product, MenuButton<Provider> *menu_button):BaseButton(x,y,width,height,text) {
+                         this->product = product;
+                         this->GoBackButton = menu_button;
+}
+void BuyButton::onClick(ButtonHandler &handler) {
+    this->product->reduceStock();
+    this->GoBackButton->onClick(handler);
 }
 
 
@@ -288,6 +308,21 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         handler.AddButton(changeTypeOfSort4);
         sortClientsButton->DrawButton();
         handler.AddButton(sortClientsButton);
+    }
+    else if constexpr (std::is_same_v<N,Provider>){
+        menu_items = this->hotel->getProviders();
+        MaxObjectsOnScreen = 1;
+        int max_page = (menu_items.size() - 1) / MaxObjectsOnScreen + 1;
+        ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangeTypeOfSort<N>(14,5,2,0,">","page_id",this);
+        gotoxy(1,3);
+        std::cout << "Providers: ";
+        gotoxy(10,5);
+        std::cout << "Page " << this->CurrentPage << "/" << max_page;
+        gotoxy(1,8);
+        std::cout << std::left<<std::setfill(' ') << std::setw(10) << "Type" << std::setw(9) << "ID" <<std::setw(7) <<"Price"<< std::setw(4) << "Quality" <<std::endl;
+        edit_delete_x = 50;
+
     }
     else if constexpr (std::is_same_v<N,Reservation>){
         if(this->client != nullptr)
@@ -430,35 +465,56 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     this->GoBack_Button->DrawButton();
     int increment_y = 0;
     for(int i = 0 + (this->CurrentPage-1) * MaxObjectsOnScreen; i < this->CurrentPage* MaxObjectsOnScreen;i++){
-        if(i >= menu_items.size()){
+        if (i >= menu_items.size()) {
             break;
         }
-        gotoxy(1,10 + increment_y);
+        gotoxy(1, 10 + increment_y);
         menu_items[i]->print();
-        if constexpr (std::is_same_v<N,Room>){
-            if(menu_items[i]->getDiscountState()){
-                ApplyDiscountButton* applyDiscountButton = new ApplyDiscountButton(edit_delete_x - 20, 9 + increment_y,19,2,"Remove Discount",menu_items[i],this);
-                handler.AddButton(applyDiscountButton);
-                applyDiscountButton->DrawButton();
-            }else{
-                ApplyDiscountButton* applyDiscountButton = new ApplyDiscountButton(edit_delete_x - 20, 9 + increment_y,19,2,"Apply Discount",menu_items[i],this);
-                handler.AddButton(applyDiscountButton);
-                applyDiscountButton->DrawButton();
-            }
+        if constexpr (std::is_same_v<N,Provider>){
+            int increment_y2 = 2;
+            for(auto& product: menu_items[i]->getProducts()){
+                gotoxy(1,10 + increment_y + increment_y2);
+                std::cout << *product;
+                auto buyButton = new BuyButton(edit_delete_x,10 + increment_y + increment_y2,5,2,"Buy",hotel,this);
+                increment_y2 += 3;
+                }
+        }else {
+            if constexpr (std::is_same_v<N, Room>) {
+                if (menu_items[i]->getDiscountState()) {
+                    ApplyDiscountButton *applyDiscountButton = new ApplyDiscountButton(edit_delete_x - 20,
+                                                                                       9 + increment_y, 19, 2,
+                                                                                       "Remove Discount", menu_items[i],
+                                                                                       this);
+                    handler.AddButton(applyDiscountButton);
+                    applyDiscountButton->DrawButton();
+                } else {
+                    ApplyDiscountButton *applyDiscountButton = new ApplyDiscountButton(edit_delete_x - 20,
+                                                                                       9 + increment_y, 19, 2,
+                                                                                       "Apply Discount", menu_items[i],
+                                                                                       this);
+                    handler.AddButton(applyDiscountButton);
+                    applyDiscountButton->DrawButton();
+                }
 
+            }
+            BaseButton *NewEditButton = new EditButton<N>(edit_delete_x, 9 + increment_y, 8, 0, "Edit", menu_items[i],
+                                                          this);
+            BaseButton *NewDeleteButton = new DeleteButton<N>(edit_delete_x, 10 + increment_y, 8, 0, "Delete",
+                                                              menu_items[i], this);
+            if constexpr (!std::is_same_v<N, Reservation> && !std::is_same_v<N, Provider>)
+                handler.AddButton(NewEditButton);
+            if constexpr (!std::is_same_v<N, Provider>) handler.AddButton(NewDeleteButton);
+            if constexpr (std::is_same_v<N, Client>) {
+                BaseButton *ShowReservationButton = new MenuButton<Reservation>(35, 9 + increment_y, 15, 2,
+                                                                                "Show Reservations", 1, menu_items[i],
+                                                                                this->hotel, this);
+                handler.AddButton(ShowReservationButton);
+                ShowReservationButton->DrawButton();
+            }
+            NewEditButton->DrawButton();
+            NewDeleteButton->DrawButton();
+            increment_y += 3;
         }
-        BaseButton* NewEditButton = new EditButton<N>(edit_delete_x,9 + increment_y,8,0,"Edit",menu_items[i],this);
-        BaseButton* NewDeleteButton = new DeleteButton<N>(edit_delete_x, 10 + increment_y, 8,0,"Delete",menu_items[i],this);
-        handler.AddButton(NewEditButton);
-        handler.AddButton(NewDeleteButton);
-        if constexpr (std::is_same_v<N,Client>){
-            BaseButton* ShowReservationButton = new MenuButton<Reservation>(35,9 + increment_y,15,2,"Show Reservations",1,menu_items[i],this->hotel,this);
-            handler.AddButton(ShowReservationButton);
-            ShowReservationButton->DrawButton();
-        }
-        NewEditButton->DrawButton();
-        NewDeleteButton->DrawButton();
-        increment_y += 3;
     }
 }
 
@@ -739,18 +795,17 @@ Client * MenuButton<N>::getClient() {
 }
 
 template <class N>
-void MenuButton<N>::AddObject(N*  item) {
+void MenuButton<N>::AddObject(std::vector<std::string>& fields,std::string type) {
     if constexpr (std::is_same_v<N,Client>){
-        this->hotel->addClient(item);
+        this->hotel->addClient(fields[0],fields[1]);
     }
     else if constexpr (std::is_same_v<N,Staff>){
-        this->hotel->addStaff(item);
+        fields.push_back("");
+        fields.push_back("");
+        this->hotel->addStaffMember(fields[0],fields[1],type,fields[3],fields[5],fields[4],fields[2]);
     }
     else if constexpr (std::is_same_v<N,Room>){
-        this->hotel->addRoom(item);
-    }
-    else if constexpr (std::is_same_v<N,Reservation>){
-        this->client->addToHistory(item);
+        this->hotel->addRoom(fields[1],fields[0],fields[2],fields[3],fields[4],fields[5]);
     }
 }
 
@@ -780,80 +835,66 @@ void AddButton<N>::onClick(ButtonHandler& handler) {
         int input_ = std::stoi(input);
         switch(input_){
             case 1:{
-                Receptionist* receptionist = new Receptionist("",0,0);
-                edit(receptionist);
-                this->Button->AddObject(receptionist);
+                std::vector<std::string> fields;
+                fields = askReceptionist();
+                std::string type = "Receptionist";
+                this->Button->AddObject(fields,type);
                 break;
 
             }
             case 2:{
-                Responsible* responsible = new Responsible("",0,0);
-                edit(responsible);
-                this->Button->AddObject(responsible);
+                std::vector<std::string> fields;
+                fields = askResponsible();
+                std::string type = "Responsible";
+                this->Button->AddObject(fields,type);
                 break;
             }
 
             case 3:{
-                Manager* manager = new Manager("",0,0,"balls");
-                edit(manager);
-                this->Button->AddObject(manager);
+                std::vector<std::string> fields;
+                fields = askManager();
+                std::string type = "Manager";
+                this->Button->AddObject(fields,type);
                 break;
             }
 
             case 4:{
-                Janitor* janitor = new Janitor(true,"",0,0);
-                edit(janitor);
-                this->Button->AddObject(janitor);
+                std::vector<std::string> fields;
+                fields = askJanitor();
+                std::string type = "Janitor";
+                this->Button->AddObject(fields,type);
                 break;
             }
 
         }
 
     }else if constexpr (std::is_same_v<N,Client>){
-        Client* client = new Client("",0);
-        edit(client);
-        this->Button->AddObject(client);
+        std::vector<std::string> fields;
+        fields = askClient();
+        this->Button->AddObject(fields,"");
     }else if constexpr (std::is_same_v<N,Room>){
-        std::string input = "5";
-        while(input != "1" && input != "2" && input != "3") {
-            gotoxy(0,0);
-            std::cout << "Which type of Room would you like to add?" << std::endl;
-            std::cout << "1- NoViewRoom" << std::endl;
-            std::cout << "2- ViewRoom" << std::endl;
-            std::cout << "3- Suite" << std::endl;
-            std::cout << "Your choice:                                      ";
-            getStringInput(input, 12, 5);
+        std::vector<std::string> fields;
+        fields = askRoom();
+        this->Button->AddObject(fields,"");
 
-        }
-        int input_ = std::stoi(input);
-        clearscreen();
-        switch(input_){
-            case 1:{
-                NoViewRoom* NoViewRoom_ = new NoViewRoom(0,0,0,0,0);
-                edit(NoViewRoom_,this->Button->getHotel());
-                this->Button->AddObject(NoViewRoom_);
-                break;
-
-            }
-            case 2:{
-                ViewRoom* ViewRoom_ = new ViewRoom(0,0,0,0,0);
-                edit(ViewRoom_,this->Button->getHotel());
-                this->Button->AddObject(ViewRoom_);
-                break;
-            }
-
-            case 3:{
-                Suite* suite = new Suite(0,0,0,0,0);
-                edit(suite,this->Button->getHotel());
-                this->Button->AddObject(suite);
-                break;
-            }
-
-        }
     }else if constexpr (std::is_same_v<N,Reservation>){
-        Reservation* reservation = new Reservation(0,0,0,0,0,0,0,0);
-        edit(reservation,this->Button->getHotel(),this->Button->getClient());
-        this->Button->AddObject(reservation);
+        int pos = std::find(this->Button->getHotel()->getClients().begin(),this->Button->getHotel()->getClients().end(),this->Button->getClient()
+        ) -  this->Button->getHotel()->getClients().begin();
+        std::vector<std::string> fields;
+        unsigned int roomId;
+        Date checkIn;
+        Date checkOut;
+        int capacity;
+        int posClient;
+        int reservationId;
+        askReservation(roomId,checkIn,checkOut,capacity,reservationId);
+        try{
+            this->Button->getHotel()->makeReservation(roomId,&checkIn,&checkOut,capacity,pos,reservationId,false);
+        }
+        catch(...){
+            gotoxy(0,15);
+            std::cout << "This reservation could not be accepted!" << std::endl;
+        }
     }
 
     this->Button->onClick(handler);
@@ -900,3 +941,4 @@ template class MenuButton<Client>;
 template class MenuButton<Staff>;
 template class MenuButton<Room>;
 template class MenuButton<Reservation>;
+template class MenuButton<Provider>;

@@ -80,7 +80,7 @@ public:
                Client* client,Hotel* hotel,BaseButton* ParentButton);
     void onClick(ButtonHandler& handler) override;
     void EraseObject(N* item);
-    void AddObject(N* item);
+    void AddObject(std::vector<std::string>& fields,std::string type);
     Hotel* getHotel();
     Client* getClient();
     void ChangeCurrentPage(int page);
@@ -89,6 +89,15 @@ public:
     void ChangeOrderId(int i);
 
 
+};
+
+class BuyButton: public BaseButton{
+private:
+    Product* product;
+    MenuButton<Provider>* GoBackButton;
+public:
+    BuyButton(const int x, const int y, const int width,const int height,const std::string text,Product* product,MenuButton<Provider>* menu_button);
+    void onClick(ButtonHandler& handler) override;
 };
 
 class ApplyDiscountToTypeOfRoom: public BaseButton{

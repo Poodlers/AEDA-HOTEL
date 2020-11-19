@@ -71,7 +71,6 @@ public:
     /**/
 
     /*PROVIDERS*/
-    void buyProducts();
 
     /// Adds a provider to providers
     ///
@@ -166,6 +165,9 @@ public:
     /// \exception throws NotAPositiveFloat if price is not a positive float
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
 
+
+    void eraseRoom(Room* room);
+
     ///Checks if floor is valid
     ///
     /// \param floor - floor to check
@@ -203,7 +205,7 @@ public:
     /// \exception throws NotAPositiveInt if capacity is a not a positive integer
     /// \exception throws NotAPositiveFloat if price is not a positive float
     void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
-
+    void addRoom(Room* room);
     ///Sorts Rooms
     ///
     /// \param criteria - sorting criteria can be: Room ID, Room Number, Floor, Capacity, Price and Type
@@ -257,7 +259,6 @@ public:
     std::vector <Client*>& getClients();
 
     void eraseClient(Client* client);
-    void eraseRoom(Room* room);
     void eraseStaff(Staff* staff);
 
     ///Check In
@@ -288,6 +289,7 @@ public:
     /// \param pos - position of the client to remove
     void removeClient(const int& pos);
 
+
     ///Adds Client
     ///
     /// \param name - name of the new client
@@ -295,7 +297,7 @@ public:
     /// \exception throws ClientAlreadyExists if client already exists
     /// \exception throws ClientWithThisNIFAlreadyExists if a client already exists with the same NIF
     void addClient(const std::string& name, const std::string& NIF);
-
+    void addClient(Client* client);
     ///Sorts vector clients
     ///
     /// \param criteria - sorting criteria can be: name, NIF, Amount of future reservations, Amount of past reservations, Current reservations, Amount of reservations and Most Recent Reservation
@@ -319,7 +321,7 @@ public:
     /// \param shift - for Janitor, can be: night or day
     /// \param password - for manager
     /// \exception throws NIFIsNotValid if NIF is invalid
-    void modifyStaffMember(const std::string & name, std::string& NIF, const int& pos, const std::string& type, const std::string& shift,const std::string& password);
+    void modifyStaffMember(const std::string & name, std::string& NIF, std::string& wage,const int& pos, const std::string& type, const std::string& shift,const std::string& password);
 
     ///Removes a staff member
     ///
@@ -338,8 +340,8 @@ public:
     /// \exception throws InvalidShift if the new staff member is a janitor and the shift isn't either night or day
     /// \exception throws InvalidPosition if type isn't one of the possible ones
     /// \exception throws StaffMemberAlreadyExists if staff member already exists
-    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& position, const std::string& password, const std::string& shift, const std::string& wage);
-
+    void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string years_of_service, const std::string& password, const std::string& shift, const std::string& wage);
+    void addStaff(Staff* staff);
     ///Sorts vector staff
     ///
     /// \param criteria - sorting criteria can be: Name, NIF, Wage, Years of service and Position
@@ -385,7 +387,6 @@ public:
 
     int getFirstFloor() const;
 
-    void ReservationQualityControl(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity,const int& reservationId,Client* client);
 private:
     ///Vector of the hotel's clients
     std::vector <Client*> clients;
@@ -405,7 +406,9 @@ private:
     ///Logged in state
     ///True if the manager is logged in, false otherwise
     bool loggedIn = false;
-
+    unsigned int cleaning_necessity;
+    unsigned int catering_necessity;
+    unsigned int hygiene_necessity;
     ///Number of floors of the hotel
     unsigned int numberOfFloors;
     ///Number of rooms of the hotel
@@ -418,12 +421,12 @@ private:
 };
 
 
-void edit(Client* client);
-void edit(Receptionist* receptionist);
-void edit(Responsible* responsible,Hotel* hotel);
-void edit(Manager* manager);
-void edit(Janitor* janitor);
-void edit(Reservation* reservation,Hotel* hotel, Client* client);
-void edit(Room* room,Hotel* hotel);
+std::vector<std::string>& askClient();
+std::vector<std::string>& askReceptionist();
+std::vector<std::string>& askResponsible();
+std::vector<std::string>& askManager();
+std::vector<std::string>& askJanitor();
+void askReservation(unsigned int& roomId,Date checkIn,Date checkOut,int& capacity,int& reservationId);
+std::vector<std::string>& askRoom();
 
 #endif

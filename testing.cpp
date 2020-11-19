@@ -8,16 +8,20 @@
 #include "GUI/utils.h"
 #include <string>
 #include <iostream>
+#include <random>
+#include <time.h>
 using namespace std;
 
 void providers(Hotel* hotel){
-    if (!hotel->getLoggedInState()){
-        throw AccessRestricted();
-    }
-    for (Provider* provider: hotel->getProviders()){
-        provider->print();
-    }
+
     while(true){
+        if (!hotel->getLoggedInState()){
+            throw AccessRestricted();
+        }
+        for (Provider* provider: hotel->getProviders()){
+            provider->print();
+            cout << endl;
+        }
         std::string input, Id;
         cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see possible commands."<<endl;
@@ -38,11 +42,16 @@ void providers(Hotel* hotel){
                 hotel->buy(stoi(Id));
             }
             else if (input == "Help"){
-                cout << "Valid commands are: Buy, Auto-buy, Time and Help "<<endl;
+                cout << "Valid commands are: Buy, Auto-buy, Time, BoughtProducts and Help "<<endl;
 
             }
             else if (input == "Time"){
                 hotel->incrementDate(1);
+            }
+            else if (input == "BoughtProducts"){
+                for (Product* product: hotel->getProductsBought()){
+                    cout << *product;
+                }
             }
             else{
                 cout << "Invalid command. Write Help to see possible commands."<<endl;
@@ -786,6 +795,7 @@ Hotel* createHotel(){
 }
 
 int main(){
+    srand(time(NULL));
 
     Hotel* hotel = createHotel();
     Provider* provider1 = new Provider("provider1", 50);

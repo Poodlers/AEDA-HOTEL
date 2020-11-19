@@ -483,7 +483,7 @@ public:
     ProductDoesNotExist(const unsigned int& productId){this->productId = productId;}
     unsigned int getProductId() const{return productId;};
     friend std::ostream & operator << (std::ostream& o,const ProductDoesNotExist& exception){
-        return     o << "Product with productId "<< exception.getProductId()<<"."<<std::endl;
+        return     o << "Product with productId "<< exception.getProductId()<<" does not exist."<<std::endl;
     }
 };
 #endif

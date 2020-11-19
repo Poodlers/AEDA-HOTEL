@@ -47,12 +47,14 @@ std::vector<int> Client::checkIn(Date* date) {
 }
 
 void Client::archiveExpiredReservations(Date* date){
-    for (int i = 0; i < futureReservations.size(); i++){
-        if (futureReservations[i]->getCheckOut() < *date){
+    for (int i = 0; i < futureReservations.size(); i++) {
+        if (futureReservations[i]->getCheckOut() < *date) {
             this->history.push_back(futureReservations[i]);
-            this->futureReservations.erase(futureReservations.begin()+i);
+            this->futureReservations.erase(futureReservations.begin() + i);
             i--;
         }
+    }
+    for (int i = 0; i < currentReservations.size(); i++){
         if (currentReservations[i]->getCheckOut() < *date){
             this->history.push_back(currentReservations[i]);
             this->currentReservations.erase(currentReservations.begin()+i);
@@ -60,6 +62,7 @@ void Client::archiveExpiredReservations(Date* date){
             i--;
         }
     }
+
 }
 
 void Client::printConsole(){

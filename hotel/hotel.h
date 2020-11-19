@@ -78,7 +78,13 @@ public:
 
     ///Auto buys a random number of the cheapest products
     void autoBuy();
+
+    ///Buys the product with the product ID productId
+    ///
+    /// \param productId - product ID to find
     void buy(const unsigned int &productId);
+
+    std::vector<Product*> getProductsBought() const;
 
     /**/
 

@@ -25,6 +25,7 @@ void Hotel::buy(const unsigned int &productId){
             if (productId == provider->getProducts()[i]->getId()){
                 productsBought.push_back(provider->getProducts()[i]);
                 provider->removeProduct(i);
+                return;
             }
         }
     }
@@ -33,7 +34,7 @@ void Hotel::buy(const unsigned int &productId){
 
 void Hotel::autoBuy(){
     std::vector<Product*> products;
-    int numberCleaning = rand()%10, numberCatering = rand()%10, numberOther= rand()%10;
+    int numberCleaning = rand()%40, numberCatering = rand()%40, numberOther= rand()%40;
     for (Provider* provider: providers){
         for (Product* product: provider->getProducts()){
             products.push_back(product);
@@ -57,17 +58,24 @@ void Hotel::autoBuy(){
     for (Product* product: products){
         if (product->getType() == "Cleaning" && numberCleaning != 0){
             buy(product->getId());
-            numberCleaning++;
+            numberCleaning--;
         }
         if (product->getType() == "Catering" && numberCatering != 0){
             buy(product->getId());
-            numberCatering++;
+            numberCatering--;
         }
         if (product->getType() == "Other" && numberOther != 0){
             buy(product->getId());
-            numberOther++;
+            numberOther--;
         }
     }
+    for (Product* product: productsBought){
+        std::cout << *product<< std::endl;
+    }
+}
+
+std::vector<Product*> Hotel::getProductsBought() const{
+    return productsBought;
 }
 
 
@@ -80,7 +88,9 @@ void Hotel::incrementDate(const int& i){
         std::cout << "If no products are brought today, the cheaper ones will be bought automatically."<<std::endl;
     }
 
-    providers[0]->restock(&date);
+    for (Provider* provider: providers){
+        provider->restock(&date);
+    }
     if (date.getDay() == 1){
         productsBought.clear();
     }

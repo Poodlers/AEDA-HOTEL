@@ -28,6 +28,7 @@ public:
         void modify(const std::string& capacity, const std::string& pricePerNight);
         virtual void print() = 0;
         virtual std::string getType() = 0;
+        virtual float getDiscountValue() const = 0;
 
 private:
         int floor;

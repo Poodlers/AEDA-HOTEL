@@ -245,7 +245,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
     for (Client* client: clients){
         file << client->getName()<< " " << client->getNIF()<< " ";
         for (Reservation* reservation: client->getHistory()){
-            file << reservation->getRoomId() <<","<<reservation->getCheckIn().getDay()<<"-"<<reservation->getCheckIn().getMonth()<<"-"<<reservation->getCheckIn().getYear()<<","<<reservation->getCheckOut().getDay()<<"-"<<reservation->getCheckOut().getMonth()<<"-"<<reservation->getCheckOut().getYear()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",0 ";
+            file << reservation->getRoomId() <<","<<reservation->getCheckIn().getDay()<<"-"<<reservation->getCheckIn().getMonth()<<"-"<<reservation->getCheckIn().getYear()<<","<<reservation->getCheckOut().getDay()<<"-"<<reservation->getCheckOut().getMonth()<<"-"<<reservation->getCheckOut().getYear()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",-1 ";
         }
         for (Reservation* reservation: client->getCurrentReservations()){
             file << reservation->getRoomId() <<","<<reservation->getCheckIn().getDay()<<"-"<<reservation->getCheckIn().getMonth()<<"-"<<reservation->getCheckIn().getYear()<<","<<reservation->getCheckOut().getDay()<<"-"<<reservation->getCheckOut().getMonth()<<"-"<<reservation->getCheckOut().getYear()<<","<<reservation->getReservationId()<< ","<<reservation->getReservationSize()<<",1 ";
@@ -519,7 +519,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         this->clients.push_back(client);
         while(ss>>reservation1){
             int roomId,dayIn,monthIn,yearIn,dayOut,monthOut,yearOut,reservationId,capacity;
-            bool in;
+            int in;
             char ignore;
             std::stringstream ss1;
             ss1 << reservation1;
@@ -600,7 +600,7 @@ std::vector<Reservation*> Hotel::getReservations() const{
 }
 
 
-void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in){
+void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in){
     for (Room* room: rooms){
         if (room->getRoomId() == roomId){
             Suite* suite = dynamic_cast<Suite*>(room);
@@ -617,15 +617,16 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
             }
             try{
                 Reservation* reservation = new Reservation(capacity,checkIn,checkOut,roomId,reservationId);
-                if(*checkOut < date){
+                if(*checkOut < date || in == -1){
                     clients[posClient]->addToHistory(reservation);
                 }
-                else if (in){
+                else if (in == 1){
                     if (*checkOut > date && (*checkIn > date || *checkIn == date)){
                         clients[posClient]->addCurrentReservation(reservation);
                     }
                     else throw NoReservationsToCheckIn(clients[posClient]->getName(),clients[posClient]->getNIF());
                 }
+
                 else clients[posClient]->addNewReservation(reservation);
 
                 this->reservations.push_back(reservation);

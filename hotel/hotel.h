@@ -116,14 +116,14 @@ public:
     /// \param capacity  size of the reservation
     /// \param posClient  position in the vector clients of the client making the reservation
     /// \param reservationId  id of the reservation (only a real ID when first building the hotel, when making reservations after should be -1
-    /// \param in  only true when building the hotel, adds the reservation to current reservations right away
+    /// \param in  only 1 or -1 when building the hotel, adds the reservation to current reservations or past reservations right away
     /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations
     /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger then the room's capacity
     /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is reserved at the time intended
     /// \exception throws ReservationHasInvalidDates if the Check In date is after the Check Out date
     /// \exception throws RoomDoesNotExist is there is no room with room ID roomId
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
-    void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
+    void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
     /**/
 
     /*ROOMS*/

@@ -319,6 +319,7 @@ public:
     /// \exception throws NIFIsNotValid if NIF is invalid
     /// \exception throws InvalidEvaluation is evaluation is invalid
     /// \exception throws NotAnInt if evaluation is not an int
+    /// \exception throws NotAPositiveFloat if wage is not a positive number
     void modifyStaffMember(const std::string & name, std::string& NIF, std::string& wage,const int& pos, const std::string& type, const std::string& shift,const std::string& password, const std::string& evaluation);
 
     /// Removes a staff member

@@ -238,7 +238,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
             else file << "night\n";
         }
         else if (manager != nullptr){
-            file << "Manager " << manager->getPassword()<<"\n";
+            file << "Manager " << manager->getPassword()<< " " << manager->getEvaluation()<<"\n";
         }
     }
     file << "Client\n";
@@ -398,7 +398,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     std::string shift,typeSearch;
     int year;
     bool shift1;
-    std::string password;
+    std::string password, evaluation;
 
     while(std::getline(file,getData) && getData!="Client"){
         ss<<getData;
@@ -450,13 +450,23 @@ Hotel::Hotel(const std::string &hotelFile) {
         }
         else if (type == "Manager"){
             ss >> password;
-
-            Manager* manager = new Manager(name,stoi(NIF),salary,password,0);
+            ss >> evaluation;
+            try{
+                checkIfInteger(evaluation, "Evaluation");
+                if (stoi(evaluation) < 1 || stoi(evaluation) > 5){
+                    throw  HotelFileHasWrongFormat("Manager evaluation is invalid");
+                }
+            }
+            catch(NotAnInt& msg){
+                std::cout << msg;
+                throw  HotelFileHasWrongFormat("Evaluation has to be an int");
+            }
+            Manager* manager = new Manager(name,stoi(NIF),salary,password,stoi(evaluation));
             manager->setYearsOfService(date.getYear()-year);
             staff.push_back(manager);
         }
         else{
-            throw HotelFileHasWrongFormat("Staff type invalid, should be 'janitor', 'responsible', 'manager' or 'receptionist'");
+            throw HotelFileHasWrongFormat("Staff type invalid, should be 'Janitor', 'Responsible', 'Manager' or 'Receptionist'");
         }
         ss.clear();
     }
@@ -1059,6 +1069,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
     if (NIF != "."){
         try{
             validateNIF(NIF,name);
+            checkIfValidPriceOrWage(wage, "wage");
         }
         catch(...){
             throw;
@@ -1094,7 +1105,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
 
     }
     else {
-        staff[pos]->personModify(name,NIF);
+        staff[pos]->modifyStaffMember(name,NIF,wage);
     }
 }
 
@@ -1107,9 +1118,6 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
 
         checkIfValidPriceOrWage(wage, "wage");
         checkIfInteger(evaluation,"manager evaluation");
-        if (stoi(evaluation) < 1 || stoi(evaluation)>5){
-            throw InvalidEvaluation();
-        }
         int pos = search(name, NIF, type1 = "Staff");
         throw StaffMemberAlreadyExists(name, stoi(NIF));
     }
@@ -1121,6 +1129,9 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
                     this->staff.erase(this->staff.begin()+ i);
                     break;
                 }
+            }
+            if (stoi(evaluation) < 1 || stoi(evaluation)>5){
+                throw InvalidEvaluation();
             }
             Manager* manager = new Manager(name, stoi(NIF), stof(wage), password,stoi(evaluation));
             this->staff.push_back(manager);

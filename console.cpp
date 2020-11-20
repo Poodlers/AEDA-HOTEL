@@ -620,6 +620,22 @@ void staff(Hotel *hotel){
                 cin >> NIF;
 
                 pos = (hotel->search(name, NIF, type = "Staff"));
+                Manager* manager = dynamic_cast<Manager*> (hotel->getStaff()[pos]);
+                Receptionist* receptionist = dynamic_cast<Receptionist*> (hotel->getStaff()[pos]);
+                Responsible* responsible = dynamic_cast<Responsible*> (hotel->getStaff()[pos]);
+                Janitor* janitor = dynamic_cast<Janitor*> (hotel->getStaff()[pos]);
+                if(manager != nullptr){
+                    type = "Manager";
+                }
+                else if (responsible != nullptr){
+                    type = "Responsible";
+                }
+                else if (receptionist != nullptr){
+                    type = "Receptionist";
+                }
+                else{
+                    type = "Janitor";
+                }
 
                 cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
                      << endl;
@@ -690,9 +706,11 @@ void staff(Hotel *hotel){
                 else if (type == "Manager"){
                     cout << "Insert the password of the manager you wish to add:"<<endl;
                     cin >> password;
+                    cout << "Insert the evaluation of the manager you wish to add:"<<endl;
+                    cin >> evaluation;
                 }
-                hotel->addStaffMember(name,NIF,type,password,shift,wage,0);
 
+                hotel->addStaffMember(name,NIF,type,password,shift,wage,evaluation);
             }
             else if (input == "Sort"){
                 cout << "Insert the type of sorting to be done. Options are: Name, NIF, Wage, Position and Years of Service"<<endl;

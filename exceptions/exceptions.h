@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../utils/utils.h"
 
-///Thrown if the client does
+///Thrown if the client does not have any Reservations to Check In
 class NoReservationsToCheckIn{
 private:
     /// name of failed check in person
@@ -35,6 +35,7 @@ public:
     }
 };
 
+///Thrown if the client has no valid reservations to checkOut of
 class NoReservationsToCheckOut{
 private:
     /// name of failed check out person
@@ -64,6 +65,7 @@ public:
     }
 };
 
+///thrown when a reservation has as invalid date
 class ReservationHasInvalidDates{
 public:
     /// invalid dates for reservation exception
@@ -77,6 +79,7 @@ public:
     }
 };
 
+///thrown when a reservation tries to fill a room that would be unavailable during that time
 class AnotherReservationForThisRoomAlreadyExistsAtThisTime{
 private:
     /// room id of repeated reservation
@@ -101,7 +104,7 @@ public:
 
 
 
-
+///thrown when input is not of int type
 class NotAnInt{
 private:
     /// value that is not integer
@@ -124,6 +127,7 @@ public:
     }
 };
 
+///thrown when input is not a positive integer
 class NotAPositiveInt{
 private:
     /// value that is not a positive integer
@@ -146,6 +150,7 @@ public:
     }
 };
 
+///thrown if the input is not a float bigger than 0
 class NotAPositiveFloat{
 private:
     /// value that is not a positive float
@@ -168,6 +173,7 @@ public:
     }
 };
 
+///thrown if the input does not constitute a valid room type(Suite, NoViewRoom, ViewRoom)
 class InvalidRoomType{
 private:
     /// id of the room with an invalid room type
@@ -198,6 +204,7 @@ public:
     }
 };
 
+///thrown when the program receives an invalid staff type
 class InvalidPosition{
 private:
     /// invalid position
@@ -227,6 +234,7 @@ public:
     }
 };
 
+///thrown when there's a sorting error
 class SortingError{
 public:
     /// sorting error exception
@@ -242,6 +250,7 @@ public:
 
 /*HOTEL*/
 
+///thrown if the selected floor is non existent
 class FloorDoesNotExist{
 private:
     /// floor that doesn't exist
@@ -263,7 +272,7 @@ public:
 };
 
 /*STAFF*/
-
+///thrown if you try to add a new Staff member with the same attributes as one that already exists
 class StaffMemberAlreadyExists{
 private:
     /// name of repeated staff member
@@ -293,6 +302,7 @@ public:
     }
 };
 
+///thrown if you try to search for a staff member with non existent attributes
 class StaffMemberDoesNotExist{
 private:
     /// name of staff member who doesn't exist
@@ -322,6 +332,7 @@ public:
     }
 };
 
+///thrown if you try to add a new staff member to the program with a NIF that one of the employees already has
 class StaffMemberWithThisNIFAlreadyExists{
 private:
     /// name of staff member with repeated NIF
@@ -351,6 +362,7 @@ public:
     }
 };
 
+///thrown if you try to add a new manager with the same attributes as the current one (program can only have one manager)
 class ManagerAlreadyExists{
 private:
     /// name of repeated manager
@@ -380,6 +392,7 @@ public:
     }
 };
 
+///thrown if you try to initialize a Janitor with a shift different from "day" or "night"
 class InvalidShift{
 public:
     /// invalid shift exception
@@ -394,6 +407,7 @@ public:
 };
 /*CLIENT*/
 
+///thrown if you try to initialize a Client with attributes of an already existent client
 class ClientAlreadyExists{
 private:
     /// name of repeated client
@@ -423,6 +437,7 @@ public:
     }
 };
 
+///thrown if you search for a client whose attributes don't match any of the available clients
 class ClientDoesNotExist{
 private:
     /// name of client who doesn't exist
@@ -452,6 +467,7 @@ public:
     }
 };
 
+///thrown if you try to add a new Client with a NIF of an already existent client
 class ClientWithThisNIFAlreadyExists{
 private:
     /// name of client with repeated NIF
@@ -481,6 +497,7 @@ public:
     }
 };
 
+///thrown if a client with no previous reservations tries to reserve a suite
 class ClientCantMakeThisReservation{
 public:
     /// client can't make reservation exception
@@ -495,7 +512,7 @@ public:
 };
 
 /*ROOMS*/
-
+///thrown if the searched Room is non existent
 class RoomDoesNotExist{
 private:
     /// number of room which doesn't  exist
@@ -532,6 +549,7 @@ public:
     }
 };
 
+///thrown if the Room does not have the capacity to accomodate the desired reservation capacity
 class RoomDoesNotHaveTheNecessaryCapacity{
 private:
     /// id of room without necessary capacity
@@ -554,6 +572,7 @@ public:
     }
 };
 
+///thrown if the user attempts to enter a new Room with data exactly equal to an existent room
 class RoomAlreadyExists{
 private:
     /// number of the repeated room
@@ -583,6 +602,7 @@ public:
     }
 };
 
+///thrown if the user attempts to edit a Room or create a new one and gives it the room Id or Room Number of a Room already in the system
 class RoomWithThisRoomIdOrRoomNumberAlreadyExists{
 private:
     /// number of the repeated room
@@ -626,6 +646,7 @@ public:
 };
 
 /*LOGIN*/
+///thrown if you try to logOut when you're not currently logged In
 class NotLoggedIn{
 private:
     /// command attempted
@@ -646,6 +667,7 @@ public:
     }
 };
 
+///thrown if the user attempts to log In again if they are already logged in
 class AlreadyLoggedIn{
 public:
     /// already logged in exception
@@ -659,6 +681,7 @@ public:
     }
 };
 
+///thrown if the manager fails the authentication process
 class IncorrectCredentials{
 public:
     /// incorrect credentials exception
@@ -672,6 +695,7 @@ public:
     }
 };
 
+///thrown if you attempt to access a section of the program that you do not have the privileges to
 class AccessRestricted{
 public:
     /// access restricted exception
@@ -687,6 +711,7 @@ public:
 
 
 /*PEOPLE*/
+///thrown if you do not input a valid NIF when prompted to do so
 class NIFIsNotValid{
 private:
     /// name of person with invalid NIF
@@ -715,6 +740,7 @@ public:
 
 
 /*HOTEL-FILE*/
+///thrown if the file you use to start the program does not exist
 class FileNotFound{
 private:
     /// name of unfound file
@@ -735,6 +761,7 @@ public:
     }
 };
 
+///thrown if there is an error with the file format of the initializing file
 class HotelFileHasWrongFormat{
 private:
     /// issue with file format
@@ -756,6 +783,7 @@ public:
     }
 };
 
+///thrown if the Date inputed to the program is in not in a valid format
 class DateIsNotValid{
 private:
     /// issue with date
@@ -777,7 +805,7 @@ public:
     }
 };
 
-
+///thrown when the inputted Product Id does not match any of the products in the system
 class ProductDoesNotExist{
 private:
     /// id of product which doesn't exist
@@ -798,6 +826,7 @@ public:
     }
 };
 
+///thrown when you give a manager an evaluation that is not within bounds(1-5)
 class InvalidEvaluation{
 public:
     InvalidEvaluation(){}

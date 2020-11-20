@@ -713,7 +713,7 @@ void staff(Hotel *hotel){
                 hotel->addStaffMember(name,NIF,type,password,shift,wage,evaluation);
             }
             else if (input == "Sort"){
-                cout << "Insert the type of sorting to be done. Options are: Name, NIF, Wage, Position and Years of Service"<<endl;
+                cout << "Insert the type of sorting to be done. Options are: Name, NIF, Wage, Position and Years of service"<<endl;
                 string sorting,order;
                 cleanCinBuffer();
                 getline(cin,sorting);
@@ -734,6 +734,7 @@ void staff(Hotel *hotel){
                 pos = (hotel->search(name,NIF,type="Staff"));
 
                 hotel->getStaff()[pos]->print();
+                cout << endl;
             }
             else if(input == "Back"){
                 return;

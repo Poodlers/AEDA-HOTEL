@@ -822,7 +822,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Reservations, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Reservations, Time and Exit"<<endl;
         }
         else if (input == "Reservations"){
             reservation(hotel);

@@ -68,17 +68,17 @@ public:
     /// Returns the costs of running the hotel
     ///
     /// \return
-    int getCosts() const;
+    float getCosts() const;
 
     /// Returns the profit of running the hotel
     ///
     /// \return
-    int getProfit() const;
+    float getProfit() const;
 
     /// Returns the money earned from running the hotel
     ///
     /// \return
-    int getMoneyEarned() const;
+    float getMoneyEarned() const;
 
     /// Returns de accounting vector
     ///
@@ -369,7 +369,6 @@ public:
 
     void reduceNecessity(std::string type);
 
-    unsigned getBudget();
 
     /// Returns the cleaning necessity
     ///
@@ -404,7 +403,6 @@ private:
     ///True if the manager is logged in, false otherwise
     bool loggedIn = false;
 
-    float budget = 500;
     ///Cleaning necessity
     int cleaningNecessity = 20;
     ///Catering necessity

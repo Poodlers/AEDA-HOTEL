@@ -18,24 +18,24 @@ std::vector<Provider*> Hotel::getProviders () const{
     return providers;
 }
 
-int Hotel::getCosts() const{
-    int money = 0;
+float Hotel::getCosts() const{
+    float money = 0;
     for (Transaction* transaction: accounting){
         if (transaction->value < 0) money += transaction->value;
     }
     return money;
 }
 
-int Hotel::getProfit() const{
-    int money = 0;
+float Hotel::getProfit() const{
+    float money = 0;
     for (Transaction* transaction: accounting){
         money += transaction->value;
     }
     return money;
 }
 
-int Hotel::getMoneyEarned() const{
-    int money = 0;
+float Hotel::getMoneyEarned() const{
+    float money = 0;
     for (Transaction* transaction: accounting){
         if (transaction->value > 0) money += transaction->value;
     }
@@ -61,7 +61,6 @@ void Hotel::buy(const unsigned int &productId){
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accounting.push_back(transaction);
                 this->reduceNecessity(provider->getProducts()[i]->getType());
-                this->budget = this->budget - provider->getProducts()[i]->getPrice();
                 provider->getProducts()[i]->reduceStock();
                 return;
             }
@@ -191,7 +190,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
     std::string f;
     file.open(hotelFile+ ".txt");
     if(!file.is_open()){
-
+        throw FileNotFound(hotelFile + ".txt");
     }
     file << "Hotel-File\n";
     file << this->date << "\n";
@@ -523,7 +522,7 @@ Hotel::Hotel(const std::string &hotelFile) {
             char ignore;
             std::stringstream ss1;
             ss1 << reservation1;
-            ss1 >> roomId >>ignore>> dayIn >> ignore>> monthIn >> ignore>> yearIn >> ignore>> dayOut >> ignore>>monthOut >> ignore>> yearOut >> ignore>> reservationId >> ignore >> capacity>>in;
+            ss1 >> roomId >>ignore>> dayIn >> ignore>> monthIn >> ignore>> yearIn >> ignore>> dayOut >> ignore>>monthOut >> ignore>> yearOut >> ignore>> reservationId >> ignore >> capacity>> ignore >> in;
             try{
                 Date* checkIn =new Date(dayIn,monthIn,yearIn);
                 Date* checkOut =new Date(dayOut,monthOut,yearOut);
@@ -585,9 +584,10 @@ Hotel::Hotel(const std::string &hotelFile) {
             throw HotelFileHasWrongFormat("the transaction value has to be a number.");
         }
         std::getline(ss,description);
-        Transaction* transaction;
+        Transaction* transaction = new Transaction();
         transaction->value = value;
         transaction->description = description;
+        this->accounting.push_back(transaction);
         ss.clear();
     }
 
@@ -621,7 +621,7 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
                     clients[posClient]->addToHistory(reservation);
                 }
                 else if (in == 1){
-                    if ((*checkOut > date || *checkOut == date ) && (*checkIn > date || *checkIn == date)){
+                    if ((*checkOut > date || *checkOut == date ) && (*checkIn < date || *checkIn == date)){
                         clients[posClient]->addCurrentReservation(reservation);
                     }
                     else throw NoReservationsToCheckIn(clients[posClient]->getName(),clients[posClient]->getNIF());
@@ -756,7 +756,6 @@ void Hotel::checkIn(const int& pos){
                                           (rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
                                            rooms[pos1]->getDiscountState())) *
                                          (reservation->getCheckOut() - reservation->getCheckIn());
-                    this->budget += transaction->value;
                     transaction->description = "Client check in to room " + std::to_string(reservation->getRoomId()) +
                                                " which was reserved for " +
                                                std::to_string(reservation->getCheckOut() - reservation->getCheckIn()) +
@@ -1490,7 +1489,4 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
 }
 
 
-unsigned int Hotel::getBudget() {
-    return this->budget;
-}
 

@@ -36,7 +36,7 @@ Date::Date(const std::string& date){
 
 std::ostream& operator<<(std::ostream& o, const Date& date){
     char a[19];
-    sprintf(a,"%02d-%02d-%02d  ",date.getDay(),date.getMonth(),date.getYear());
+    sprintf(a,"%02d-%02d-%02d         ",date.getDay(),date.getMonth(),date.getYear());
     o << a;
     return o;
 }

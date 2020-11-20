@@ -138,8 +138,3 @@ std::vector<int> Client::checkOut( Date* date){
     return roomIds;
 }
 
-void Client::removeReservation(Reservation *reservation) {
-    this->history.erase(std::find(this->history.begin(),this->history.end(),reservation));
-    delete reservation;
-}
-

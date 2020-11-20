@@ -1,7 +1,6 @@
 #ifndef DATE_H
 #define DATE_H
 #include "../exceptions/exceptions.h"
-#include <string>
 
 /// Represents a date structure made up of a year, a month and a day
 class Date{

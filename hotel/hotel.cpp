@@ -195,6 +195,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
 
     }
     file << "Hotel-File\n";
+    file << this->date << "\n";
     file << this->numberOfFloors<<"\n";
     file << this->firstFloor<<"\n";
     file << "Rooms"<<"\n";
@@ -280,6 +281,17 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
     if (getData.empty()){
         throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+
+    std::getline(file,getData);
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    try{
+        Date* date = new Date(getData);
+    }
+    catch(DateIsNotValid){
+        throw HotelFileHasWrongFormat("Date is invalid.");
     }
 
 

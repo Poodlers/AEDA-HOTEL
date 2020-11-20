@@ -6,7 +6,7 @@
 #include "../person.h"
 #include "../../exceptions/exceptions.h"
 
-
+/// \class Client
 /// represents a client
 ///
 /// Is made up of a NIF, a name, a vector with the history of the client's reservations, a vector with the client's future reservations and a vector
@@ -15,8 +15,8 @@ class Client: public Person{
 public:
     ///Client constructor
     ///
-    /// \param name - client's name
-    /// \param NIF - client's NIF
+    /// \param name  client's name
+    /// \param NIF  client's NIF
     Client(const std::string &name, const unsigned int &NIF);
 
     /// Return the history vector
@@ -36,29 +36,25 @@ public:
 
     /// Adds a reservation to history vector
     ///
-    /// \param reservation - reservation to add
+    /// \param reservation  reservation to add
     void addToHistory(Reservation *reservation);
 
     ///Adds reservation to new reservations
     ///
-    /// \param reservation - reservation to add
+    /// \param reservation  reservation to add
     void addNewReservation(Reservation *reservation);
 
     ///Adds reservation to current reservations
     ///
-    /// \param reservation - reservation to add
+    /// \param reservation  reservation to add
     void addCurrentReservation(Reservation *reservation);
 
-    ///Removes reservation from history
-    ///
-    /// \param reservation - reservation to remove
-    void removeReservation(Reservation* reservation);
 
     /// Check Out
     ///
     /// Goes through the vector current reservations and if the date is bigger or equal to the check out date proceeds
     /// to remove it from the current reservations vector and put it in the client's history.
-    /// \param date - current date
+    /// \param date  current date
     /// \return positions of the reservations that were checked out
     /// \exception throws NoReservationsToCheckOut if there are no reservations from the client to check out currently
     std::vector<int> checkOut (Date* date);
@@ -67,7 +63,7 @@ public:
     ///
     /// Goes through the vector future reservations and if the date is bigger or equal to the check in date proceeds
     /// to remove it from the future reservations vector and put it in the client's current reservations vector.
-    /// \param date - current date
+    /// \param date  current date
     /// \return positions of the reservations that were checked in
     /// \exception throws NoReservationsToCheckIn if there are no reservations from client to check in
     std::vector<int> checkIn (Date* date);
@@ -76,7 +72,7 @@ public:
     ///
     /// If a reservation in future reservations expires on date (i.e. check out date <= current date) it is removed from
     /// the future reservations vector and appended to the client's history
-    /// \param date - current sate
+    /// \param date  current sate
     void archiveExpiredReservations(Date* date);
 
     /// Prints clients in the format:

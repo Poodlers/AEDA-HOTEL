@@ -289,6 +289,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
     try{
         Date* date = new Date(getData);
+        this->date = *date;
     }
     catch(DateIsNotValid){
         throw HotelFileHasWrongFormat("Date is invalid.");

@@ -621,7 +621,7 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
                     clients[posClient]->addToHistory(reservation);
                 }
                 else if (in == 1){
-                    if (*checkOut > date && (*checkIn > date || *checkIn == date)){
+                    if ((*checkOut > date || *checkOut == date ) && (*checkIn > date || *checkIn == date)){
                         clients[posClient]->addCurrentReservation(reservation);
                     }
                     else throw NoReservationsToCheckIn(clients[posClient]->getName(),clients[posClient]->getNIF());

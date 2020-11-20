@@ -53,17 +53,6 @@ void Hotel::reduceNecessity(std::string type) {
     }
 }
 
-unsigned Hotel::getCleaningNecessity() {
-    return this->cleaningNecessity;
-}
-
-unsigned Hotel::getCateringNecessity() {
-    return this->cateringNecessity;
-}
-unsigned Hotel::getOtherNecessity() {
-    return this->otherNecessity;
-}
-
 void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
@@ -108,19 +97,16 @@ void Hotel::autoBuy(){
         if (product->getType() == "Cleaning" && cleaningNecessity != 0){
             while(product->getStock()!= 0  && cleaningNecessity != 0){
                 buy(product->getId());
-                cleaningNecessity--;
             }
         }
         if (product->getType() == "Catering" && cateringNecessity != 0){
             while(product->getStock()!= 0 && cateringNecessity != 0){
                 buy(product->getId());
-                cateringNecessity--;
             }
         }
         if (product->getType() == "Other" && otherNecessity != 0){
             while(product->getStock()!= 0 && otherNecessity != 0){
                 buy(product->getId());
-                otherNecessity--;
             }
         }
     }

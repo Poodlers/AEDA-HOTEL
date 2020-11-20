@@ -27,7 +27,9 @@ public:
     /// \param yearsOfService - years of service to set for staff member
     void setYearsOfService(const int yearsOfService);
     ///
-    virtual void print() override;
+    virtual void printConsole();
+
+    virtual void print();
 
     void modifyStaffMember(const std::string& name, const std::string& NIF, const std::string& wage);
 
@@ -73,7 +75,11 @@ public:
     /// \return "Responsible"
     std::string getType() override;
     ///
+    void printConsole() override;
+
     void print() override;
+
+    void printFloors();
 
 private:
     /// number of floors being monitored by the floor monitor
@@ -100,7 +106,7 @@ public:
     /// \return "Janitor"
     std::string getType() override;
     ///
-    void print() override;
+    void printConsole() override;
     ///
     /// \param name - janitor's name
     /// \param NIF - janitor's NIF as string
@@ -133,8 +139,11 @@ public:
     /// \return manager's password
     std::string getPassword();
     ///
-    void print() override;
+    void printConsole() override;
+
     ///
+    void print() override;
+
     /// \param name - manager's name
     /// \param NIF - manager's NIF as string
     /// \param password - manager's password as string

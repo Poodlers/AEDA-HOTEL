@@ -16,10 +16,10 @@ void Janitor:: setShift(const bool& shift){
 std::string Janitor::getType() {
     return "Janitor";
 }
-void Janitor::print() {
-    std::cout << std::left << std::setw(13) << "Janitor" <<  std::setw(20) << std::setfill(' ') << this->getName() <<
-              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
-              << std::setw(19) << " ";
+void Janitor::printConsole() {
+    std::cout << std::left << std::setw(13) << "Janitor" <<  std::setw(22) << std::setfill(' ') << this->getName() <<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService()
+              << std::setw(16) << " ";
     if (shift){
         std::cout << std::setw(8) << "day";
     }

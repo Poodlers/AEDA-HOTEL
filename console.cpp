@@ -21,7 +21,7 @@ void accounting(Hotel* hotel){
     if (!hotel->getLoggedInState()){
         throw AccessRestricted();
     }
-    cout << "Value     Description"<<endl;
+    cout << setw(8) << setfill(' ') <<"Value" <<"Description"<<endl;
     for (Transaction* transaction: hotel->getAccounting()){
         cout << setw(8) << setfill(' ')<< transaction->value << transaction->description<<endl;
     }

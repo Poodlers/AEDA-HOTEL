@@ -133,6 +133,8 @@ public:
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     /**/
 
+    /// Removes a reservation when given the objet
+    /// \param reservation
     void deleteReservation(Reservation* reservation);
 
     /*ROOMS*/
@@ -152,7 +154,8 @@ public:
     /// \exception throws InvalidRoomType if room type is not valid
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
 
-
+    /// Removes a room when given the room
+    /// \param room
     void eraseRoom(Room* room);
 
     /// Checks if floor is valid
@@ -250,7 +253,12 @@ public:
     /// \return vector clients
     std::vector <Client*>& getClients();
 
+    /// Removes de client when given the client
+    /// \param client
     void eraseClient(Client* client);
+
+    /// Removes the staff member when given the staff member
+    /// \param staff
     void eraseStaff(Staff* staff);
 
     /// Check In
@@ -291,8 +299,6 @@ public:
     /// \exception throws ClientAlreadyExists if client already exists
     /// \exception throws ClientWithThisNIFAlreadyExists if a client already exists with the same NIF
     void addClient(const std::string& name, const std::string& NIF);
-
-    void addClient(Client* client);
 
     /// Sorts vector clients
     ///
@@ -343,8 +349,6 @@ public:
     /// \exception throws NotAnInt if evaluation is not an int
     /// \warning adding a manager switches out the current manager for the new one
     void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage, const std::string& evaluation);
-
-    void addStaff(Staff* staff);
 
     /// Sorts vector staff
     ///
@@ -398,11 +402,6 @@ public:
     int getFirstFloor() const;
 
     void reduceNecessity(std::string type);
-
-    unsigned getCleaningNecessity();
-
-    unsigned getCateringNecessity();
-    unsigned getOtherNecessity();
 
     unsigned getBudget();
 

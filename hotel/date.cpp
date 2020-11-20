@@ -116,3 +116,16 @@ bool Date::operator >(Date date){
     else if (this->year > date.getYear()) return true;
     else return false;
 }
+
+bool Date::operator <=(Date date){
+    if(this->year == date.getYear()){
+        if(this->month == date.getMonth()){
+            if (this->day <= date.getDay()) return true;
+            else return false;
+        }
+        if(this->month < date.getMonth()) return true;
+        else return false;
+    }
+    else if (this->year < date.getYear()) return true;
+    else return false;
+}

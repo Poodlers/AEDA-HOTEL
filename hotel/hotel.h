@@ -403,7 +403,7 @@ private:
 
     ///Logged in state
     ///True if the manager is logged in, false otherwise
-    bool loggedIn = false;;
+    bool loggedIn = false;
 
     float budget = 500;
     ///Cleaning necessity

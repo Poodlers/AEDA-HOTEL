@@ -3,9 +3,7 @@
 #include "../exceptions/exceptions.h"
 #include <string>
 
-/// Represents a date structure
-///
-/// Is made up of a year, a month and a day
+/// Represents a date structure made up of a year, a month and a day
 class Date{
 private:
     ///year
@@ -105,8 +103,6 @@ public:
     bool operator <=(Date date);
 
 };
-
-
 
 
 

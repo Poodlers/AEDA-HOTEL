@@ -7,6 +7,11 @@
 #include "../hotel/reservation.h"
 #include "../exceptions/exceptions.h"
 
+/// \class Room
+/// Class which represents a room
+///
+///
+/// Holds the all the information of a room (floor, roomNumber,roomId,capacity,availability...)
 class Room{
 public:
     /// Room constructor
@@ -62,12 +67,13 @@ public:
     /// \param capacity - room's capacity in string form
     /// \param pricePerNight - room's price per night in string form
     void modify(const std::string& capacity, const std::string& pricePerNight);
-    ///
+    ///Gets discount value of the correspondent Type of Room
+    ///\return 0.05 if Suite, 0.15 if NoViewRoom, 0.08 if ViewRoom
     virtual float getDiscountValue() const = 0;
-    ///
+    ///Prints the room's info in a formatted way
     virtual void print() = 0;
     ///
-    /// \return
+    /// \return "Suite", "NoViewRoom" or "ViewRoom"
     virtual std::string getType() = 0;
 
 private:
@@ -85,6 +91,11 @@ private:
     bool free = true;
 };
 
+/// \class Suite
+/// Class which represents a suite, a type of room
+///
+///
+/// Holds the all the same information as Room, only modifying its discount value
 class Suite: public Room{
 public:
     ///
@@ -114,6 +125,11 @@ private:
     const float discountValue = 0.05;
 };
 
+/// \class ViewRoom
+/// Class which represents a room that has a view
+///
+///
+/// Holds the all the same information as Room, only modifying its discount value
 class ViewRoom: public Room{
 public:
     ///
@@ -142,6 +158,11 @@ private:
     const float discountValue = 0.08;
 };
 
+/// \class NoViewRoom
+/// Class which represents a room without a view
+///
+///
+/// Holds the all the same information as Room, only modifying its discount value
 class NoViewRoom: public Room{
 public:
     ///
@@ -151,7 +172,7 @@ public:
     /// \param capacity - room's capacity
     /// \param pricePerNight - room's price per night
     NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    ///
+    ///prints NoViewRoom in formatted way
     void print() override;
     /// changes discount value
     void toggleDiscount() override;
@@ -165,7 +186,6 @@ public:
     float getDiscountValue() const override;
     /// \return "NoViewRoom"
     std::string getType() override;
-
 
 private:
     /// discount is true if a discount is to be applied

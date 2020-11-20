@@ -1,19 +1,15 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <windows.h>
 #include <map>
 #include <string>
 #include <vector>
-#include "../exceptions/exceptions.h"
-#include "../hotel/reservation.h"
-#include "../hotel/date.h"
 
 
 /// Struct which represents a transaction
 ///
 /// Holds the value and the description of the transaction
-typedef struct Transaction{
+struct Transaction{
     ///value of the transaction
     float value;
     ///description of the transaction

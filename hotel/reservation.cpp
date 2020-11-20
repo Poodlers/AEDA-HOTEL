@@ -1,5 +1,4 @@
 #include "reservation.h"
-#include "../utils/utils.h"
 #include <sstream>
 #include <algorithm>
 #include <iostream>
@@ -40,20 +39,6 @@ Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&
         throw;
     }
 
-}
-
-
-bool Date::operator <=(Date date){
-    if(this->year == date.getYear()){
-        if(this->month == date.getMonth()){
-            if (this->day <= date.getDay()) return true;
-            else return false;
-        }
-        if(this->month < date.getMonth()) return true;
-        else return false;
-    }
-    else if (this->year < date.getYear()) return true;
-    else return false;
 }
 
 Date Reservation::getCheckIn() const{

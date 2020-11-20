@@ -39,13 +39,16 @@ public:
     /// \param type - type to set to product
     void setType(const std::string & type);
 
+    ///reduces the parameter stock of the product object by 1
     void reduceStock();
 
+    ///getter for stock parameter of product
     unsigned int getStock() const;
 
+    ///setter for stock parameter of product
     void setStock(const unsigned int& stock);
 
-
+    ///Overloaded operator << to print the product's info in a formatted way
     friend std::ostream& operator <<(std::ostream& o, Product& product);
 
 private:
@@ -60,6 +63,7 @@ private:
     /// type of product
     /// can be catering, cleaning or other
     std::string type;
+    ///amount of the product in the warehouse
     unsigned int stock;
 };
 

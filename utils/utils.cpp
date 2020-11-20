@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <iostream>
 #include <conio.h>
+#include "../exceptions/exceptions.h"
 
 using namespace std;
 

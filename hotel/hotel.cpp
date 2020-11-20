@@ -668,6 +668,7 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
             throw;
         }
     }
+    return {};
 }
 
 
@@ -721,6 +722,7 @@ int Hotel::search(const std::string& name, const std::string& NIF, std::string& 
         }
         throw StaffMemberDoesNotExist(name, stoi(NIF));
     }
+    return -1;
 }
 
 
@@ -741,6 +743,7 @@ void Hotel::checkIn(const int& pos){
                                           (rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
                                            rooms[pos1]->getDiscountState())) *
                                          (reservation->getCheckOut() - reservation->getCheckIn());
+                    this->budget += transaction->value;
                     transaction->description = "Client check in to room " + std::to_string(reservation->getRoomId()) +
                                                " which was reserved for " +
                                                std::to_string(reservation->getCheckOut() - reservation->getCheckIn()) +
@@ -1358,50 +1361,7 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
-void Hotel::deleteReservation(Reservation *reservation) {
-    auto find = std::find(this->reservations.begin(),this->reservations.end(),reservation);
-    for(auto client: this->clients){
-        for(auto Reservation:client->getHistory()){
-            if(Reservation == reservation){
-                this->reservations.erase(find);
-                client->removeReservation(reservation);
-                return;
-            }
-        }
-        for(auto Reservation:client->getFutureReservations()){
-            if(Reservation == reservation){
-                this->reservations.erase(find);
-                client->removeReservation(reservation);
-                return;
-            }
-        }
-        for(auto Reservation:client->getCurrentReservations()){
-            if(Reservation == reservation){
-                this->reservations.erase(find);
-                client->removeReservation(reservation);
-                return;
-            }
-        }
-    }
-}
 
-void Hotel::eraseStaff(Staff *staff) {
-    auto find = std::find(this->staff.begin(),this->staff.end(),staff);
-    this->staff.erase(find);
-    delete staff;
-}
-
-void Hotel::eraseClient(Client *client) {
-    auto find = std::find(this->clients.begin(),this->clients.end(),client);
-    this->clients.erase(find);
-    delete client;
-}
-
-void Hotel::eraseRoom(Room *room) {
-    auto find = std::find(this->rooms.begin(),this->rooms.end(),room);
-    this->rooms.erase(find);
-    delete room;
-}
 
 void Hotel::staffSort(const std::string& input,const std::string& order1){
     bool order;
@@ -1516,14 +1476,8 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
-int Hotel::getFirstFloor() const {
-    return this->firstFloor;
-}
-
-int Hotel::getNumberOfFloors() const {
-    return this->numberOfFloors;
-}
 
 unsigned int Hotel::getBudget() {
     return this->budget;
 }
+

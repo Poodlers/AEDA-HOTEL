@@ -19,6 +19,7 @@ add_executable(
         main.cpp
         hotel/date.cpp
         utils/utils.cpp
+        hotel/reservation.cpp
         room/room.cpp
         room/suite.cpp
         room/noviewroom.cpp
@@ -33,4 +34,4 @@ add_executable(
         person/person.cpp
         product/product1.cpp
         hotel/hotel.cpp
-        hotel/reservation.cpp)
+        )

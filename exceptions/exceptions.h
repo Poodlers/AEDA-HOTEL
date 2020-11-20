@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../utils/utils.h"
 
-
+///Thrown if the client does
 class NoReservationsToCheckIn{
 private:
     /// name of failed check in person
@@ -621,6 +621,7 @@ public:
         else if (exception.getMsg() == "Room Number"){
             return o << "A room exists under this ID ("<<exception.getRoomId()<<  ")with a different room number" << std::endl;
         }
+        return o;
     }
 };
 

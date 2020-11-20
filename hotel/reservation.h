@@ -36,8 +36,6 @@ public:
     /// \exception throws DateIsNotValid if Check Out date < Check In date or Check Out date are invalid
     Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
 
-    ///Default constructor
-    Reservation();
 
     ///Return reservation size
     ///

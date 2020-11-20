@@ -5,7 +5,6 @@
 #include "../utils/utils.h"
 #include "../exceptions/exceptions.h"
 
-Date Hotel::date(9,11,2020);
 
 Date Hotel::getDate() const{
     return date;

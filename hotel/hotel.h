@@ -180,7 +180,6 @@ public:
     /// \exception throws NotAPositiveInt if capacity is a not a positive integer
     /// \exception throws NotAPositiveFloat if price is not a positive float
     void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
-    void addRoom(Room* room);
 
     /// Sorts Rooms
     ///
@@ -420,7 +419,7 @@ private:
     int firstFloor;
 
     ///Current date
-    static Date date;
+    Date date;
 };
 
 

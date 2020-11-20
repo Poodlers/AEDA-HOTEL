@@ -7,19 +7,19 @@
 #include <vector>
 #include "../exceptions/exceptions.h"
 #include "../hotel/reservation.h"
-
-char waitForCharInput( int mili_seconds );
-void clearscreen();
-void printTime(Date date, std::map<int,std::string> &map_month);
-void gotoxy(int x, int y);
-void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURSOR_INFO &cci);
-void fill_month_map(std::map<int,std::string> &map_month);
-void getStringInput(std::string& input, int x, int y);
-std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input));
+#include "../hotel/date.h"
 
 
-bool CheckIfInteger(std::string input);
-bool CheckIfFloat(std::string input);
+/// Struct which represents a transaction
+///
+/// Holds the value and the description of the transaction
+typedef struct Transaction{
+    ///value of the transaction
+    float value;
+    ///description of the transaction
+    std::string description;
+};
+
 
 /// Check if input is integer
 ///
@@ -41,12 +41,6 @@ void checkIfPositiveInteger(std::string input, std::string check);
 /// \param check  description of the input
 /// \exception throw <checkIfValidPriceOrWage> if input is not a positive number (int or float)
 void checkIfValidPriceOrWage(std::string input, std::string check);
-
-/// Overload for printing vectors
-/// \param o
-/// \param v
-/// \return
-std::ostream& operator<<(std::ostream &o, std::vector<int> v);
 
 /// Check if NIF is valid
 ///

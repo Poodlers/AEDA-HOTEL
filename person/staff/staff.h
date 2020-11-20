@@ -29,8 +29,6 @@ public:
     ///
     virtual void printConsole();
 
-    virtual void print();
-
     void modifyStaffMember(const std::string& name, const std::string& NIF, const std::string& wage);
 
 protected:
@@ -76,8 +74,6 @@ public:
     std::string getType() override;
     ///
     void printConsole() override;
-
-    void print() override;
 
     void printFloors();
 
@@ -140,9 +136,6 @@ public:
     std::string getPassword();
     ///
     void printConsole() override;
-
-    ///
-    void print() override;
 
     /// \param name - manager's name
     /// \param NIF - manager's NIF as string

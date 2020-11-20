@@ -1,6 +1,6 @@
 #include "client.h"
 #include <iostream>
-#include "../../GUI/utils.h"
+#include "../../utils/utils.h"
 #include <iomanip>
 #include <algorithm>
 

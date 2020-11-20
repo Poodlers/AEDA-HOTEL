@@ -3,7 +3,7 @@
 #include<string>
 #include<vector>
 #include <iostream>
-#include "../GUI/utils.h"
+#include "../utils/utils.h"
 
 
 class NoReservationsToCheckIn{

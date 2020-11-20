@@ -8,17 +8,10 @@
 #include "../provider/provider.h"
 #include "../product/product1.h"
 #include "reservation.h"
-#include "../GUI/utils.h"
+#include "date.h"
+#include "../utils/utils.h"
 #include <algorithm>
-/// Struct which represents a transaction
-///
-/// Holds the value and the description of the transaction
-typedef struct Transaction{
-    ///value of the transaction
-    float value;
-    ///description of the transaction
-    std::string description;
-};
+
 
 /// \class Hotel
 /// Class which represents a hotel
@@ -133,10 +126,6 @@ public:
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const bool& in);
     /**/
 
-    /// Removes a reservation when given the objet
-    /// \param reservation
-    void deleteReservation(Reservation* reservation);
-
     /*ROOMS*/
     /// Adds a room
     ///
@@ -153,10 +142,6 @@ public:
     /// \exception throws NotAPositiveFloat if price is not a positive float
     /// \exception throws InvalidRoomType if room type is not valid
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
-
-    /// Removes a room when given the room
-    /// \param room
-    void eraseRoom(Room* room);
 
     /// Checks if floor is valid
     ///
@@ -252,14 +237,6 @@ public:
     ///
     /// \return vector clients
     std::vector <Client*>& getClients();
-
-    /// Removes de client when given the client
-    /// \param client
-    void eraseClient(Client* client);
-
-    /// Removes the staff member when given the staff member
-    /// \param staff
-    void eraseStaff(Staff* staff);
 
     /// Check In
     ///
@@ -391,16 +368,6 @@ public:
     bool getLoggedInState() const;
     /**/
 
-    /// Returns the number of floors
-    ///
-    /// \return numberOfFloors
-    int getNumberOfFloors() const;
-
-    /// Returns the number of the first floor
-    ///
-    /// \return firstFloot
-    int getFirstFloor() const;
-
     void reduceNecessity(std::string type);
 
     unsigned getBudget();
@@ -456,15 +423,6 @@ private:
     static Date date;
 };
 
-
-std::vector<std::string> askClient();
-std::vector<std::string> askReceptionist();
-std::vector<std::string> askResponsible();
-std::vector<std::string> askManager();
-std::vector<std::string> askJanitor();
-void askReservation(unsigned int& roomId,Date checkIn,Date checkOut,int& capacity,int& reservationId);
-std::vector<std::string> askRoom();
-void BuildProvider(Provider* provider);
 
 /**
   \file "C:\Users\Joana\Documents\Uni\Algoritmos e Estruturas de dados\Projeto\aeda_hotel_projeto\cmake-build-debug\hotel_exemplo.txt"

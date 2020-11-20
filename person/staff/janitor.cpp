@@ -1,5 +1,5 @@
 #include "staff.h"
-#include "../../GUI/utils.h"
+#include "../../utils/utils.h"
 #include <iostream>
 #include <iomanip>
 Janitor ::Janitor(const bool & shift,const std::string& name, const unsigned int & NIF, const float& wage) : Staff(name,NIF,wage){

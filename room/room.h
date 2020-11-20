@@ -103,8 +103,7 @@ public:
     bool getDiscountState() const override;
     ///
     /// \return value of the possible discount
-    float getDiscountValue() const;
-    ///
+    float getDiscountValue() const override;
     /// \return "Suite"
     std::string getType() override;
 
@@ -132,8 +131,7 @@ public:
     bool getDiscountState() const override;
     ///
     /// \return value of the possible discount
-    float getDiscountValue() const;
-    ///
+    float getDiscountValue() const override;
     /// \return "ViewRoom"
     std::string getType() override;
 
@@ -160,10 +158,11 @@ public:
     ///
     /// \return true if discount is active; false otherwise
     bool getDiscountState() const override;
+
     ///
     /// \return value of the possible discount
-    float getDiscountValue() const;
     ///
+    float getDiscountValue() const override;
     /// \return "NoViewRoom"
     std::string getType() override;
 

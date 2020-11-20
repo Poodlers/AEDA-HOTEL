@@ -43,6 +43,26 @@ int Hotel::getMoneyEarned() const{
     return money;
 }
 
+void Hotel::reduceNecessity(std::string type) {
+    if(type == "Cleaning"){
+        this->cleaningNecessity--;
+    }else if(type == "Other"){
+        this->otherNecessity--;
+    }else if(type == "Catering"){
+        this->cateringNecessity--;
+    }
+}
+
+unsigned Hotel::getCleaningNecessity() {
+    return this->cleaningNecessity;
+}
+
+unsigned Hotel::getCateringNecessity() {
+    return this->cateringNecessity;
+}
+unsigned Hotel::getOtherNecessity() {
+    return this->otherNecessity;
+}
 
 void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
@@ -52,6 +72,8 @@ void Hotel::buy(const unsigned int &productId){
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accounting.push_back(transaction);
+                this->reduceNecessity(provider->getProducts()[i]->getType());
+                this->budget = this->budget - provider->getProducts()[i]->getPrice();
                 provider->getProducts()[i]->reduceStock();
                 return;
             }
@@ -104,18 +126,10 @@ void Hotel::autoBuy(){
     }
 }
 
-
 void Hotel::incrementDate(const int& i){
     date = date + i;
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
-    }
-    if ((date.getDay() % 5) == 1 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
-        std::cout << "If no products are brought today, the cheaper ones will be bought automatically after tomorrow as to meet the hotel's necessities."<<std::endl;
-    }
-    if ((date.getDay() % 6) == 1 && (this->cleaningNecessity != 0 || this->cateringNecessity != 0 || this->otherNecessity)){
-        autoBuy();
-        std::cout << "Products were bought automatically."<<std::endl;
     }
     if (date.getDay() == 1){
         for (Provider* provider: providers){
@@ -1110,7 +1124,6 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
 }
 
 
-
 void Hotel::addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage, const std::string& evaluation){
     std::string type1;
     bool shf;
@@ -1361,8 +1374,29 @@ void Hotel::clientSort(const std::string& input,const std::string& order1){
 
 void Hotel::deleteReservation(Reservation *reservation) {
     auto find = std::find(this->reservations.begin(),this->reservations.end(),reservation);
-    this->reservations.erase(find);
-    delete reservation;
+    for(auto client: this->clients){
+        for(auto Reservation:client->getHistory()){
+            if(Reservation == reservation){
+                this->reservations.erase(find);
+                client->removeReservation(reservation);
+                return;
+            }
+        }
+        for(auto Reservation:client->getFutureReservations()){
+            if(Reservation == reservation){
+                this->reservations.erase(find);
+                client->removeReservation(reservation);
+                return;
+            }
+        }
+        for(auto Reservation:client->getCurrentReservations()){
+            if(Reservation == reservation){
+                this->reservations.erase(find);
+                client->removeReservation(reservation);
+                return;
+            }
+        }
+    }
 }
 
 void Hotel::eraseStaff(Staff *staff) {
@@ -1504,7 +1538,11 @@ int Hotel::getNumberOfFloors() const {
     return this->numberOfFloors;
 }
 
-std::vector<std::string>& askClient() {
+unsigned int Hotel::getBudget() {
+    return this->budget;
+}
+
+std::vector<std::string> askClient() {
     std::string name;
     std::string NIF;
     std::cout << "Edit the client's information as follows: " << std::endl;
@@ -1517,10 +1555,9 @@ std::vector<std::string>& askClient() {
     std::vector<std::string> vec = {name,NIF};
     return vec;
 
-
 }
 
-std::vector<std::string>& askReceptionist() {
+std::vector<std::string> askReceptionist() {
     std::string edit;
     std::vector<std::string> vec;
     std::cout << "Edit the Receptionist's information as follows: " << std::endl;
@@ -1540,7 +1577,7 @@ std::vector<std::string>& askReceptionist() {
 
 }
 
-std::vector<std::string>& askResponsible() {
+std::vector<std::string> askResponsible() {
     std::string edit;
     std::vector<std::string> vec;
     std::cout << "Edit the Responsible's information as follows: " << std::endl;
@@ -1561,7 +1598,7 @@ std::vector<std::string>& askResponsible() {
 
 }
 
-std::vector<std::string>& askManager() {
+std::vector<std::string> askManager() {
     std::string edit;
     std::vector<std::string> vec;
     std::cout << "Edit the Manager's information as follows: " << std::endl;
@@ -1582,10 +1619,14 @@ std::vector<std::string>& askManager() {
     std::cout << "Password: " << std::endl;
     getStringInput(edit,15,9);
     vec.push_back(edit);
+    gotoxy(0,11);
+    std::cout << "Evaluation: " << std::endl;
+    getStringInput(edit,15,11);
+    vec.push_back(edit);
     return vec;
 }
 
-std::vector<std::string>& askJanitor() {
+std::vector<std::string> askJanitor() {
     std::string edit;
     std::vector<std::string> vec;
     std::cout << "Edit the Manager's information as follows: " << std::endl;
@@ -1665,7 +1706,7 @@ void askReservation(unsigned int& roomId,Date checkIn,Date checkOut,int& capacit
 
 }
 
-std::vector<std::string>& askRoom() {
+std::vector<std::string> askRoom() {
     std::string edit;
     std::vector<std::string> vec;
     std::cout << "Edit the Room's information as follows: " << std::endl;
@@ -1687,8 +1728,67 @@ std::vector<std::string>& askRoom() {
     vec.push_back(edit);
     gotoxy(0,11);
     std::cout << "Room Type(Suite,NoViewRoom,ViewRoom): " << std::endl;
-    getStringInput(edit,30,11);
+    getStringInput(edit,45,11);
+    vec.push_back(edit);
+    gotoxy(0,13);
+    std::cout << "Room ID: " << std::endl;
+    getStringInput(edit,10,11);
     vec.push_back(edit);
     return vec;
+
+}
+
+void BuildProvider(Provider* provider){
+    std::string edit;
+    std::cout << "Edit the Room's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    std::cout << "Provider Name: " << std::endl;
+    getStringInput(edit,16,3);
+    provider->setName(edit);
+    edit = " ";
+    while(edit != "."){
+        std::cout << "Add the products this provider provides. When you are done, write '.' ";
+        Product* product = new Product(0,0,"Other");
+        edit = " ";
+        gotoxy(0,5);
+        std::cout << "Type of this product (Other,Cleaning,Catering): " << std::endl;
+        getStringInput(edit,60,5);
+        if(edit == ".") break;
+        if(edit != "Other" && edit != "Cleaning" && edit != "Catering"){
+            gotoxy(0,7);
+            std::cout << "Invalid Type! Try again!" << std::endl;
+            Sleep(2000);
+            gotoxy(0,7);
+            std::cout << "                             " << std::endl;
+            delete product;
+            continue;
+        }
+        product->setType(edit);
+        gotoxy(0,7);
+        std::cout << "Amount of the product?:             " << std::endl;
+        edit = GetNumberInput(30,7,CheckIfInteger);
+        product->setStock(std::stoi(edit));
+        gotoxy(0,9);
+        edit = "";
+        std::cout << "Price of the product?:               " << std::endl;
+        edit = GetNumberInput(30,9,CheckIfFloat);
+        product->setPrice(std::stof(edit));
+        edit = "6";
+        while(std::stoi(edit) < 0 || std::stoi(edit) > 5){
+            gotoxy(0,11);
+            std::cout << "Quality of the product?(0-5):            " << std::endl;
+            edit = GetNumberInput(25,11,CheckIfInteger);
+            if (std::stoi(edit) < 0 || std::stoi(edit) > 5){
+                gotoxy(0,13);
+                std::cout << "Out of range!" << std::endl;
+                Sleep(2000);
+                gotoxy(0,13);
+                std::cout << "               " << std::endl;
+            }
+        }
+        product->setPrice(std::stof(edit));
+        provider->addProduct(product);
+        clearscreen();
+    }
 
 }

@@ -41,7 +41,7 @@ public:
     /// \param p - vector of products to set
     void setProducts(const std::vector<Product *> &p);
     /// add product to vector
-    void addProduct();
+    void addProduct(Product* product);
     ///
     /// \param index - element to remove from products vector
     void removeProduct(unsigned &index);

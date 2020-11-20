@@ -397,6 +397,15 @@ public:
     /// \return firstFloot
     int getFirstFloor() const;
 
+    void reduceNecessity(std::string type);
+
+    unsigned getCleaningNecessity();
+
+    unsigned getCateringNecessity();
+    unsigned getOtherNecessity();
+
+    unsigned getBudget();
+
     /// Returns the cleaning necessity
     ///
     /// \return cleaningNecessity
@@ -428,13 +437,15 @@ private:
 
     ///Logged in state
     ///True if the manager is logged in, false otherwise
-    bool loggedIn = false;
+    bool loggedIn = false;;
+
+    float budget = 500;
     ///Cleaning necessity
-    unsigned int cleaningNecessity = 0;
+    int cleaningNecessity = 20;
     ///Catering necessity
-    unsigned int cateringNecessity = 0;
+    int cateringNecessity = 20;
     ///Other necessity
-    unsigned int otherNecessity = 0;
+    int otherNecessity = 20;
     ///Number of floors of the hotel
     unsigned int numberOfFloors;
     ///Number of rooms of the hotel
@@ -447,13 +458,14 @@ private:
 };
 
 
-std::vector<std::string>& askClient();
-std::vector<std::string>& askReceptionist();
-std::vector<std::string>& askResponsible();
-std::vector<std::string>& askManager();
-std::vector<std::string>& askJanitor();
+std::vector<std::string> askClient();
+std::vector<std::string> askReceptionist();
+std::vector<std::string> askResponsible();
+std::vector<std::string> askManager();
+std::vector<std::string> askJanitor();
 void askReservation(unsigned int& roomId,Date checkIn,Date checkOut,int& capacity,int& reservationId);
-std::vector<std::string>& askRoom();
+std::vector<std::string> askRoom();
+void BuildProvider(Provider* provider);
 
 /**
   \file "C:\Users\Joana\Documents\Uni\Algoritmos e Estruturas de dados\Projeto\aeda_hotel_projeto\cmake-build-debug\hotel_exemplo.txt"

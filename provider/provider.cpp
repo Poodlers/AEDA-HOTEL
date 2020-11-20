@@ -1,9 +1,7 @@
 #include "provider.h"
 #include <algorithm>
+
 void Provider::restock(){
-    while (products.size()!= numProducts){
-        addProduct();
-    }
     for (Product* product: products){
         product->setStock(100);
     }
@@ -28,13 +26,6 @@ void Provider::print(){
     std::cout <<"Provider: "  << name <<std::endl;
 }
 
-void Provider::printConsole(){
-    std::cout <<"Provider: "  << name <<std::endl;
-    std::cout<<std::left<< std::setfill(' ') <<std::setw(7) << "Stock"<< std::setw(10) << "Type"<< std::setw(9) << "ID" <<std::setw(7) <<"Price"<< std::setw(4) << "Quality"<<std::endl;
-    for (Product* product: products){
-        std::cout << *product;
-    }
-}
 
 std::string Provider::getName() const {
     return this->name;
@@ -56,9 +47,8 @@ void Provider::setProducts(const std::vector<Product *> &p) {
     this->products = p;
 }
 
-void Provider::addProduct() {
-    Product * n = new Product();
-    this->products.push_back(n);
+void Provider::addProduct(Product* product) {
+    this->products.push_back(product);
 }
 
 void Provider::removeProduct(unsigned &index){

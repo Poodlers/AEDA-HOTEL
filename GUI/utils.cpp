@@ -170,7 +170,7 @@ void checkIfPositiveInteger(std::string input, std::string check){
     }
 }
 
-void checkIfValidPriceOrWage(std::string input, std::string check){
+void checkIfValidPriceOrWage(std::string input,std::string check){
     bool isfloat = false;
     for(int i = 0; i < input.length();i++){
         if(input[i] == '.'){

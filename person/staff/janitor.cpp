@@ -17,14 +17,14 @@ std::string Janitor::getType() {
     return "Janitor";
 }
 void Janitor::print() {
-    std::cout << std::left << std::setw(13) << this->getType() <<  std::setw(22) << std::setfill(' ') << this->getName() <<
-    std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
-    << std::setw(13) << "";
+    std::cout << std::left << std::setw(13) << "Janitor" <<  std::setw(20) << std::setfill(' ') << this->getName() <<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
+              << std::setw(19) << " ";
     if (shift){
-        std::cout << std::setw(7) << "day";
+        std::cout << std::setw(8) << "day";
     }
     else{
-        std::cout << std::setw(7) << "night";
+        std::cout << std::setw(8) << "night";
     }
 }
 

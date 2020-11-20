@@ -61,8 +61,6 @@ public:
     void onClick(ButtonHandler& handler) override;
 };
 
-
-
 template<class N>
 class MenuButton : public BaseButton{
 private:
@@ -88,15 +86,23 @@ public:
     void ChangeTypeId(int i);
     void ChangeOrderId(int i);
 
-
 };
 
 class BuyButton: public BaseButton{
 private:
     Product* product;
     MenuButton<Provider>* GoBackButton;
+    Hotel* hotel;
 public:
-    BuyButton(const int x, const int y, const int width,const int height,const std::string text,Product* product,MenuButton<Provider>* menu_button);
+    BuyButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,Product* product,MenuButton<Provider>* menu_button);
+    void onClick(ButtonHandler& handler) override;
+};
+
+class SaveHotelFileButton: public BaseButton{
+private:
+    Hotel* hotel;
+public:
+    SaveHotelFileButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel);
     void onClick(ButtonHandler& handler) override;
 };
 
@@ -160,9 +166,6 @@ public:
     void onClick(ButtonHandler& handler) override;
     ModifyButton(const int x, const int y, const int width,const int height,const std::string text,N* object);
 };
-
-
-
 
 template <class N>
 class DeleteButton: public ModifyButton<N>{

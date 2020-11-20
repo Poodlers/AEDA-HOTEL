@@ -58,7 +58,7 @@ void Client::archiveExpiredReservations(Date* date){
         if (currentReservations[i]->getCheckOut() < *date){
             this->history.push_back(currentReservations[i]);
             this->currentReservations.erase(currentReservations.begin()+i);
-            std::cout << "Reservation " << currentReservations[i]->getReservationId() <<" for client: " << this->name << " with NIF: " << this->NIF << " has expired."<<std::endl;
+            //std::cout << "Reservation " << currentReservations[i]->getReservationId() <<" for client: " << this->name << " with NIF: " << this->NIF << " has expired."<<std::endl;
             i--;
         }
     }

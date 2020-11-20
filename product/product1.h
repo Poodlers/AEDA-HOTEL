@@ -42,7 +42,9 @@ public:
     void reduceStock();
 
     unsigned int getStock() const;
+
     void setStock(const unsigned int& stock);
+
 
     friend std::ostream& operator <<(std::ostream& o, Product& product);
 
@@ -58,7 +60,6 @@ private:
     /// type of product
     /// can be catering, cleaning or other
     std::string type;
-
     unsigned int stock;
 };
 

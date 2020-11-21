@@ -4,98 +4,122 @@
 #include <vector>
 #include <iostream>
 
-///Thrown if the client does not have any Reservations to Check In
+/// Thrown if the client does not have any reservations to check in.
 class NoReservationsToCheckIn{
 private:
-    /// name of failed check in person
+    /// Name of client.
     std::string name;
-    /// NIF of failed check in person
+    /// NIF of client.
     unsigned int NIF;
 public:
+
+    /// Constructor.
     ///
-    /// \param name - name of failed check in person
-    /// \param NIF - NIF of failed check in person
+    /// \param name name of the client
+    /// \param NIF NIF of the client
     NoReservationsToCheckIn (const std::string& name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns NIF.
     ///
-    /// \return NIF of failed check in person
+    /// \return NIF
     unsigned int getNIF() const {return NIF;}
+
+    /// Returns name.
     ///
-    /// \return name of failed check in person
+    /// \return name.
     std::string getName() const {return name;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - failed check in exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const NoReservationsToCheckIn& exception){
         return o << exception.getName() << " with NIF: " << exception.getNIF() << " doesn't have any reservations to check in."<<std::endl;
     }
 };
 
-///Thrown if the client has no valid reservations to checkOut of
+/// Thrown if client has no reservations to check out.
 class NoReservationsToCheckOut{
 private:
-    /// name of failed check out person
+    /// Name of client.
     std::string name;
-    /// NIF of failed check out person
+    /// NIF of client.
     unsigned int NIF;
 public:
+
+    /// Constructor.
     ///
-    /// \param name - name of failed check out person
-    /// \param NIF - NIF of failed check out person
+    /// \param name name of the client
+    /// \param NIF NIF of the client
     NoReservationsToCheckOut (const std::string& name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns NIF.
     ///
-    /// \return NIF of failed check out person
+    /// \return NIF
     unsigned int getNIF() const {return NIF;}
+
+    /// Returns name.
     ///
-    /// \return name of failed check out person
+    /// \return name
     std::string getName() const {return name;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - failed to check out exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const NoReservationsToCheckOut& exception){
         return o << exception.getName() << " with NIF: " << exception.getNIF() << " doesn't have any reservations to check out."<<std::endl;
     }
 };
 
-///thrown when a reservation has as invalid date
+/// Thrown when a reservation has an invalid date.
 class ReservationHasInvalidDates{
 public:
-    /// invalid dates for reservation exception
+    /// Constructor.
     ReservationHasInvalidDates (){}
+
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - invalid dates for reservation exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const ReservationHasInvalidDates& exception){
         return o << "Check Out date can't be before Check In date."<<std::endl;
     }
 };
 
-///thrown when a reservation tries to fill a room that would be unavailable during that time
+/// Thrown when a client tries to claim a room that is already claimed for the intended period of time.
 class AnotherReservationForThisRoomAlreadyExistsAtThisTime{
 private:
-    /// room id of repeated reservation
+    /// Room id of repeated reservation.
     int roomId;
 public:
+    /// Constructor.
     ///
-    /// \param roomId room id of repeated reservation
+    /// \param roomId room id of repeated reservation.
     AnotherReservationForThisRoomAlreadyExistsAtThisTime(const int& roomId){
         this->roomId = roomId;
     }
+
+    /// Return room ID.
     ///
-    /// \return room id of repeated reservation
+    /// \return room id of repeated reservation.
     int getRoomId() const {return roomId;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - reservation already made for the room exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const AnotherReservationForThisRoomAlreadyExistsAtThisTime& exception){
         return o << "Room with Id: "<< exception.getRoomId() << " already has a reservation at this time."<<std::endl;
     }
@@ -103,536 +127,616 @@ public:
 
 
 
-///thrown when input is not of int type
+/// Thrown when input is not an integer.
 class NotAnInt{
 private:
-    /// value that is not integer
+    /// Description of the input.
     std::string msg;
 public:
+    /// Constructor.
     ///
-    /// \param msg - value that is not integer
+    /// \param msg description of the input.
     NotAnInt(const std::string& msg){this->msg = msg;}
+
+    /// Returns description.
     ///
-    /// \return value that is not integer
+    /// \return description of the input.
     std::string getMsg() const{
         return msg;
     }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - not an integer exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, NotAnInt& exception){
         return o << exception.getMsg() << " should be an integer."<<std::endl;
     }
 };
 
-///thrown when input is not a positive integer
+/// Thrown when input is not a positive integer.
 class NotAPositiveInt{
 private:
-    /// value that is not a positive integer
+    /// Description of the input.
     std::string msg;
 public:
+    /// Constructor.
     ///
-    /// \param msg - value that is not a positive integer
+    /// \param msg description of the input.
     NotAPositiveInt(const std::string& msg){this->msg = msg;}
+
+    /// Returns description.
     ///
-    /// \return value that is not a positive integer
+    /// \return description of the input.
     std::string getMsg() const{
         return msg;
     }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - not a positive integer exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, NotAPositiveInt& exception){
-        return o << exception.getMsg() << " should be a positive integer."<<std::endl;
+        return o << exception.getMsg() << " should be an integer."<<std::endl;
     }
 };
 
-///thrown if the input is not a float bigger than 0
+
+/// Thrown if the input is not a float bigger than 0
 class NotAPositiveFloat{
 private:
-    /// value that is not a positive float
+    /// Description of the input.
     std::string msg;
 public:
+    /// Constructor
     ///
     /// \param msg - value that is not a positive float
     NotAPositiveFloat(const std::string& msg){this->msg = msg;}
+
+    /// Returns description.
     ///
-    /// \return value that is not a positive float
+    /// \return description of the input.
     std::string getMsg() const{
         return msg;
     }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - not a positive float exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, NotAPositiveFloat& exception){
         return o << exception.getMsg() << " should be a positive float."<<std::endl;
     }
 };
 
-///thrown if the input does not constitute a valid room type(Suite, NoViewRoom, ViewRoom)
+/// Thrown if room type is not valid (valid : "Suite", "NoViewRoom" or "ViewRoom").
 class InvalidRoomType{
 private:
-    /// id of the room with an invalid room type
+    /// ID of the room with an invalid room type.
     unsigned int Id;
-    /// invalid room type
+    /// Invalid room type.
     std::string type;
 
 public:
+    /// Constructor.
     ///
-    /// \param Id - id of the room with an invalid room type
-    /// \param type - invalid room type
+    /// \param Id  id of the room with an invalid room type.
+    /// \param type  invalid room type.
     InvalidRoomType(const unsigned int &Id, const std::string& type){
         this->Id = Id;
         this->type = type;
     }
+
+    /// Return ID.
     ///
-    /// \return id of the room with an invalid room type
+    /// \return id of the room with an invalid room type.
     unsigned int getId() const{ return this->Id; }
     ///
-    /// \return invalid room type
+    /// \return invalid room type.
     std::string  getType() const{ return this->type; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - invalid room type exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, InvalidRoomType& exception){
         return o << "Room with Id " << exception.getId() << " has the invalid type "<< exception.getType()<< ". Type must be 'Suite', 'ViewRoom' or 'NoViewRoom'."<< std::endl;
     }
 };
 
-///thrown when the program receives an invalid staff type
+/// Thrown if staff type is not valid (valid: "Manager", "Janitor", "Receptionist" or "Responsible").
 class InvalidPosition{
 private:
-    /// invalid position
+    /// Invalid position.
     std::string type;
-    /// name of the staff member with an invalid position
+    /// Name of the staff member with an invalid position.
     std::string name;
 public:
+    /// Constructor.
     ///
-    /// \param type - invalid position
-    /// \param name - name of the staff member with an invalid position
+    /// \param type  invalid position.
+    /// \param name  name of the staff member with an invalid position.
     InvalidPosition(const std::string& type,const std::string& name){
         this->type = type;
         this->name = name;
     }
+
+    /// Return position.
     ///
-    /// \return invalid position
+    /// \return invalid position.
     std::string getType() const{ return this->type; }
+
+    /// Return Name.
     ///
-    /// \return name of the staff member with an invalid position
+    /// \return name of the staff member with an invalid position.
     std::string getName() const {return this->name;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - invalid position exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, InvalidPosition& exception){
         return o << "Staff member " << exception.getName() << " has the invalid position "<< exception.getType()<< ". Position must be 'Receptionist', 'Responsible', 'Janitor' or 'Manager'."<< std::endl;
     }
 };
 
-///thrown when there's a sorting error
+/// Thrown if there's a sorting error (criteria or order is wrong).
 class SortingError{
 public:
-    /// sorting error exception
+    /// Constructor.
     SortingError(){}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - sorting error exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, SortingError& exception){
        return o << "Sorting criteria or order is incorrect."<<std::endl;
     }
 };
 
-/*HOTEL*/
 
-///thrown if the selected floor is non existent
+/// Thrown if the selected floor does not exist.
 class FloorDoesNotExist{
 private:
-    /// floor that doesn't exist
+    /// Floor that doesn't exist.
     unsigned int floor;
 public:
+    /// Constructor
     ///
-    /// \param floor - floor that doesn't exist
+    /// \param floor  floor that doesn't exist.
     FloorDoesNotExist(const unsigned int &floor){ this->floor = floor; }
+
+    /// Returns floor.
     ///
-    /// \return floor that doesn't exist
+    /// \return floor that doesn't exist.
     unsigned int getFloor() const{ return this->floor; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - floor does not exist
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, FloorDoesNotExist& exception){
         return o << exception.getFloor() <<" does not exist."<<std::endl;
     }
 };
 
-/*STAFF*/
-///thrown if you try to add a new Staff member with the same attributes as one that already exists
+/// Thrown if you try to add a new staff member with the same NIF and name as an already existing staff member.
 class StaffMemberAlreadyExists{
 private:
-    /// name of repeated staff member
+    /// Name of repeated staff member.
     std::string name;
-    /// NIF of repeated staff member
+    /// NIF of repeated staff member.
     unsigned int NIF;
 public:
+    /// Constructor.
     ///
-    /// \param name - name of repeated staff member
-    /// \param NIF - NIF of repeated staff member
+    /// \param name  name of repeated staff member.
+    /// \param NIF  NIF of repeated staff member.
     StaffMemberAlreadyExists(const std::string &name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns name.
     ///
-    /// \return name of repeated staff member
+    /// \return name of repeated staff member.
     std::string getName() const{ return this->name; }
+
+    /// Returns NIF.
     ///
-    /// \return NIF of repeated staff member
+    /// \return NIF of repeated staff member.
     unsigned int getNIF() const{ return this->NIF; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - staff member already exists exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, StaffMemberAlreadyExists& exception){
         return o << exception.getName() << " with NIF "<< exception.getNIF() << " already exists."<<std::endl;
     }
 };
 
-///thrown if you try to search for a staff member with non existent attributes
+/// Thrown if you try to search for a staff member that does not exist.
 class StaffMemberDoesNotExist{
 private:
-    /// name of staff member who doesn't exist
+    /// Name of staff member who doesn't exist.
     std::string name;
-    /// NIF of staff member who doesn't exist
+    /// NIF of staff member who doesn't exist.
     unsigned int NIF;
 public:
+    /// Constructor.
     ///
-    /// \param name - name of staff member who doesn't exist
-    /// \param NIF - NIF of staff member who doesn't exist
+    /// \param name  name of staff member who doesn't exist.
+    /// \param NIF  NIF of staff member who doesn't exist.
     StaffMemberDoesNotExist(const std::string &name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns name.
     ///
-    /// \return name of staff member who doesn't exist
+    /// \return name of staff member who doesn't exist.
     std::string getName() const{ return this->name; }
+
+    /// Returns NIF
     ///
-    /// \return name of staff member who doesn't exist
+    /// \return name of staff member who doesn't exist.
     unsigned int getNIF() const{ return this->NIF; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - staff member does not exist exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, StaffMemberDoesNotExist& exception){
         return o << exception.getName() << " with NIF "<< exception.getNIF() << " is not in the list of staff members."<<std::endl;
     }
 };
 
-///thrown if you try to add a new staff member to the program with a NIF that one of the employees already has
+/// Thrown if you try to add a new staff member to the program with a NIF that one other staff member already has.
 class StaffMemberWithThisNIFAlreadyExists{
 private:
-    /// name of staff member with repeated NIF
+    /// Name of staff member with repeated NIF.
     std::string name;
-    /// repeated NIF
+    /// Repeated NIF.
     unsigned int NIF;
 public:
+    /// Constructor
     ///
-    /// \param name - name of staff member with repeated NIF
-    /// \param NIF - repeated NIF
+    /// \param name  name of staff member with repeated NIF.
+    /// \param NIF  repeated NIF.
     StaffMemberWithThisNIFAlreadyExists(const std::string &name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns name.
     ///
-    /// \return name of staff member with repeated NIF
+    /// \return name of staff member with repeated NIF.
     std::string getName() const{ return this->name; }
+
+    /// Returns NIF.
     ///
-    /// \return repeated NIF
+    /// \return repeated NIF.
     unsigned int getNIF() const{ return this->NIF; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - repeated NIF exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, StaffMemberWithThisNIFAlreadyExists& exception){
         return o << exception.getName() << " with NIF "<< exception.getNIF() << " exists under a different name."<<std::endl;
     }
 };
 
-///thrown if you try to add a new manager with the same attributes as the current one (program can only have one manager)
-class ManagerAlreadyExists{
-private:
-    /// name of repeated manager
-    std::string name;
-    /// NIF of repeated manager
-    unsigned int NIF;
-public:
-    ///
-    /// \param name - name of repeated manager
-    /// \param NIF - NIF of repeated manager
-    ManagerAlreadyExists(const std::string &name, const unsigned int& NIF){
-        this->name = name;
-        this->NIF = NIF;
-    }
-    ///
-    /// \return name of repeated manager
-    std::string getName() const{ return this->name; }
-    ///
-    /// \return NIF of repeated manager
-    unsigned int getNIF() const{ return this->NIF; }
-    ///
-    /// \param o - ostream with error message
-    /// \param exception - manager already exists exception
-    /// \return ostream with error message
-    friend std::ostream& operator <<(std::ostream& o, ManagerAlreadyExists& exception){
-        return o << "There already exists a manager. Name: "<<exception.getName()<<" NIF: " << exception.getNIF() <<std::endl;
-    }
-};
 
-///thrown if you try to initialize a Janitor with a shift different from "day" or "night"
+/// Thrown if you try to initialize a Janitor with a shift different from "day" or "night".
 class InvalidShift{
 public:
-    /// invalid shift exception
+    /// Constructor
     InvalidShift(){};
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - invalid shift exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, InvalidShift& exception){
         return o << "Shift must be night or day;"<<std::endl;
     }
 };
-/*CLIENT*/
 
-///thrown if you try to initialize a Client with attributes of an already existent client
+/// Thrown if you try to initialize a Client with the same name and NIF as an already existing client.
 class ClientAlreadyExists{
 private:
-    /// name of repeated client
+    /// Name of repeated client.
     std::string name;
-    /// NIF of repeated client
+    /// NIF of repeated client.
     unsigned int NIF;
 public:
+
+    /// Constructor.
     ///
-    /// \param name - name of repeated client
-    /// \param NIF - NIF of repeated client
+    /// \param name  name of repeated client.
+    /// \param NIF  NIF of repeated client.
     ClientAlreadyExists(const std::string &name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+    /// Returns name.
     ///
-    /// \return name of repeated client
+    /// \return name of repeated client.
     std::string getName() const{ return this->name; }
+
+    /// Returns NIF.
     ///
-    /// \return NIF of repeated client
+    /// \return NIF of repeated client.
     unsigned int getNIF() const{ return this->NIF; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - client already exists exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, ClientAlreadyExists& exception){
         return o << exception.getName() << " with NIF "<< exception.getNIF() << " already exists."<<std::endl;
     }
 };
 
-///thrown if you search for a client whose attributes don't match any of the available clients
+/// Thrown if you search for a client who doesn't exist.
 class ClientDoesNotExist{
 private:
-    /// name of client who doesn't exist
+    /// Name of client who doesn't exist.
     std::string name;
-    /// NIF of client who doesn't exist
+    /// NIF of client who doesn't exist.
     unsigned int NIF;
 public:
+    /// Constructor.
     ///
-    /// \param name - name of client who doesn't exist
-    /// \param NIF - NIF of client who doesn't exist
+    /// \param name  name of client who doesn't exist.
+    /// \param NIF  NIF of client who doesn't exist.
     ClientDoesNotExist(const std::string &name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns name.
     ///
     /// \return name of client who doesn't exist
     std::string getName() const{ return this->name; }
+
+    /// Returns NIF.
     ///
     /// \return NIF of client who doesn't exist
     unsigned int getNIF() const{ return this->NIF; }
+
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - client doesn't exist exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, ClientDoesNotExist& exception){
         return o << exception.getName() << " with NIF "<< exception.getNIF() << " is not in the list of clients."<<std::endl;
     }
 };
 
-///thrown if you try to add a new Client with a NIF of an already existent client
+/// Thrown if you try to add a new Client with a NIF of an already existent client.
 class ClientWithThisNIFAlreadyExists{
 private:
-    /// name of client with repeated NIF
+    /// Name of client with repeated NIF.
     std::string name;
-    /// repeated NIF
+    /// Repeated NIF.
     unsigned int NIF;
 public:
+    /// Constructor.
     ///
-    /// \param name - name of client with repeated NIF
-    /// \param NIF - repeated NIF
+    /// \param name  name of client with repeated NIF.
+    /// \param NIF  repeated NIF.
     ClientWithThisNIFAlreadyExists(const std::string &name, const unsigned int& NIF){
         this->name = name;
         this->NIF = NIF;
     }
+
+    /// Returns name.
     ///
     /// \return name of client with repeated NIF
     std::string getName() const{ return this->name; }
+
+    /// Returns NIF.
     ///
     /// \return repeated NIF
     unsigned int getNIF() const{ return this->NIF; }
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - repeated NIF exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, ClientWithThisNIFAlreadyExists& exception){
         return o << exception.getName() << " with NIF "<< exception.getNIF() << " exists under a different name."<<std::endl;
     }
 };
 
-///thrown if a client with no previous reservations tries to reserve a suite
+/// Thrown if a client with no previous reservations tries to claim a suite.
 class ClientCantMakeThisReservation{
 public:
-    /// client can't make reservation exception
+    /// Constructor.
     ClientCantMakeThisReservation(){};
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - client can't make reservation exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, ClientCantMakeThisReservation& exception){
         return o << "Client has to have reserved at least one other room before they can make a reservation for a suite."<<std::endl;
     }
 };
 
-/*ROOMS*/
-///thrown if the searched Room is non existent
+/// Thrown if the searched Room does not exist.
 class RoomDoesNotExist{
 private:
-    /// number of room which doesn't  exist
+    /// Number of room which doesn't exist.
     int roomNumber;
-    /// id of room which doesn't exist
+    /// ID of room which doesn't exist.
     unsigned int roomId;
 public:
+    /// Constructor.
     ///
-    /// \param roomNumber - number of room which doesn't  exist
-    /// \param roomId - id of room which doesn't  exist
+    /// \param roomNumber  number of the room which doesn't exist.
+    /// \param roomId  ID of room which doesn't exist.
     RoomDoesNotExist(const unsigned int &roomNumber, const unsigned int &roomId){
         this->roomNumber = roomNumber;
         this->roomId = roomId;
     }
+
+    /// Constructor.
     ///
-    /// \param roomId - id of room which doesn't  exist
+    /// \param roomId  ID of room which doesn't exist.
     RoomDoesNotExist(const unsigned int &roomId){
         this->roomId = roomId;
         this->roomNumber = -1;
     }
+
+    /// Returns room number.
     ///
-    /// \return number of room which doesn't  exist
+    /// \return number of room which doesn't exist.
     unsigned int getRoomNumber() const {return this->roomNumber;}
+
+    /// Returns room ID.
     ///
-    /// \return id of room which doesn't  exist
+    /// \return ID of room which doesn't  exist.
     unsigned int getRoomId() const {return this-> roomId;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - room doesn't exist exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, RoomDoesNotExist& exception){
         if(exception.getRoomNumber() != -1) return o << "Room with room number: "<< exception.getRoomNumber() << " and room id:"<<exception.getRoomId()<< "does not exist"<<std::endl;
         else return o << "Room with room id: "<<exception.getRoomId()<< " does not exist"<<std::endl;
     }
 };
 
-///thrown if the Room does not have the capacity to accomodate the desired reservation capacity
+/// Thrown if the Room does not have the capacity to accommodate the desired reservation size.
 class RoomDoesNotHaveTheNecessaryCapacity{
 private:
-    /// id of room without necessary capacity
+    /// ID of room without necessary capacity.
     unsigned int roomId;
 public:
+    /// Constructor.
     ///
-    /// \param roomId - id of room without necessary capacity
+    /// \param roomId  ID of room without necessary capacity.
     RoomDoesNotHaveTheNecessaryCapacity(const unsigned int& roomId){
         this->roomId = roomId;
     }
+
+    /// Returns room ID.
     ///
-    /// \return id of room without necessary capacity
+    /// \return ID of room without necessary capacity.
     unsigned int getRoomId() const {return this-> roomId;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - room without necessary capacity exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, RoomDoesNotHaveTheNecessaryCapacity& exception){
         return o << "Room with room id: "<<exception.getRoomId()<< " doesn't have the necessary capacity for the reservation."<<std::endl;
     }
 };
 
-///thrown if the user attempts to enter a new Room with data exactly equal to an existent room
+/// Thrown if the user attempts to add a new Room which already exists.
 class RoomAlreadyExists{
 private:
-    /// number of the repeated room
+    /// Number of the repeated room.
     unsigned int roomNumber;
-    /// id of the repeated room
+    /// ID of the repeated room.
     unsigned int roomId;
 public:
+
+    /// Constructor.
     ///
-    /// \param roomNumber - number of the repeated room
-    /// \param roomId - id of the repeated room
+    /// \param roomNumber  number of the repeated room.
+    /// \param roomId  ID of the repeated room.
     RoomAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId){
         this->roomNumber = roomNumber;
         this->roomId = roomId;
     }
+
+    /// Return room number.
     ///
-    /// \return number of the repeated room
+    /// \return number of the repeated room.
     unsigned int getRoomNumber() const {return this->roomNumber;}
+
+    /// Return room ID.
     ///
-    /// \return id of the repeated room
+    /// \return ID of the repeated room.
     unsigned int getRoomId() const {return this-> roomId;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - room already exists exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, RoomAlreadyExists& exception){
         return o << "Room with room number: "<< exception.getRoomNumber() << " and room id:"<<exception.getRoomId()<< "already exist"<<std::endl;
     }
 };
 
-///thrown if the user attempts to edit a Room or create a new one and gives it the room Id or Room Number of a Room already in the system
+/// Thrown if the user attempts to edit a Room or create a new one and gives it the room ID or room number of an already existing room.
 class RoomWithThisRoomIdOrRoomNumberAlreadyExists{
 private:
-    /// number of the repeated room
+    /// Number of the repeated room.
     unsigned int roomNumber;
-    /// id of the repeated room
+    /// ID of the repeated room.
     unsigned int roomId;
-    /// string with the repeated info
+    /// Type of repeated info can be "Room ID" or "Room Number".
     std::string msg;
 public:
+    /// Constructor.
     ///
-    /// \param roomNumber - number of the repeated room
-    /// \param roomId - id of the repeated room
-    /// \param msg - string with the repeated info
+    /// \param roomNumber  number of the repeated room.
+    /// \param roomId  id of the repeated room.
+    /// \param msg  type of repeated info.
     RoomWithThisRoomIdOrRoomNumberAlreadyExists(const unsigned int &roomNumber, const unsigned int &roomId, const std::string& msg){
         this->roomNumber = roomNumber;
         this->roomId = roomId;
         this->msg = msg;
     }
+
+    /// Return room number.
     ///
-    /// \return number of the repeated room
+    /// \return number of the repeated room.
     unsigned int getRoomNumber() const {return this->roomNumber;}
+
+    /// Return room ID.
     ///
-    /// \return id of the repeated room
+    /// \return id of the repeated room.
     unsigned int getRoomId() const {return this-> roomId;}
+
+    /// Return type.
     ///
-    /// \return string with the repeated info
+    /// \return type of repeated info.
     std::string getMsg() const {return this->msg;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - room id or room number already exists exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, RoomWithThisRoomIdOrRoomNumberAlreadyExists& exception){
         if (exception.getMsg() == "Room Id"){
             return o << "A room exists under this room number ("<<exception.getRoomNumber()<<  ")with a different room ID" << std::endl;
@@ -644,65 +748,65 @@ public:
     }
 };
 
-/*LOGIN*/
-///thrown if you try to logOut when you're not currently logged In
+/// Thrown if user tries to log out when they're not currently logged in.
 class NotLoggedIn{
-private:
-    /// command attempted
-    std::string action;
 public:
+    /// Constructor
+    NotLoggedIn(){}
+
+    /// Operator overload for <<.
     ///
-    /// \param action - command attempted
-    NotLoggedIn(const std::string& action){this->action = action;}
-    ///
-    /// \return command attempted
-    std::string getAction() const {return action;}
-    ///
-    /// \param o - ostream with error message
-    /// \param exception - not logged in exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const NotLoggedIn& exception){
-        return o << "The command "<< exception.getAction() << " is only available to the manager, to access this area freely or LogOut, LogIn first."<<std::endl;
+        return o << "You are not logged in. Log out before you log in."<<std::endl;
     }
 };
 
-///thrown if the user attempts to log In again if they are already logged in
+/// Thrown if user attempts to log in again if they are already logged in.
 class AlreadyLoggedIn{
 public:
-    /// already logged in exception
+    /// Constructor.
     AlreadyLoggedIn(){}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - already logged in exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const AlreadyLoggedIn& exception){
         return o<<"User is already logged in. Write LogOut to log out."<<std::endl;
     }
 };
 
-///thrown if the manager fails the authentication process
+/// Thrown if user fails the authentication process.
 class IncorrectCredentials{
 public:
-    /// incorrect credentials exception
+    /// Constructor
     IncorrectCredentials(){}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - incorrect credentials exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const IncorrectCredentials& exception){
         return o<<"Password or username are incorrect."<<std::endl;
     }
 };
 
-///thrown if you attempt to access a section of the program that you do not have the privileges to
+/// Thrown if you attempt to access a section of the program that you do not have the permission to.
 class AccessRestricted{
 public:
-    /// access restricted exception
+    /// Constructor.
     AccessRestricted(){}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const AccessRestricted& exception){
         return o<<"Only the manager has access to this area, log in to access it."<<std::endl;
     }
@@ -710,28 +814,35 @@ public:
 
 
 /*PEOPLE*/
-///thrown if you do not input a valid NIF when prompted to do so
+/// Thrown if you do not input a valid NIF when prompted to do so.
 class NIFIsNotValid{
 private:
-    /// name of person with invalid NIF
+    /// Name of person with invalid NIF.
     std::string name;
-    /// invalid NIF
+    /// Invalid NIF.
     std::string NIF;
 public:
+    /// Constructor.
     ///
-    /// \param name - name of person with invalid NIF
-    /// \param NIF - invalid NIF
+    /// \param name  name of person with invalid NIF
+    /// \param NIF  invalid NIF
     NIFIsNotValid(const std::string& name, const std::string& NIF){this->name = name;this->NIF = NIF;}
+
+    /// Returns NIF.
     ///
     /// \return invalid NIF
     std::string getNIF() const {return NIF;}
+
+    /// Returns Name.
     ///
-    /// \return name of person with invalid NIF
+    /// \return name of person with invalid NIF.
     std::string getName() const {return name;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - invalid NIF exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const NIFIsNotValid& exception){
         return o << exception.getName() << "has the invalid NIF: " <<  exception.getNIF() << ". Please choose a valid NIF." <<std::endl;
     }
@@ -739,96 +850,125 @@ public:
 
 
 /*HOTEL-FILE*/
-///thrown if the file you use to start the program does not exist
+/// Thrown if the file you use to start the program does not exist.
 class FileNotFound{
 private:
-    /// name of unfound file
+    /// name of missing file
     std::string fileName;
 public:
+
+    /// Constructor.
     ///
-    /// \param fileName - name of unfound file
+    /// \param fileName name of missing file.
     FileNotFound(const std::string & fileName){this->fileName = fileName;}
+
+    /// Returns file name.
     ///
-    /// \return name of unfound file
+    /// \return name of missing file
     std::string getFileName() const {return fileName;}
+
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - file not found exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const FileNotFound& exception){
         return o << "File not found. Make sure that the name " << exception.getFileName() << " is spelled correctly, that it does not include .txt and that the file is in the same folder as the executable or that otherwise thw file path is written correctly (make sure none of the directories have spaces)."<<std::endl;
     }
 };
 
-///thrown if there is an error with the file format of the initializing file
+/// Thrown if the initializing file has the wrong format.
 class HotelFileHasWrongFormat{
 private:
-    /// issue with file format
+    /// Issue with file format.
     std::string issue;
 public:
+    /// Constructor.
     ///
-    /// \param issue - issue with file format
+    /// \param issue  issue with file format
     HotelFileHasWrongFormat(const std::string& issue){this->issue = issue;}
+
+    /// Returns file format.
     ///
-    /// \return issue with file format
+    /// \return issue with file format.
     std::string getIssue() const {return issue;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - hotel file has wrong format exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const HotelFileHasWrongFormat& exception){
         return     o << "File format is wrong, because " << exception.getIssue() << ". Fix the issue and try again."<<std::endl;
 
     }
 };
 
-///thrown if the Date inputed to the program is in not in a valid format
+/// Thrown if the a date does not have a valid format.
 class DateIsNotValid{
 private:
-    /// issue with date
+    /// Issue with date.
     std::string issue;
 public:
+    /// Constructor.
     ///
-    /// \param issue - issue with date
+    /// \param issue  issue with date.
     DateIsNotValid(const std::string& issue){this->issue=issue;}
+
+    /// Return issue.
     ///
-    /// \return issue with date
+    /// \return issue with date.
     std::string getIssue() const {return issue;}
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - date isn't valid exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const DateIsNotValid& exception){
         return     o << "Date is invalid, because "<< exception.getIssue()<<"."<<std::endl;
 
     }
 };
 
-///thrown when the inputted Product Id does not match any of the products in the system
+/// Thrown when product with product ID does not exist.
 class ProductDoesNotExist{
 private:
-    /// id of product which doesn't exist
+    /// ID of product which doesn't exist.
     unsigned int productId;
 public:
+    /// Constructor.
     ///
-    /// \param productId - id of product which doesn't exist
+    /// \param productId  ID of product which doesn't exist.
     ProductDoesNotExist(const unsigned int& productId){this->productId = productId;}
+
+    /// Returns product ID.
     ///
-    /// \return id of product which doesn't exist
+    /// \return ID of product which doesn't exist.
     unsigned int getProductId() const{return productId;};
+
+    /// Operator overload for <<.
     ///
-    /// \param o - ostream with error message
-    /// \param exception - product doesn't exist exception
-    /// \return ostream with error message
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const ProductDoesNotExist& exception){
         return     o << "Product with productId "<< exception.getProductId()<<" does not exist."<<std::endl;
     }
 };
 
-///thrown when you give a manager an evaluation that is not within bounds(1-5)
+/// Thrown when you give a manager an evaluation that is not within bounds(1-5).
 class InvalidEvaluation{
 public:
+    /// Constructor.
     InvalidEvaluation(){}
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const InvalidEvaluation& exception){
         return     o << "Evaluation should be between 1 and 5."<<std::endl;
     }

@@ -8,189 +8,226 @@
 #include "../exceptions/exceptions.h"
 
 /// \class Room
-/// Class which represents a room
+/// Class which represents a Room.
 ///
-///
-/// Holds the all the information of a room (floor, roomNumber,roomId,capacity,availability...)
+/// Defined by floor, roomNumber, roomId, capacity, availability and price per night.
 class Room{
 public:
     /// Room constructor
     ///
-    /// \param floor - floor of the room
-    /// \param roomNumber - number of the room
-    /// \param roomId - id of the room
-    /// \param capacity - room's capacity
-    /// \param pricePerNight - room's price per night
+    /// \param floor  floor of the room.
+    /// \param roomNumber  number of the room.
+    /// \param roomId  ID of the room.
+    /// \param capacity  room's capacity.
+    /// \param pricePerNight  room's price per night.
     Room(const int &floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight );
+
+    /// Returns floor.
     ///
-    /// \return room's floor
+    /// \return room's floor.
     int getFloor() const;
+
+    /// Returns room number.
     ///
-    /// \return number of the room
+    /// \return number of the room.
     int getRoomNumber() const;
+
+    /// Returns capacity.
     ///
-    /// \return room's capacity
+    /// \return room's capacity.
     int getCapacity() const;
+
+    /// Returns price per night.
     ///
-    /// \return room's price per night
+    /// \return room's price per night.
     float getPricePerNight() const;
+
+    /// Returns ID.
     ///
-    /// \return id of the room
+    /// \return id of the room.
     unsigned int getRoomId() const;
 
-    ///Checks if the room is available
+    /// Checks if the room is available.
     ///
-    /// \return availability of the room: true means the room is free; false means otherwise
+    /// \return availability of the room: true means the room is free; false means otherwise.
     bool getAvailability() const;
-    ///
+
+    /// Abstract.
     virtual void toggleDiscount() = 0;
-    ///
+    /// Abstract.
     virtual bool getDiscountState() const = 0;
+
+    /// Change availability.
     ///
-    /// \param floor - floor of the room
-    void setFloor(const int floor);
-    ///
-    /// \param roomNumber - number of the room
-    void setRoomNumber(const unsigned int roomNumber);
-    ///
-    /// \param capacity - room's capacity
-    void setCapacity(const unsigned int capacity);
-    ///
-    /// \param pricePerNight - room's price per night
-    void setPricePerNight(const float pricePerNight);
-    ///
-    /// \param free - new state of room's availability
+    /// \param free  new state of room's availability.
     void changeAvailability(const bool& free);
 
-    ///Modifies the rooms capacity and/ot pricePerNight
+    /// Modifies rooms capacity and/or pricePerNight.
     ///
-    /// \param capacity - room's capacity in string form
-    /// \param pricePerNight - room's price per night in string form
+    /// \param capacity  room's capacity.
+    /// \param pricePerNight  room's price per night.
     void modify(const std::string& capacity, const std::string& pricePerNight);
-    ///Gets discount value of the correspondent Type of Room
-    ///\return 0.05 if Suite, 0.15 if NoViewRoom, 0.08 if ViewRoom
+
+    /// Abstract.
     virtual float getDiscountValue() const = 0;
-    ///Prints the room's info in a formatted way
+
+    /// Abstract.
     virtual void print() = 0;
-    ///
-    /// \return "Suite", "NoViewRoom" or "ViewRoom"
+
+    /// Abstract.
     virtual std::string getType() = 0;
 
 private:
-    /// room's floor
+    /// Room's floor.
     int floor;
-    /// room's number
+    /// Room's number.
     unsigned int roomNumber;
-    /// room's id
+    /// Room's ID.
     unsigned int roomId;
-    /// room's capacity
+    /// Room's capacity.
     unsigned int capacity;
-    /// room's base price per night
+    /// Room's base price per night.
     float pricePerNight;
-    /// room's availability
+    /// Room's availability.
     bool free = true;
 };
 
 /// \class Suite
-/// Class which represents a suite, a type of room
+/// Class which represents a Suite.
 ///
 ///
-/// Holds the all the same information as Room, only modifying its discount value
+/// Defined by floor, roomNumber, roomId, capacity, availability and price per night by inheritance from room and its specific discount.
 class Suite: public Room{
 public:
+
+    /// Suite Constructor.
     ///
-    /// \param floor - suite's floor
-    /// \param roomNumber - suite's room number
-    /// \param roomId - suite's id
-    /// \param capacity - suite's capacity
-    /// \param pricePerNight - suite's price per night
+    /// \param floor  suite's floor.
+    /// \param roomNumber  suite's room number.
+    /// \param roomId  suite's ID.
+    /// \param capacity  suite's capacity.
+    /// \param pricePerNight  suite's price per night.
     Suite(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
+
+    /// Prints Suite in format:
     ///
+    /// Suite roomId roomNumber capacity pricePerNight availability
     void print() override;
-    /// changes discount value
+
+    /// Activates/Deactivates discount.
     void toggleDiscount() override;
+
+    /// Returns if discount is activated.
     ///
-    /// \return true if discount is active; false otherwise
+    /// \return true if discount is active, false otherwise.
     bool getDiscountState() const override;
+
+    /// Returns the discount value.
     ///
-    /// \return value of the possible discount
+    /// \return value of the possible discount.
     float getDiscountValue() const override;
-    /// \return "Suite"
+
+    /// Returns room type.
+    ///
+    /// \return "Suite".
     std::string getType() override;
 
 private:
-    /// discount is true if a discount is to be applied
-    bool discount  = false;
-    /// discount value
+    /// Discount is true if a discount is applied.
+    static bool discount;
+    /// Discount value.
     const float discountValue = 0.05;
 };
 
 /// \class ViewRoom
-/// Class which represents a room that has a view
+/// Class which represents a room with a view (ViewRoom).
 ///
 ///
-/// Holds the all the same information as Room, only modifying its discount value
+/// Defined by floor, roomNumber, roomId, capacity, availability and price per night by inheritance from room and its specific discount.
 class ViewRoom: public Room{
 public:
-    ///
-    /// \param floor - view room's floor
-    /// \param roomNumber - view room's number
-    /// \param roomId - view room's id
-    /// \param capacity - view room's capacity
-    /// \param pricePerNight - view room's price per night
-    ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    void print() override;
-    /// changes discount value
-    void toggleDiscount() override;
-    ///
-    /// \return true if discount is active; false otherwise
-    bool getDiscountState() const override;
-    ///
-    /// \return value of the possible discount
-    float getDiscountValue() const override;
-    /// \return "ViewRoom"
-    std::string getType() override;
 
+    /// Suite constructor.
+    ///
+    /// \param floor  view room's floor.
+    /// \param roomNumber  view room's number.
+    /// \param roomId  view room's ID.
+    /// \param capacity  view room's capacity.
+    /// \param pricePerNight  view room's price per night.
+    ViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
+
+    /// Prints ViewRoom in format:
+    ///
+    /// ViewRoom roomId roomNumber capacity pricePerNight availability
+    void print() override;
+
+    /// Activates/Deactivates discount.
+    void toggleDiscount() override;
+
+    /// Returns if discount is activated.
+    ///
+    /// \return true if discount is active, false otherwise.
+    bool getDiscountState() const override;
+
+    /// Returns the discount value.
+    ///
+    /// \return value of the possible discount.
+    float getDiscountValue() const override;
+
+    /// Returns room type.
+    ///
+    /// \return "ViewRoom".
+    std::string getType() override;
 private:
-    /// discount is true if a discount is to be applied
-    bool discount  = false;
-    /// discount value
+    /// Discount is true if a discount is applied.
+    static bool discount;
+    /// Discount value.
     const float discountValue = 0.08;
 };
 
 /// \class NoViewRoom
-/// Class which represents a room without a view
+/// Class which represents a room without a view (NoViewRoom).
 ///
 ///
-/// Holds the all the same information as Room, only modifying its discount value
+/// Defined by floor, roomNumber, roomId, capacity, availability and price per night by inheritance from room and its specific discount.
 class NoViewRoom: public Room{
 public:
+    /// NoViewRoom constructor
     ///
-    /// \param floor - floor of the room
-    /// \param roomNumber - number of the room
-    /// \param roomId - id of the room
-    /// \param capacity - room's capacity
-    /// \param pricePerNight - room's price per night
+    /// \param floor  floor of the room.
+    /// \param roomNumber  number of the room.
+    /// \param roomId  ID of the room.
+    /// \param capacity  room's capacity.
+    /// \param pricePerNight  room's price per night.
     NoViewRoom(const int & floor, const unsigned int & roomNumber ,const unsigned int & roomId, const unsigned int & capacity, const float &pricePerNight);
-    ///prints NoViewRoom in formatted way
-    void print() override;
-    /// changes discount value
-    void toggleDiscount() override;
+
+    /// Prints NoViewRoom in format:
     ///
-    /// \return true if discount is active; false otherwise
+    /// ViewRoom roomId roomNumber capacity pricePerNight availability
+    void print() override;
+
+    /// Activates/Deactivates discount.
+    void toggleDiscount() override;
+
+    /// Returns if discount is activated.
+    ///
+    /// \return true if discount is active, false otherwise.
     bool getDiscountState() const override;
 
+    /// Returns the discount value.
     ///
-    /// \return value of the possible discount
-    ///
+    /// \return value of the possible discount.
     float getDiscountValue() const override;
-    /// \return "NoViewRoom"
+
+    /// Returns room type.
+    ///
+    /// \return "NoViewRoom".
     std::string getType() override;
 
 private:
-    /// discount is true if a discount is to be applied
-    bool discount = false;
-    /// discount value
+    /// Discount is true if a discount is applied.
+    static bool discount;
+    /// Discount value.
     const float discountValue = 0.12;
 };
 

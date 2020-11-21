@@ -22,10 +22,6 @@ Provider::Provider(const std::string &n,const unsigned int &size) {
     }
 }
 
-void Provider::print(){
-    std::cout <<"Provider: "  << name <<std::endl;
-}
-
 void Provider::printConsole(){
     std::cout <<"Provider: "  << name <<std::endl;
     std::cout<<std::left<< std::setfill(' ') <<std::setw(7) << "Stock"<< std::setw(10) << "Type"<< std::setw(9) << "ID" <<std::setw(7) <<"Price"<< std::setw(4) << "Quality"<<std::endl;
@@ -42,22 +38,7 @@ std::vector<Product *> Provider::getProducts() const {
     return this->products;
 }
 
-unsigned Provider::getNumProducts() const {
-    return this->numProducts;
-}
-
 void Provider::setName(const std::string &n) {
     this->name = n;
 }
 
-void Provider::setProducts(const std::vector<Product *> &p) {
-    this->products = p;
-}
-
-void Provider::addProduct(Product* product) {
-    this->products.push_back(product);
-}
-
-void Provider::removeProduct(unsigned &index){
-    this->products.erase(products.begin() + index);
-}

@@ -17,14 +17,6 @@ void Responsible::clearAssignedFloors(){
     this->floorsAssigned.clear();
 }
 
- int Responsible::getNumberOfFloorsBringMonitored() const{
-    return this->numberOfFloorsBeingMonitored;
-};
-
-std::vector<int> Responsible :: getFloorsAssigned() const{
-    return this->floorsAssigned;
-};
-
 std::string Responsible::getType() {
     return "Responsible";
 }

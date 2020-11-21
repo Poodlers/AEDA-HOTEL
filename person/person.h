@@ -3,51 +3,49 @@
 #include <string>
 #include "../hotel/reservation.h"
 
-///Represents a person
+/// Represents a Person.
 ///
-///Has a name and a NIF
+/// Defined by a name and a NIF.
 class Person{
 public:
-    ///Person constructor
+    /// Person constructor.
     ///
     /// \param name  person's name
     /// \param NIF   person's NIF
     Person(const std::string& name, const unsigned int & NIF);
 
-    /// Returns the name
+    /// Returns name.
     ///
-    /// \return name
+    /// \return name.
     std::string getName() const;
 
-    /// Returns the NIF
+    /// Returns NIF.
     ///
-    /// \return NIF
+    /// \return NIF.
     unsigned int getNIF() const;
 
-    /// Changes the name
+    /// Changes name.
     ///
-    /// \param name - new name
+    /// \param name  new name.
     void setName(const std::string& name);
 
-    /// Changes the NIF
+    /// Prints person in format:
     ///
-    /// \param NIF  new NIF
-    void setNIF(const unsigned int & NIF);
-    /// Prints person
+    /// name NIF
     virtual void print();
 
-    ///Modifies person
+    /// Modifies person.
     ///
-    /// if any of the parameters are '.' they are not modified
+    /// If any of the parameters are '.' they are not modified.
     /// \see Hotel#modifieStaffMember and Hotel#modifieClient
-    /// \param name  new name
-    /// \param NIF  new NIF
+    /// \param name  new name.
+    /// \param NIF  new NIF.
     virtual void personModify(const std::string& name, const std::string& NIF);
 
 protected:
-    ///name
+    /// Name.
     std::string name;
-    ///NIF
+    /// NIF.
     unsigned int NIF;
 };
 

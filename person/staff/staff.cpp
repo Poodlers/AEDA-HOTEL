@@ -34,7 +34,7 @@ void Staff::print() {
 
 
 std::string Staff::getType(){
-    return "staff";
+    return "Staff";
 }
 /* ------- */
 

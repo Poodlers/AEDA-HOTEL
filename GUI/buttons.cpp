@@ -851,6 +851,8 @@ void SearchButton<N>::onClick(ButtonHandler &handler) {
     int waitForNewAttempt = 3000;
     int edit_delete_x = 0;
     handler.SpecialGoBackClear();
+    auto GoBackButton_ = new GoBackButton(90,0,6,2,"Go Back",this->goBackButton);
+    handler.AddButton(GoBackButton_);
     if constexpr (std::is_same_v<N,Client>){
         try{
             type = "Client";
@@ -1084,6 +1086,7 @@ void SearchButton<N>::onClick(ButtonHandler &handler) {
             return;
         }
     }
+    GoBackButton_->DrawButton();
 
 }
 

@@ -249,7 +249,7 @@ public:
     }
 };
 
-/// Thrown if staff type is not valid (valid: "Manager", "Janitor", "Resectionist" or "Responsible").
+/// Thrown if staff type is not valid (valid: "Manager", "Janitor", "Receptionist" or "Responsible").
 class InvalidPosition{
 private:
     /// Invalid position.
@@ -791,7 +791,7 @@ public:
     ///
     /// \param o
     /// \param exception
-    /// \return ostreame
+    /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const IncorrectCredentials& exception){
         return o<<"Password or username are incorrect."<<std::endl;
     }

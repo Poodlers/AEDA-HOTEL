@@ -5,7 +5,7 @@
 #include <iomanip>
 
 
-/// Class which represents a product.
+/// Class which represents a Product.
 ///
 /// Defined by quality, price, ID, type and stock.
 class Product {

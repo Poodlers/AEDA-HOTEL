@@ -1,15 +1,8 @@
 #include "hotel/hotel.h"
-#include "provider/provider.h"
-#include "product/product1.h"
-#include "person/client/client.h"
-#include "room/room.h"
-#include "person/staff/staff.h"
-#include "exceptions/exceptions.h"
-#include "utils/utils.h"
 #include <string>
 #include <iostream>
 #include <random>
-#include <time.h>
+#include <ctime>
 using namespace std;
 
 /// Accounting menu for console application.
@@ -620,7 +613,6 @@ void staff(Hotel *hotel){
                 Manager* manager = dynamic_cast<Manager*> (hotel->getStaff()[pos]);
                 Receptionist* receptionist = dynamic_cast<Receptionist*> (hotel->getStaff()[pos]);
                 Responsible* responsible = dynamic_cast<Responsible*> (hotel->getStaff()[pos]);
-                Janitor* janitor = dynamic_cast<Janitor*> (hotel->getStaff()[pos]);
                 if(manager != nullptr){
                     type = "Manager";
                 }

@@ -1008,7 +1008,7 @@ void Hotel::logIn(const std::string &name, const std::string &password) {
 
 void Hotel::logOut(){
     if(!this->loggedIn){
-        throw NotLoggedIn("LogOut");
+        throw NotLoggedIn();
     }
     loggedIn = false;
 }

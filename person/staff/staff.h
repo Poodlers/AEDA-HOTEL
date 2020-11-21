@@ -31,12 +31,12 @@ public:
     /// \return "Staff".
     virtual std::string getType();
 
-    /// Changes staff member's wage.
+    /// Changes staff member' wage.
     ///
     /// \param wage  new wage to set for staff member.
     void setWage(const float wage);
 
-    /// Changes staff members's years of service.
+    /// Changes staff members' years of service.
     ///
     /// \param yearsOfService  new years of service for staff member.
     void setYearsOfService(const int yearsOfService);
@@ -159,6 +159,7 @@ public:
     /// \param name  janitor's name.
     /// \param NIF  janitor's NIF.
     /// \param shift  janitor's shift.
+    /// \param wage janitor's wage
     void janitorModify(const std::string& name, const std::string& NIF,const std::string& wage, const std::string& shift);
 
 private:
@@ -206,7 +207,9 @@ public:
     /// \param name  manager's name.
     /// \param NIF  manager's NIF as string.
     /// \param password  manager's password as string.
-    void managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password, const std::string& evalution);
+    /// \param evaluation manager's evaluation.
+    /// \param wage manager's wage.
+    void managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password, const std::string& evaluation);
 
 private:
     /// Manager's evaluation: 0 if manager has not been evaluated, else number between 1 and 5 (included)

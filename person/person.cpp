@@ -25,9 +25,6 @@ void Person::setName(const std::string &name){
     this->name = name;
 }
 
-void Person::setNIF(const unsigned int &NIF){
-    this->NIF = NIF;
-}
 void Person::personModify(const std::string& name, const std::string& NIF){
     if (name != "."){
         this->name = name;

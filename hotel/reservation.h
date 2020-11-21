@@ -2,109 +2,95 @@
 #define RESERVATION_H
 #include "date.h"
 
-/// Represents a reservation
+/// Represents a reservation.
 ///
-/// Is made up of a reservation ID, a reservation size, do room ID of the reserved room, the check in date and the check out date
+/// Defined by a reservation ID, a reservation size, do room ID of the claimed room, the check in date and the check out date.
 class Reservation{
 public:
-    ///Reservation constructor
+    ///Reservation constructor.
     ///
-    /// \param reservationSize - size of the reservation
-    /// \param CheckIn - Check In date
-    /// \param CheckOut - Check Out date
-    /// \param roomId - Room ID
-    /// \param reservationId - Reservation -> if -1 generates a new random ID
-    /// \exception throws ReservationHasInvalidDates if Check Out date < Check In date
+    /// \param reservationSize  size of the reservation.
+    /// \param CheckIn  check in date.
+    /// \param CheckOut  check out date.
+    /// \param roomId  room ID.
+    /// \param reservationId  reservation ID -> if -1 generates a new distinct ID using the static ID variable
+    /// \exception throws ReservationHasInvalidDates if check out date < check in date.
     Reservation(const int &reservationSize,Date* CheckIn,Date* CheckOut, const int & roomId, const int& reservationId);
 
-    ///Returns the reservation ID
+    /// Returns reservation ID.
     ///
-    /// \return reservationId
+    /// \return reservationId.
     int getReservationId() const;
 
-    ///Reservation constructor
+    /// Reservation constructor.
     ///
-    /// \param reservationSize - size of the reservation
-    /// \param dayIn - Day of the check In
-    /// \param monthIn - Month of the check In
-    /// \param yearIn - Year of the check In
-    /// \param dayOut - Day of the check Out
-    /// \param monthOut - Month of the check Out
-    /// \param yearOut - Year of the check Out
-    /// \param roomId - Id of the reserved room
-    /// \exception throws ReservationHasInvalidDates if Check Out date < Check In date
-    /// \exception throws DateIsNotValid if Check Out date < Check In date or Check Out date are invalid
+    /// \param reservationSize  size of the reservation.
+    /// \param dayIn  day of the check in.
+    /// \param monthIn  month of the check in.
+    /// \param yearIn  year of the check in.
+    /// \param dayOut  day of the check out.
+    /// \param monthOut  month of the check out.
+    /// \param yearOut  year of the check out.
+    /// \param roomId  ID of the claimed room.
+    /// \exception throws ReservationHasInvalidDates if check out date < check in date.
+    /// \exception throws DateIsNotValid if check in date or check out date are invalid.
     Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
 
 
-    ///Return reservation size
+    /// Return reservation size.
     ///
-    /// \return reservation size
+    /// \return reservation size.
     int getReservationSize() const;
 
-    ///Returns the check In date
+    /// Returns check in date.
     ///
-    /// \return check in date
+    /// \return check in date.
     Date getCheckIn() const;
 
-    ///Returns the check Out date
+    /// Returns check out date.
     ///
-    /// \return check out date
+    /// \return check out date.
     Date getCheckOut() const;
 
-    ///Returns the room ID
+    /// Returns room ID.
     ///
-    /// \return room ID
+    /// \return room ID.
     int getRoomId() const;
 
-    /// Changes the reservations ID to reservationID
+    /// Changes check in date.
     ///
-    /// \param reservationId - new reservation ID;
-    void setReservationId(const int & reservationId);
-
-    /// Changes the reservation size to reservationSize
-    ///
-    /// \param reservationSize - new reservation size
-    void setReservationSize(const int & reservationSize);
-
-    /// Changes the check in date
-    ///
-    /// \param checkIn - new check in date
+    /// \param checkIn  new check in date.
     void setCheckIn(const Date& checkIn);
 
-    /// Changes the RoomID
+    /// Changes check ou date.
     ///
-    /// \param roomId - new room ID
-    void setRoomId(const int& roomId);
-
-    /// Changes the check ou date
-    ///
-    /// \param checkOut - new check out date
+    /// \param checkOut  new check out date.
     void setCheckOut(const Date& checkOut);
 
-    /// Changes the ID
+    /// Changes the static ID.
     ///
-    /// used after initializing the hotel to make sure we don't repeat reservation IDs
-    /// \param ID - new ID
+    /// Used after initializing the hotel to make sure we don't repeat reservation IDs.
+    /// \param ID  new ID
     void setID(const int& ID) const;
 
-    /// Prints the reservation
+    /// Prints the reservation in format:
+    ///
+    /// reservationId reservationSize checkIn checkOut roomId
     void print();
 
 private:
-    /// Reservation ID
+    /// Reservation ID.
     int reservationId;
-    /// Reservation size
+    /// Reservation size.
     int reservationSize;
-    ///Check in date
+    /// Check in date.
     Date checkIn ;
-    ///Check out date
+    /// Check out date.
     Date checkOut;
-    ///Room ID
+    /// Room ID.
     int roomId;
-    ///variable to avoid repeating reservation IDs
+    /// Variable to avoid repeating reservation IDs.
     static int ID;
 };
-
 
 #endif

@@ -35,7 +35,7 @@ void Staff::printConsole() {
 
 
 std::string Staff::getType(){
-    return "staff";
+    return "Staff";
 }
 /* ------- */
 

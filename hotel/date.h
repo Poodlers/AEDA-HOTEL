@@ -2,103 +2,107 @@
 #define DATE_H
 #include "../exceptions/exceptions.h"
 
-/// Represents a date structure made up of a year, a month and a day
+/// \class Date
+/// Class which represents a Date.
+///
+/// Defined by a year, a month and a day.
 class Date{
 private:
-    ///year
+    ///year.
     int year;
-    ///month
+    ///month.
     int month;
-    ///day
+    ///day.
     int day;
 public:
-    /// Date's constructor
+    /// Date's constructor.
     ///
     /// \param day
     /// \param month
     /// \param year
     /// \exception throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers or the number of days is
-    /// bigger then the number of days the month has
+    /// bigger than the total number of days in the month).
     Date(const int &day, const int &month, const int &year);
 
-    /// Date's constructor from a string
+    /// Date's constructor from a string.
     ///
-    /// \param date - must have format dd(char)mm(char)yyyy
+    /// \param date  must have format dd(char)mm(char)yyyy.
     /// \exception throws DateIsNotValid if date is not valid (day, month and/or year are negative numbers, not numbers or the number of days is
-    /// bigger then the number of days the month has
+    ///  bigger than the total number of days in the month).
     Date(const std::string& date);
 
-    /// Default date constructor
+    /// Default date constructor.
     Date();
 
-    /// Operator overload for <<
+    /// Operator overload for <<.
     ///
+    /// Format 'dd-mm-yyyy         '
     /// \param o
     /// \param date
     /// \return o
     friend std::ostream & operator<<(std::ostream &o,const Date& date);
 
-    ///Returns the day
+    /// Returns day.
     ///
-    /// \return this->day
+    /// \return this->day.
     int getDay() const;
 
-    ///Returns the month
+    /// Returns month.
     ///
-    /// \return this->month
+    /// \return this->month.
     int getMonth() const;
 
-    ///Returns the year
+    ///Returns year.
     ///
-    /// \return this->year
+    /// \return this->year.
     int getYear() const;
 
-    ///Returns the number of days in the month
+    /// Returns number of days in the month.
     ///
-    /// \param month - month to check
-    /// \return number of days in this month
-    /// \exception throws DateIsNotValid is the month is invalid
+    /// \param month  month to check.
+    /// \return number of days in this month.
+    /// \exception throws DateIsNotValid is the month is invalid.
     int getDaysInMonth(const int& month) const;
 
-    ///Checks if this year is leap year
+    /// Checks if this year is leap year.
     ///
-    /// \return true if leap year, false otherwise
+    /// \return true if leap year, false otherwise.
     bool isInLeapYear() const;
 
-    ///Operator overload for ==
+    /// Operator overload for ==.
     ///
     /// \param date
-    /// \return true if ==, false if not
+    /// \return true if ==, false if not.
     bool operator ==(Date date);
 
-    ///Operator overload for <
+    /// Operator overload for <.
     ///
     /// \param date
-    /// \return true if <, false if not
+    /// \return true if <, false if not.
     bool operator <(Date date);
 
-    ///Operator overload for >
+    /// Operator overload for >.
     ///
     /// \param date
-    /// \return true if >, false if not
+    /// \return true if >, false if not.
     bool operator >(Date date);
 
-    ///Operator overload for - between to dates
+    /// Operator overload for - between two dates.
     ///
     /// \param date
-    /// \return this-> - date
+    /// \return this->date.
     int operator -(Date date);
 
-    ///Operator overload for + between a date and a number
+    /// Operator overload for + between a date and a number.
     ///
     /// \param d
     /// \return this-> + d
     Date operator +(const int& d) const;
 
-    ///operator overload for <=
+    /// Operator overload for <=.
     ///
     /// \param date
-    /// \return true if <=, false if not
+    /// \return true if <=, false if not.
     bool operator <=(Date date);
 
 };

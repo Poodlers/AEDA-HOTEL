@@ -11,10 +11,6 @@ Manager::Manager(const std::string& name, const unsigned int & NIF, const float&
 unsigned int Manager :: getEvaluation() const{
     return this->evaluation;
 }
-void Manager::setEvaluation(const unsigned int &evaluation){
-    //throw exception if the evaluation given is invalid
-    this->evaluation = evaluation;
-}
 
 std::string Manager::getType() {
     return "Manager";

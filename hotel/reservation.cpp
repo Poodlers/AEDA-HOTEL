@@ -67,12 +67,7 @@ void Reservation::print() {
               << std::setw(15) << this->getCheckIn() << std::setw(15) << this->checkOut << std::setw(8) << this->getRoomId();
 }
 
-void Reservation::setReservationId(const int & reservationId){
-    this->reservationId =reservationId;
-}
-void Reservation::setReservationSize(const int & reservationSize){
-    this->reservationSize =reservationSize;
-}
+
 void Reservation::setCheckIn(const Date& checkIn){
     this->checkIn =checkIn;
 }
@@ -83,10 +78,6 @@ void Reservation::setCheckOut(const Date& checkOut){
 
 void Reservation::setID(const int& ID) const{
     this->ID = ID;
-}
-
-void Reservation::setRoomId(const int& roomId){
-    this->roomId = roomId;
 }
 
 int Reservation::ID = 0;

@@ -30,18 +30,6 @@ unsigned int Room::getRoomId() const{
 float Room::getPricePerNight() const{
     return this->pricePerNight;
 }
-void Room::setFloor(const int floor) {
-    this->floor = floor;
-}
-void Room::setRoomNumber(const unsigned int roomNumber) {
-    this->roomNumber = roomNumber;
-}
-void Room::setCapacity(const unsigned int capacity){
-    this->capacity = capacity;
-}
-void Room::setPricePerNight(const float pricePerNight){
-    this->pricePerNight = pricePerNight;
-}
 
 void Room::print() {
     std::cout << std::left <<  std::setw(10) << std::setfill(' ') << this->roomId << std::setw(15)

@@ -6,6 +6,8 @@ NoViewRoom :: NoViewRoom(const int & floor, const unsigned int & roomNumber ,con
     this->discount = false;
 }
 
+bool NoViewRoom::discount = false;
+
 void NoViewRoom ::toggleDiscount(){
     this->discount = !this->discount;
 }

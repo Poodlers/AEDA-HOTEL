@@ -6,63 +6,58 @@
 #include <iostream>
 #include "../hotel/reservation.h"
 
-///Provider
+/// Class which represents a Provider.
 ///
-///Class which represents a provider
+/// Defined by name and products.
 class Provider{
 public:
-    ///
-    /// \param n - name of provider
-    /// \param p - vector of products available
-    Provider(const std::string &n,const std::vector<Product *> &p);
 
+    /// Provider constructor for making a more specific provider.
     ///
-    /// \param n - name of provider
-    /// \param size - number of products to create
-    Provider(const std::string &n, const unsigned int &size);
+    /// \param name  name of provider.
+    /// \param products  vector of products available.
+    Provider(const std::string &name,const std::vector<Product *> &products);
 
+    /// Provider constructor for making a provider with 'size' random products.
     ///
-    /// \return name of provider
+    /// \param name  name of provider.
+    /// \param size  number of products to create.
+    Provider(const std::string &name, const unsigned int &size);
+
+    /// Returns name.
+    ///
+    /// \return name of provider.
     std::string getName() const;
 
+    /// Returns products.
     ///
-    /// \return vector of products
+    /// \return vector of products.
     std::vector<Product *> getProducts() const;
 
+    /// Changes name.
     ///
-    /// \return number of products
-    unsigned getNumProducts() const;
+    /// \param name  new name.
+    void setName(const std::string &name);
 
+    /// Prints the provider in format
     ///
-    /// \param n - name of provider to set
-    void setName(const std::string &n);
-
-    ///
-    /// \param p - vector of products to set
-    void setProducts(const std::vector<Product *> &p);
-    /// add product to vector
-    void addProduct(Product* product);
-    ///
-    /// \param index - element to remove from products vector
-    void removeProduct(unsigned &index);
-
-    ///Prints the provider
-    void print();
-
-    ///Prints the provider (for the console)
+    /// Provider: name
+    /// Stock Type ID Price Quality
+    /// product
+    /// ...
     void printConsole();
 
-    ///Restocks its' products'
-    ///
+
+    /// Restocks its products
     void restock();
 
 
 private:
-    /// name of provider
+    /// Mame of provider
     std::string name;
-    /// products available
+    /// Products available
     std::vector<Product *> products;
-    /// number of products
+    /// Number of products
     unsigned numProducts;
 
 };

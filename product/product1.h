@@ -68,18 +68,18 @@ public:
     friend std::ostream& operator <<(std::ostream& o, Product& product);
 
 private:
-    /// Quality of the product
+    /// Quality of the product.
     unsigned int quality;
-    /// Price of the product
+    /// Price of the product.
     float price;
-    /// ID of the product
+    /// ID of the product.
     unsigned int id;
-    /// Variable to keep product ids unique
+    /// Variable to keep product ids unique.
     static int totalId;
-    /// Type of product
-    /// Can be catering, cleaning or other
+    /// Type of product.
+    /// Can be catering, cleaning or other.
     std::string type;
-    /// Amount of the product in the provider
+    /// Amount of the product in the provider.
     unsigned int stock;
 };
 

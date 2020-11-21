@@ -48,16 +48,16 @@ public:
     void printConsole();
 
 
-    /// Restocks its products
+    /// Restocks its products.
     void restock();
 
 
 private:
-    /// Mame of provider
+    /// Mame of provider.
     std::string name;
-    /// Products available
+    /// Products available.
     std::vector<Product *> products;
-    /// Number of products
+    /// Number of products.
     unsigned numProducts;
 
 };

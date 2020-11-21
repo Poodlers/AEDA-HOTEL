@@ -18,7 +18,6 @@ void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURS
 void fill_month_map(std::map<int,std::string> &map_month);
 void getStringInput(std::string& input, int x, int y);
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input));
-
 /// Asks for the name of the Hotel file and creates the hotel
 Hotel* createHotel();
 bool CheckIfInteger(std::string input);

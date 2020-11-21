@@ -865,34 +865,15 @@ void Hotel::addRoom(const std::string &floor, const std::string & roomNumber ,co
 }
 
 void Hotel::activateDiscount(const std::string& type){
+    if(type!= "Suite" && type != "NoViewRoom" && type != "ViewRoom") throw InvalidRoomType(-1, type);
     if(!this->loggedIn){
         throw AccessRestricted();
     }
-    if (type == "Suite") {
-        for (Room *room : rooms) {
-            Suite *suite = dynamic_cast<Suite *> (room);
-            if (suite != nullptr) {
-                suite->toggleDiscount();
-            }
+    for(Room* room: this->rooms){
+        if(room->getType() == type){
+            room->toggleDiscount();
         }
     }
-    else if (type == "NoViewRoom") {
-        for (Room *room : rooms) {
-            NoViewRoom *noViewRoom = dynamic_cast<NoViewRoom *> (room);
-            if (noViewRoom != nullptr) {
-                noViewRoom->toggleDiscount();
-            }
-        }
-    }
-    else if (type == "ViewRoom") {
-        for (Room *room : rooms) {
-            ViewRoom *viewRoom = dynamic_cast<class ViewRoom*> (room);
-            if (viewRoom != nullptr) {
-                viewRoom->toggleDiscount();
-            }
-        }
-    }
-    else throw InvalidRoomType(-1, type);
 }
 
 void Hotel::modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos){

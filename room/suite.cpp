@@ -21,8 +21,6 @@ std::string Suite::getType() {
     return "Suite";
 }
 
-bool Suite::discount = false;
-
 
 void Suite::print() {
     std::cout << std::left << std::setw(14) << "Suite" <<  std::setw(10) << std::setfill(' ') << this->getRoomId() << std::setw(15)

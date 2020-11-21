@@ -42,5 +42,3 @@ void ViewRoom::print() {
         std::cout << "Occupied"<<std::endl;
     }
 }
-
-bool ViewRoom::discount = false;

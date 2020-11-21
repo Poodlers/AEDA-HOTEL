@@ -123,6 +123,15 @@ public:
     void onClick(ButtonHandler& handler) override;
 };
 
+class AutoBuyButton: public BaseButton{
+private:
+    MenuButton<Provider>* ProviderButton;
+    Hotel* hotel;
+public:
+    AutoBuyButton(const int x, const int y, const int width,const int height,const std::string text,Hotel* hotel,MenuButton<Provider>* menu_button);
+    void onClick(ButtonHandler& handler) override;
+};
+
 class SaveHotelFileButton: public BaseButton{
 private:
     Hotel* hotel;

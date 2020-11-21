@@ -134,7 +134,7 @@ public:
 
 private:
     /// Discount is true if a discount is applied.
-    static bool discount;
+    bool discount;
     /// Discount value.
     const float discountValue = 0.05;
 };
@@ -180,7 +180,7 @@ public:
     std::string getType() override;
 private:
     /// Discount is true if a discount is applied.
-    static bool discount;
+    bool discount;
     /// Discount value.
     const float discountValue = 0.08;
 };
@@ -226,7 +226,7 @@ public:
 
 private:
     /// Discount is true if a discount is applied.
-    static bool discount;
+    bool discount;
     /// Discount value.
     const float discountValue = 0.12;
 };

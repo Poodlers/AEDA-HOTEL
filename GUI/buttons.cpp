@@ -1,5 +1,6 @@
 #include "buttons.h"
 #include <algorithm>
+#include <cmath>
 #include <type_traits>
 
 
@@ -413,7 +414,17 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     handler.AddButton(this->GoBack_Button);
     ChangeTypeOfSort<N>* ChangePagesBack;
     ChangeTypeOfSort<N>* ChangePagesFront;
-    if constexpr (!std::is_same_v<N,Provider> && !std::is_same_v<N,Product> && !std::is_same_v<N,Transaction>){
+    if constexpr (std::is_same_v<N,Reservation>){
+        SearchButton<N>* searchButton = new SearchButton<N>(30,0,8,2,"Search",this->hotel,this);
+        handler.AddButton(searchButton);
+        searchButton->DrawButton();
+        if(this->client != nullptr){
+            auto addButton = new AddButton<N>(20,0,4,2,"+",this);
+            addButton->DrawButton();
+            handler.AddButton(addButton);
+        }
+    }
+    else if constexpr (!std::is_same_v<N,Provider> && !std::is_same_v<N,Product> && !std::is_same_v<N,Transaction>){
         auto addButton = new AddButton<N>(20,0,4,2,"+",this);
         addButton->DrawButton();
         handler.AddButton(addButton);
@@ -432,7 +443,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     if constexpr(std::is_same_v<N,Client>){
         menu_items = this->hotel->getClients();
         edit_delete_x = 60;
-        int max_page = (menu_items.size() - 1) / MaxObjectsOnScreen + 1;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         }
@@ -453,7 +464,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
             this->type_id = typeOfSort.size() - 1;
         }
         gotoxy(edit_delete_x + 35,14);
-        std::cout << std::setw(15) << order[this->order_id];
+        std::cout << std::left << std::setw(15) << order[this->order_id];
         gotoxy(edit_delete_x + 35,16);
         std::cout << std::setw(15) << typeOfSort[this->type_id];
         SortButton<N>* sortClientsButton = new SortButton<N>(edit_delete_x + 40,11,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
@@ -475,7 +486,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     else if constexpr (std::is_same_v<N,Transaction>){
         menu_items = this->hotel->getAccounting();
         MaxObjectsOnScreen = 7;
-        int max_page = (menu_items.size()) / MaxObjectsOnScreen + 1;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         }
@@ -507,7 +518,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         menu_items = this->hotel->getProviders();
         MaxObjectsOnScreen = 7;
         edit_delete_x = 50;
-        int max_page = (menu_items.size()) / MaxObjectsOnScreen;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         }
@@ -526,13 +537,16 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         std::cout << "Page " << this->CurrentPage << "/" << max_page;
         ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
         ChangePagesFront = new ChangeTypeOfSort<N>(19,5,2,0,">","page_id",this);
+        auto autoBuyButton = new AutoBuyButton(70,16,8,2,"Auto Buy",this->hotel,this);
+        autoBuyButton->DrawButton();
+        handler.AddButton(autoBuyButton);
 
     }
     else if constexpr (std::is_same_v<N,Product>){
         menu_items = this->provider->getProducts();
         MaxObjectsOnScreen = 7;
         edit_delete_x = 60;
-        int max_page = (menu_items.size()) / MaxObjectsOnScreen + 1;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         }
@@ -553,7 +567,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
             menu_items = this->client->getAllReservations();
         }
         else menu_items = this->hotel->getReservations();
-        int max_page = (menu_items.size()) / MaxObjectsOnScreen + 1;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         } else if(this->CurrentPage > max_page) this->CurrentPage = 1;
@@ -566,9 +580,9 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         }
 
         gotoxy(40,4);
-        std::cout << std::setw(17) << order[this->order_id];
+        std::cout << std::left << std::setw(17) << order[this->order_id];
         gotoxy(62,4);
-        std::cout << std::left << std::setw(20) << typeOfSort[this->type_id];
+        std::cout << std::setw(20) << typeOfSort[this->type_id];
 
         SortButton<N>* sortReservationsButton = new SortButton<N>(50,1,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
         ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(38,4,2,0,"<","order_id",this);
@@ -600,7 +614,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     }
     else if constexpr (std::is_same_v<N,Room>){
         menu_items = this->hotel->getRooms();
-        int max_page = (menu_items.size() - 1) / MaxObjectsOnScreen + 1;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         }
@@ -614,9 +628,9 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
             this->type_id = typeOfSort.size() - 1;
         }
         gotoxy(40,4);
-        std::cout << std::setw(17) << order[this->order_id];
+        std::cout << std::left << std::setw(17) << order[this->order_id];
         gotoxy(62,4);
-        std::cout << std::left << std::setw(20) << typeOfSort[this->type_id];
+        std::cout << std::setw(20) << typeOfSort[this->type_id];
         SortButton<N>* sortRoomsButton = new SortButton<N>(50,1,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
         ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(38,4,2,0,"<","order_id",this);
         ChangeTypeOfSort<N>* changeTypeOfSort2 = new ChangeTypeOfSort<N>(40 + order[this->order_id].size() + 1,4,2,0,">","order_id",this);
@@ -656,7 +670,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     }
     else if constexpr (std::is_same_v<N,Staff>){
         menu_items = this->hotel->getStaff();
-        int max_page = (menu_items.size()-1) / MaxObjectsOnScreen + 1;
+        int max_page = std::ceil((menu_items.size()) / (double)MaxObjectsOnScreen);
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         }else if(this->CurrentPage > max_page){this->CurrentPage = 1;}
@@ -668,7 +682,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
             this->type_id = typeOfSort.size() - 1;
         }
         gotoxy(50,5);
-        std::cout << std::setw(15) << order[this->order_id] << std::setw(20) << typeOfSort[this->type_id];
+        std::cout << std::left << std::setw(15) << order[this->order_id] << std::setw(20) << typeOfSort[this->type_id];
         SortButton<N>* sortStaffButton = new SortButton<N>(60,2,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
         ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(48,5,2,0,"<","order_id",this);
         ChangeTypeOfSort<N>* changeTypeOfSort2 = new ChangeTypeOfSort<N>(60,5,2,0,">","order_id",this);
@@ -814,6 +828,16 @@ void ApplyDiscountToTypeOfRoom::onClick(ButtonHandler &handler) {
     clearscreen();
     handler.SpecialGoBackClear();
     this->GoBackButton->onClick(handler);
+}
+
+AutoBuyButton::AutoBuyButton(const int x, const int y, const int width, const int height, const std::string text, Hotel *hotel, MenuButton<Provider> *menu_button): BaseButton(x,y,width,height,text){
+    this->hotel = hotel;
+    this->ProviderButton = menu_button;
+}
+
+void AutoBuyButton::onClick(ButtonHandler &handler) {
+    this->hotel->autoBuy();
+    this->ProviderButton->onClick(handler);
 }
 
 template <class N>
@@ -1103,11 +1127,21 @@ SaveHotelFileButton::SaveHotelFileButton(const int x, const int y, const int wid
 }
 
 void SaveHotelFileButton::onClick(ButtonHandler &handler) {
+    int waitSeeMessage = 2000;
     gotoxy(70,8);
     std::cout << "Filename(w/o .txt): ";
     std::string edit;
     getStringInput(edit,70,9);
     this->hotel->saveHotel(edit);
+    gotoxy(70,11);
+    std::cout << "Saved Hotel File successfully!";
+    Sleep(waitSeeMessage);
+    gotoxy(70,8);
+    std::cout << "                       ";
+    gotoxy(70,11);
+    std::cout << "                               ";
+    gotoxy(70,9);
+    std::cout << "                               ";
 
 }
 

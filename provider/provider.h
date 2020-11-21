@@ -51,6 +51,7 @@ public:
     /// Restocks its products.
     void restock();
 
+    void print();
 
 private:
     /// Mame of provider.

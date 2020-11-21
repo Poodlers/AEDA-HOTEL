@@ -57,6 +57,10 @@ void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURS
     scrollbar.X = SBInfo.srWindow.Right - SBInfo.srWindow.Left + 1;
     scrollbar.Y = SBInfo.srWindow.Bottom - SBInfo.srWindow.Top + 1;
     SetConsoleScreenBufferSize(hout, scrollbar);
+    CONSOLE_CURSOR_INFO     cursorInfo;
+    GetConsoleCursorInfo(hout, &cursorInfo);
+    cursorInfo.bVisible = false; // set the cursor visibility
+    SetConsoleCursorInfo(hout, &cursorInfo);
 }
 
 void printTime(Date date, map<int,string> &map_month){
@@ -250,7 +254,6 @@ std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input
             }
         }
     }
-
 
 std::ostream& operator<<(std::ostream &o, std::vector<int> v){
     o << "[";

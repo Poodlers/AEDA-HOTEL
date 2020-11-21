@@ -166,7 +166,7 @@ private:
     bool shift;
 };
 
-/// Represents a manager.
+/// Represents a Manager.
 ///
 /// Defined by a wage, NIF and name by inheritance from staff, evaluation and password.
 class Manager : public Staff{

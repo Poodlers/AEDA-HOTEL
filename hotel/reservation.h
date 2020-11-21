@@ -91,6 +91,11 @@ public:
     /// Prints the reservation
     void print();
 
+    void setIsCurrent(bool isCurrent);
+
+    bool getIsCurrent() const;
+
+
 private:
     /// Reservation ID
     int reservationId;
@@ -102,6 +107,7 @@ private:
     Date checkOut;
     ///Room ID
     int roomId;
+    bool isCurrent = false;
     ///variable to avoid repeating reservation IDs
     static int ID;
 };

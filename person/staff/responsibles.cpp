@@ -1,7 +1,7 @@
 #include "staff.h"
-#include "../../utils/utils.h"
 #include <iostream>
 #include <iomanip>
+#include "../../GUI/utils.h"
 
 Responsible::Responsible(const std::string& name, const unsigned int & NIF, const float& wage) : Receptionist(name,NIF,wage){
     numberOfFloorsBeingMonitored = 0;
@@ -29,15 +29,8 @@ std::string Responsible::getType() {
     return "Responsible";
 }
 
-void Responsible::printConsole() {
-    std::cout << std::left << std::setw(13) << this->getType() <<  std::setw(22) << std::setfill(' ') << this->getName() <<
-    std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(16) << this->getYearsOfService();
-    this->printFloors();
+void Responsible::print() {
+    std::cout << std::left << std::setw(13) << "Responsible" <<  std::setw(20) << std::setfill(' ') << this->getName() <<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
+              << "  " << this->getFloorsAssigned() << std::setw(8) << " " << std::setw(12) << " ";
 }
-
-void Responsible::printFloors(){
-    for (int floor: floorsAssigned){
-        std::cout << floor << ", ";
-    }
-
-};

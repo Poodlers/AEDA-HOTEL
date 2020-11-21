@@ -59,8 +59,8 @@ void Product::setType(const std::string & type){
     this->type = type;
 }
 
-std::ostream& operator<<(std::ostream& o, Product& product){
-    return o <<std::left<< std::setfill(' ') <<std::setw(7)<<product.getStock() << std::setw(10) << product.getType()<< std::setw(9) << product.getId() <<std::setw(7) <<product.getPrice()<< std::setw(7) << product.getQuality() <<std::endl;
+void Product::print() {
+    std::cout  <<std::left<< std::setfill(' ') <<std::setw(7)<< this->getStock() << std::setw(10) << this->getType()<< std::setw(9) << this->getId() <<std::setw(7) <<this->getPrice()<< std::setw(7) << this->getQuality() <<std::endl;
 }
 unsigned int Product::getStock() const{
     return stock;

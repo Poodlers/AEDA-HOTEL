@@ -1,6 +1,5 @@
 #include "client.h"
 #include <iostream>
-#include "../../utils/utils.h"
 #include <iomanip>
 #include <algorithm>
 
@@ -29,6 +28,7 @@ std::vector<int> Client::checkIn(Date* date) {
     for (int i = 0; i < futureReservations.size(); i++) {
         if (futureReservations[i]->getCheckIn() == *date) {
             this->currentReservations.push_back(futureReservations[i]);
+            currentReservations[i]->setIsCurrent(true);
             reservationIds.push_back(futureReservations[i]->getReservationId());
             this->futureReservations.erase(futureReservations.begin()+i);
             std::cout << "The checkIn for room " << futureReservations[i]->getRoomId() << " was completed."<<std::endl;
@@ -38,6 +38,7 @@ std::vector<int> Client::checkIn(Date* date) {
                       << *date - futureReservations[i]->getCheckIn() << " days late." << std::endl;
             futureReservations[i]->setCheckIn(*date);
             this->currentReservations.push_back(futureReservations[i]);
+            currentReservations[i]->setIsCurrent(true);
             reservationIds.push_back(futureReservations[i]->getRoomId());
             this->futureReservations.erase(futureReservations.begin()+i);
         }
@@ -56,6 +57,7 @@ void Client::archiveExpiredReservations(Date* date){
     }
     for (int i = 0; i < currentReservations.size(); i++){
         if (currentReservations[i]->getCheckOut() < *date){
+            currentReservations[i]->setIsCurrent(false);
             this->history.push_back(currentReservations[i]);
             this->currentReservations.erase(currentReservations.begin()+i);
             //std::cout << "Reservation " << currentReservations[i]->getReservationId() <<" for client: " << this->name << " with NIF: " << this->NIF << " has expired."<<std::endl;
@@ -104,6 +106,14 @@ void Client::printConsole(){
     }
 }
 
+std::vector<Reservation *> & Client::getAllReservations() {
+    this->allReservations.clear();
+    for(auto resev: this->currentReservations) this->allReservations.push_back(resev);
+    for(auto resev: this->history) this->allReservations.push_back(resev);
+    for(auto resev: this->futureReservations) this->allReservations.push_back(resev);
+    return allReservations;
+}
+
 bool Client::operator==(Client* client){
     return ((this->getName() == client->getName()) && (this->getNIF() == client->getNIF()));
 }
@@ -116,17 +126,29 @@ void Client::addCurrentReservation(Reservation *reservation){
     currentReservations.push_back(reservation);
 }
 
+void Client::deleteReservation(Reservation *reservation) {
+    auto find_history = std::find(this->history.begin(),this->history.end(),reservation);
+    auto find_future = std::find(this->futureReservations.begin(),this->futureReservations.end(),reservation);
+    if(find_history != this->history.end()){
+        this->history.erase(find_history);
+    }else if(find_future != this->futureReservations.end()){
+        this->futureReservations.erase(find_future);
+    }
+}
+
 std::vector<int> Client::checkOut( Date* date){
     std::vector<int> roomIds;
     if (this->currentReservations.size()==0) throw NoReservationsToCheckOut(this->getName(),this->getNIF());
     for (int i = 0; i < currentReservations.size(); i++) {
         if (currentReservations[i]->getCheckOut() == *date) {
+            currentReservations[i]->setIsCurrent(false);
             this->history.push_back(currentReservations[i]);
             roomIds.push_back(currentReservations[i]->getRoomId());
             this->currentReservations.erase(currentReservations.begin()+i);
             std::cout << "The checkOut for room " << currentReservations[i]->getRoomId() << " was completed."<<std::endl;
         }
         if (currentReservations[i]->getCheckOut() > *date) {
+            currentReservations[i]->setIsCurrent(false);
             std::cout << "The checkOut for room " << currentReservations[i]->getRoomId() << " was "
                       << currentReservations[i]->getCheckOut() - *date << " days early." << std::endl;
             currentReservations[i]->setCheckOut(*date);

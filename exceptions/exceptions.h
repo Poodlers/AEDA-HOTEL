@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "../utils/utils.h"
 
 ///Thrown if the client does not have any Reservations to Check In
 class NoReservationsToCheckIn{
@@ -834,4 +833,5 @@ public:
         return     o << "Evaluation should be between 1 and 5."<<std::endl;
     }
 };
+
 #endif

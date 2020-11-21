@@ -30,7 +30,7 @@ void Provider::printConsole(){
     std::cout <<"Provider: "  << name <<std::endl;
     std::cout<<std::left<< std::setfill(' ') <<std::setw(7) << "Stock"<< std::setw(10) << "Type"<< std::setw(9) << "ID" <<std::setw(7) <<"Price"<< std::setw(4) << "Quality"<<std::endl;
     for (Product* product: products){
-        std::cout << *product;
+        product->print();
     }
 }
 

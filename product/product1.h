@@ -70,7 +70,7 @@ public:
     void setStock(const unsigned int& stock);
 
     ///Overloaded operator << to print the product's info in a formatted way
-    friend std::ostream& operator <<(std::ostream& o, Product& product);
+    void print();
 
 private:
     /// quality of the product

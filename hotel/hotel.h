@@ -9,9 +9,16 @@
 #include "../product/product1.h"
 #include "reservation.h"
 #include "date.h"
-#include "../utils/utils.h"
 #include <algorithm>
 
+struct Transaction{
+    ///value of the transaction
+    float value;
+    ///description of the transaction
+    std::string description;
+
+    void print();
+};
 
 /// \class Hotel
 /// Class which represents a hotel
@@ -93,7 +100,7 @@ public:
     /// Returns the reservations vector
     ///
     /// \return reservations vector
-    std::vector<Reservation*> getReservations() const;
+    std::vector<Reservation*>& getReservations();
 
     /// Searches for reservations
     ///
@@ -107,6 +114,8 @@ public:
     /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
 
+
+    void deleteReservation(Reservation* reservation);
     /// Makes a reservation
     ///
     /// Makes a reservation and ads it to the client's reservations an the reservations vector in the hotel
@@ -143,6 +152,7 @@ public:
     /// \exception throws InvalidRoomType if room type is not valid
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
 
+    void removeRoom(Room* room);
     /// Checks if floor is valid
     ///
     /// \param floor  floor to check
@@ -265,8 +275,8 @@ public:
     /// Removes a client
     ///
     /// \param pos  position of the client to remove
-    void removeClient(const int& pos);
-
+    void removeClient(Client* client);
+    void removeClient(int pos);
 
     /// Adds Client
     ///
@@ -304,11 +314,12 @@ public:
     /// \exception throws NotAPositiveFloat if wage is not a positive number
     void modifyStaffMember(const std::string & name, std::string& NIF, std::string& wage,const int& pos, const std::string& type, const std::string& shift,const std::string& password, const std::string& evaluation);
 
+
+    void removeStaffMember(Staff* staff);
     /// Removes a staff member
     ///
     /// \param pos  position of the staff member to remove
-    void removeStaffMember(const int& pos);
-
+    void removeStaffMember(int pos);
     /// Adds a staff member
     ///
     /// \param name  name of the new staff member

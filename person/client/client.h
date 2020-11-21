@@ -49,7 +49,7 @@ public:
     /// \param reservation  reservation to add
     void addCurrentReservation(Reservation *reservation);
 
-
+    void deleteReservation(Reservation* reservation);
     /// Check Out
     ///
     /// Goes through the vector current reservations and if the date is bigger or equal to the check out date proceeds
@@ -92,6 +92,8 @@ public:
     /// \return this-> == client
     bool operator==(Client* client);
 
+    std::vector<Reservation*>& getAllReservations();
+
 private:
     /// Vector with past reservations
     std::vector<Reservation*> history;
@@ -99,5 +101,7 @@ private:
     std::vector<Reservation*> futureReservations;
     /// Vector with current reservation i.e. the person is currently staying at the hotel
     std::vector<Reservation*> currentReservations;
+
+    std::vector<Reservation*> allReservations;
 };
 #endif

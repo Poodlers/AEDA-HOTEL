@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "../utils/utils.h"
+#include "../GUI/utils.h"
 #include "../exceptions/exceptions.h"
 
 
@@ -591,14 +591,20 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss.clear();
     }
 
+    Provider* provider1 = new Provider("provider1", 50);
+    Provider* provider2 = new Provider("provider 2", 55);
+    Provider* provider3 = new Provider("provider 3", 65);
+    this->addProvider(provider1);
+    this->addProvider(provider2);
+    this->addProvider(provider3);
+
     file.close();
 
 }
 
-std::vector<Reservation*> Hotel::getReservations() const{
+std::vector<Reservation*>& Hotel::getReservations() {
     return reservations;
 }
-
 
 void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in){
     for (Room* room: rooms){
@@ -618,16 +624,21 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
             try{
                 Reservation* reservation = new Reservation(capacity,checkIn,checkOut,roomId,reservationId);
                 if(*checkOut < date || in == -1){
+                    reservation->setIsCurrent(false);
                     clients[posClient]->addToHistory(reservation);
                 }
                 else if (in == 1){
+                    reservation->setIsCurrent(true);
                     if ((*checkOut > date || *checkOut == date ) && (*checkIn < date || *checkIn == date)){
                         clients[posClient]->addCurrentReservation(reservation);
                     }
                     else throw NoReservationsToCheckIn(clients[posClient]->getName(),clients[posClient]->getNIF());
                 }
 
-                else clients[posClient]->addNewReservation(reservation);
+                else{
+                    clients[posClient]->addNewReservation(reservation);
+                    reservation->setIsCurrent(false);
+                }
 
                 this->reservations.push_back(reservation);
             }
@@ -640,14 +651,52 @@ void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* check
     throw RoomDoesNotExist(roomId);
 }
 
-void Hotel::removeClient(const int& pos){
-    clients.erase(clients.begin() + pos);
+void Hotel::removeClient(Client* client){
+    auto find = std::find(this->clients.begin(),this->clients.end(),client);
+    this->clients.erase(find);
+    delete client;
 }
 
-void Hotel::removeStaffMember(const int& pos){
-    staff.erase(staff.begin() + pos);
+void Hotel::removeClient(int pos) {
+    this->clients.erase(this->clients.begin() + pos);
 }
 
+void Hotel::removeStaffMember(Staff* staff){
+    auto find = std::find(this->staff.begin(),this->staff.end(),staff);
+    this->staff.erase(find);
+    delete staff;
+}
+
+void Hotel::removeStaffMember(int pos) {
+    this->staff.erase(this->staff.begin() + pos);
+}
+
+void Hotel::removeRoom(Room* room){
+    auto find = std::find(this->rooms.begin(),this->rooms.end(),room);
+    this->rooms.erase(find);
+    delete room;
+}
+
+void Hotel::deleteReservation(Reservation *reservation) {
+    auto find = std::find(this->reservations.begin(),this->reservations.end(),reservation);
+    this->reservations.erase(find);
+    for(Client* client: this->clients){
+        for(auto reservation_: client->getHistory()){
+            if(reservation_ == reservation){
+                client->deleteReservation(reservation);
+                delete reservation;
+                return;
+            }
+        }
+        for(auto reservation_: client->getFutureReservations()){
+            if(reservation_ == reservation){
+                client->deleteReservation(reservation);
+                delete reservation;
+                return;
+            }
+        }
+    }
+}
 
 std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, const std::string& value){
     std::vector<int> pos;
@@ -677,8 +726,8 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
             }
             return pos;
         }
-        catch(...){
-            throw;
+        catch(DateIsNotValid& msg){
+            throw msg;
         }
     }
     return {};

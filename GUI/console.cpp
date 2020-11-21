@@ -1,11 +1,12 @@
-#include "hotel/hotel.h"
-#include "provider/provider.h"
-#include "product/product1.h"
-#include "person/client/client.h"
-#include "room/room.h"
-#include "person/staff/staff.h"
-#include "exceptions/exceptions.h"
-#include "utils/utils.h"
+#include "console.h"
+#include "../hotel/hotel.h"
+#include "../provider/provider.h"
+#include "../product/product1.h"
+#include "../person/client/client.h"
+#include "../room/room.h"
+#include "../person/staff/staff.h"
+#include "../exceptions/exceptions.h"
+#include "utils.h"
 #include <string>
 #include <iostream>
 #include <random>
@@ -51,7 +52,6 @@ void providers(Hotel* hotel){
         std::string input, Id;
         cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see possible commands."<<endl;
-
         cin >> input;
         try{
             if (input == "Back"){
@@ -596,7 +596,7 @@ void staff(Hotel *hotel){
                   std::setw(10) << "NIF" << std::setw(7) << "Wage" << std::setw(16) << "Years of work"
                   << std::setw(16) << "Floors assigned" << std::setw(7) << "Shift" << std::setw(12)<< "Evaluation"<<std::endl;
         for(Staff* staff: hotel->getStaff()){
-            staff->printConsole();
+            staff->print();
             cout<<endl;
         }
         cout << "Write Help to see possible commands."<<endl;
@@ -692,7 +692,6 @@ void staff(Hotel *hotel){
                         continue;
                     }
                 }
-
                 cout << "Insert the wage of the staff member you wish to add:"<<endl;
                 cin >> wage;
 
@@ -730,7 +729,7 @@ void staff(Hotel *hotel){
 
                 pos = (hotel->search(name,NIF,type="Staff"));
 
-                hotel->getStaff()[pos]->printConsole();
+                hotel->getStaff()[pos]->print();
                 cout << endl;
             }
             else if(input == "Back"){
@@ -878,42 +877,4 @@ void system(Hotel* hotel){
     }
 }
 
-/// Asks for the name of the Hotel file and creates de hotel
-Hotel* createHotel(){
-    while(true){
-        string input;
-        cout << "input the name of the hotel file (without .txt)"<< endl;
-        cin >> input;
-        system("CLS");
-        cleanCinBuffer();
-        try {
-            Hotel *hotel = new Hotel(input);
-            return hotel;
-        }
-        catch(FileNotFound& msg){
-            cout <<msg;
-        }
-        catch(HotelFileHasWrongFormat& msg){
-            cout << msg;
-        }
-        catch(NIFIsNotValid& msg){
-            cout <<msg;
-        }
-    }
-}
 
-/// Creates the hotel, creates 3 providers (with 50, 55 and 65 products), call System and makes a seed for the random numbers
-int main(){
-    srand(time(NULL));
-
-    Hotel* hotel = createHotel();
-    Provider* provider1 = new Provider("provider1", 50);
-    Provider* provider2 = new Provider("provider 2", 55);
-    Provider* provider3 = new Provider("provider 3", 65);
-    hotel->addProvider(provider1);
-    hotel->addProvider(provider2);
-    hotel->addProvider(provider3);
-    system(hotel);
-
-    return 0;
-}

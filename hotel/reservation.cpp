@@ -1,5 +1,4 @@
 #include "reservation.h"
-#include <sstream>
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
@@ -19,6 +18,15 @@ Reservation::Reservation(const int &reservationSize,Date* checkIn,Date* checkOut
     this->checkOut = *checkOut;
     this->roomId =  roomId;
 
+}
+
+void Reservation::setIsCurrent(bool isCurrent) {
+    this->isCurrent = isCurrent;
+}
+
+
+bool Reservation::getIsCurrent() const {
+    return this->isCurrent;
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){
@@ -88,5 +96,7 @@ void Reservation::setID(const int& ID) const{
 void Reservation::setRoomId(const int& roomId){
     this->roomId = roomId;
 }
+
+
 
 int Reservation::ID = 0;

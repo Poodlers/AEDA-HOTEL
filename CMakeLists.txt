@@ -16,9 +16,11 @@ message("CMAKE_STATIC_LINKER_FLAGS is ${CMAKE_STATIC_LINKER_FLAGS} ")
 
 add_executable(
         aeda_hotel_projeto
-        main.cpp
+        gui.cpp
+        GUI/console.cpp
         hotel/date.cpp
-        utils/utils.cpp
+        GUI/utils.cpp
+        GUI/buttons.cpp
         hotel/reservation.cpp
         room/room.cpp
         room/suite.cpp
@@ -34,4 +36,4 @@ add_executable(
         person/person.cpp
         product/product1.cpp
         hotel/hotel.cpp
-        )
+        GUI/console.h)

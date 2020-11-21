@@ -47,11 +47,10 @@ public:
     /// ...
     void printConsole();
 
+    void print();
 
     /// Restocks its products.
     void restock();
-
-    void print();
 
 private:
     /// Mame of provider.

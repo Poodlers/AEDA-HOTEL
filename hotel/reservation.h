@@ -32,7 +32,7 @@ public:
     /// \param monthOut - Month of the check Out
     /// \param yearOut - Year of the check Out
     /// \param roomId - Id of the reserved room
-    /// \exception throws ReservationHasInvalidDates if Check Out date < Check In date
+    /// \exception throws ReservationHasInvalidDates if check out date < check in date.
     /// \exception throws DateIsNotValid if Check Out date < Check In date or Check Out date are invalid
     Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId);
 

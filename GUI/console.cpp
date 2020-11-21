@@ -770,9 +770,6 @@ void staff(Hotel *hotel){
         catch(InvalidShift& msg){
             cout <<msg;
         }
-        catch(ManagerAlreadyExists& msg){
-            cout << msg;
-        }
         catch(InvalidPosition& msg){
             cout << msg;
         }

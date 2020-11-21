@@ -236,10 +236,6 @@ void EditButton<N>::onClick(ButtonHandler& handler) {
             std::cout << msg;
             Sleep(waitSeeMessage);
         }
-        catch(ManagerAlreadyExists& msg){
-            std::cout << msg;
-            Sleep(waitSeeMessage);
-        }
         catch(InvalidPosition& msg){
             std::cout << msg;
             Sleep(waitSeeMessage);
@@ -1254,11 +1250,6 @@ void AddButton<N>::onClick(ButtonHandler& handler) {
                 Sleep(waitForRead);
             }
             catch(InvalidShift& msg){
-                gotoxy(0,16);
-                std::cout << msg;
-                Sleep(waitForRead);
-            }
-            catch(ManagerAlreadyExists& msg){
                 gotoxy(0,16);
                 std::cout << msg;
                 Sleep(waitForRead);

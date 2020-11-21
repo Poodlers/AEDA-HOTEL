@@ -19,7 +19,7 @@ Product::Product(){
             this->type = "Other";
             break;
     }
-    this->Id = totalId;
+    this->id = totalId;
     this->totalId++;
     this->stock = 100;
 }
@@ -28,7 +28,7 @@ Product::Product(const unsigned int& quality, const float& price, const std::str
     this->quality = quality;
     this->price = price;
     this->type = type;
-    this->Id = totalId;
+    this->id = totalId;
     this->totalId++;
     this->stock = 100;
 }
@@ -39,7 +39,7 @@ float Product::getPrice() const{
     return this->price;
 }
 unsigned int Product::getId() const{
-    return this->Id;
+    return this->id;
 }
 std::string Product::getType() const{
     return this->type;

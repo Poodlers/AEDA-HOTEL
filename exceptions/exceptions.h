@@ -301,24 +301,6 @@ public:
     }
 };
 
-/// Thrown when the User attempts to add a New Manager (system can only have one)
-class ManagerAlreadyExists{
-private:
-    std::string name;
-    unsigned int NIF;
-public:
-    ManagerAlreadyExists(const std::string &name, const unsigned int& NIF){
-        this->name = name;
-        this->NIF = NIF;
-    }
-    std::string getName() const{ return this->name; }
-    unsigned int getNIF() const{ return this->NIF; }
-    friend std::ostream& operator <<(std::ostream& o, ManagerAlreadyExists& exception){
-        return o << "There already exists a manager. Name: "<<exception.getName()<<" NIF: " << exception.getNIF() <<std::endl;
-    }
-};
-
-
 /// Thrown if the selected floor does not exist.
 class FloorDoesNotExist{
 private:

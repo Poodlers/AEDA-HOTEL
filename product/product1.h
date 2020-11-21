@@ -78,7 +78,7 @@ private:
     /// price of the product
     float price;
     /// id of the product
-    unsigned int Id;
+    unsigned int id;
     /// variable to keep product ids unique
     static int totalId;
     /// type of product

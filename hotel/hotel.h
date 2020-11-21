@@ -21,188 +21,191 @@ struct Transaction{
 };
 
 /// \class Hotel
-/// Class which represents a hotel
+/// Class which represents a hotel.
 ///
 ///
-/// Holds the all the information of a hotel (clients, staff members, reservations, providers, rooms, products bought, floors, ...)
+/// Defined by clients, staff members, reservations, providers, accounting, rooms, first floor, number of
+/// rooms, number of floors, hotel necessities, current date and if the manger is logged in or not).
 class Hotel{
 public:
     /*HOTEL-BUILDING-AND-SAVING*/
 
     /// \fn Hotel::Hotel(const std::string &hotelFile)
-    /// Hotel Constructor
+    /// Hotel Constructor.
     ///
-    /// Creates a hotel from a .txt file with the correct format
+    /// Creates a hotel from a '.txt' file with the correct format.
     /// \see hotel_exemplo.txt
-    /// \param hotelFile  name of the '.txt' file with out the '.txt', if it's not in the same directory as the .exe needs to be path\file
+    /// \param hotelFile  name of the '.txt' file without the '.txt' extension, if it's not in the same directory as the '.exe' hotelFile needs to be the whole path to the file.
     /// \exception throws FileNotFound if it can't find the file.
     /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
     Hotel(const std::string &hotelFile);
 
-    /// Save Hotel
+    /// Save Hotel.
     ///
-    /// Creates a .txt with the current hotel that can be read by the constructor
+    /// Creates a '.txt' file with the current hotel that can be read by the constructor.
     /// \see hotel_exemplo.txt
-    /// \param hotelFile  name of the '.txt' file with out the '.txt'
+    /// \param hotelFile  name of the '.txt' file without the '.txt' extension.
     void saveHotel(const std::string &hotelFile);
 
     /**/
 
     /*PROVIDERS*/
 
-    /// Adds a provider to providers
+    /// Adds provider to providers.
     ///
-    /// \param provider  provider to add
+    /// \param provider  provider to add.
     void addProvider(Provider* provider);
 
-    /// Returns the providers' vector
+    /// Returns providers' vector.
     ///
-    /// \return providers
+    /// \return providers.
     std::vector<Provider*> getProviders () const;
 
-    /// Auto buys products so that the hotel's necessities are met
+    /// Auto buys products so that the hotel's necessities are met.
     void autoBuy();
 
-    /// Buys the product with the product ID productId
+    /// Buys the product with the product ID productId.
     ///
-    /// \param productId  product ID to find
-    /// \exception throws ProductDoesNotExist is product with productID does not exist
+    /// \param productId  product ID to find.
+    /// \exception throws ProductDoesNotExist if product with productId does not exist.
     void buy(const unsigned int &productId);
 
     /**/
 
     /*PROFIT*/
-    /// Returns the costs of running the hotel
+    /// Returns costs of running the hotel.
     ///
-    /// \return
+    /// \return cost of running the hotel (paying salaries + buying products).
     float getCosts() const;
 
-    /// Returns the profit of running the hotel
+    /// Returns profit of running the hotel.
     ///
-    /// \return
+    /// \return profit of running the hotel.
     float getProfit() const;
 
-    /// Returns the money earned from running the hotel
+    /// Returns money earned from running the hotel.
     ///
-    /// \return
+    /// \return money earned by the hotel (payed by clients who checked in).
     float getMoneyEarned() const;
 
-    /// Returns de accounting vector
+    /// Returns accounting vector.
     ///
-    /// \return accounting
+    /// \return accounting.
     std::vector<Transaction*> getAccounting() const;
 
-    /// Pays staff
+    /// Pays staff.
     void payStaff();
     /**/
 
     /*RESERVATION*/
-    /// Returns the reservations vector
+    /// Returns reservations' vector.
     ///
-    /// \return reservations vector
+    /// \return reservations.
     std::vector<Reservation*>& getReservations();
 
-    /// Searches for reservations
+    /// Searches for reservations.
     ///
     /// Searches for reservations by searchCriteria which agree with value.
     /// \param searchCriteria  criteria used to search for reservations, can be "Date", "ID" or "Room".
-    /// \param value  value that the reservation has to agree with
+    /// \param value  value that the reservation has to agree with.
     /// \example searchReservations("Date",date1) will search for reservations with check in date equal to date1.
     /// \example searchReservations("ID",reservationId) will search for the reservation with ID reservationID.
     /// \example searchReservations("Room",roomID) will search for the reservations for the room with room ID roomId.
-    /// \return list of positions in the vector reservations of the found objects.
-    /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date
+    /// \return list of positions in the vector reservations of the found reservations.
+    /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date.
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
 
 
     void deleteReservation(Reservation* reservation);
-    /// Makes a reservation
+
+    /// Makes a reservation.
     ///
-    /// Makes a reservation and ads it to the client's reservations an the reservations vector in the hotel
-    /// \param roomId  ID of the room to be reserved
-    /// \param checkIn  Check In date for the reservation
-    /// \param checkOut  Check Out date for the reservation
-    /// \param capacity  size of the reservation
-    /// \param posClient  position in the vector clients of the client making the reservation
-    /// \param reservationId  id of the reservation (only a real ID when first building the hotel, when making reservations after should be -1
-    /// \param in  only 1 or -1 when building the hotel, adds the reservation to current reservations or past reservations right away
-    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations
-    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger then the room's capacity
-    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is reserved at the time intended
-    /// \exception throws ReservationHasInvalidDates if the Check In date is after the Check Out date
-    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId
+    /// Makes a reservation and adds it to the client's reservations and the reservations vector in the hotel.
+    /// \param roomId  ID of the room to be occupied.
+    /// \param checkIn  check in date for the reservation.
+    /// \param checkOut  check out date for the reservation.
+    /// \param capacity  size of the reservation.
+    /// \param posClient  position in the vector clients of the client making the reservation.
+    /// \param reservationId  ID of the reservation (only a real ID when first building the hotel, when making reservations afterwards should be -1 to generate a distinct reservation ID).
+    /// \param in  only 1 or -1 when building the hotel, adds the reservation to current reservations or past reservations right away.
+    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations registered.
+    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger than the room's capacity.
+    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is claimed at the time intended for the reservation.
+    /// \exception throws ReservationHasInvalidDates if the check in date is after the check out date.
+    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
     /**/
 
     /*ROOMS*/
-    /// Adds a room
+    /// Adds room.
     ///
-    /// \param floor  floor of the room
-    /// \param roomNumber  room number
-    /// \param roomId  room ID
-    /// \param capacity  room capacity
-    /// \param pricePerNight  price per night of the room
-    /// \param type  room type, can be 'Suite', 'NoViewRoom' or 'ViewRoom'
-    /// \exception throws RoomAlreadyExists if the room already exist
-    /// \exception throws NotAnInt if floor is not an integer
-    /// \exception throws NotAPositiveInt if capacity is a not a positive integer
-    /// \exception throws FloorDoesNotExist if floor is not a floor of the hotel
-    /// \exception throws NotAPositiveFloat if price is not a positive float
-    /// \exception throws InvalidRoomType if room type is not valid
+    /// \param floor  floor of the room.
+    /// \param roomNumber  room number.
+    /// \param roomId  room ID.
+    /// \param capacity  room capacity.
+    /// \param pricePerNight  price per night of the room.
+    /// \param type  room type, can be 'Suite', 'NoViewRoom' or 'ViewRoom'.
+    /// \exception throws RoomAlreadyExists if the room already exist.
+    /// \exception throws NotAnInt if floor is not an integer.
+    /// \exception throws NotAPositiveInt if capacity is not a positive integer.
+    /// \exception throws FloorDoesNotExist if floor is not a floor of the hotel.
+    /// \exception throws NotAPositiveFloat if price is not a positive float.
+    /// \exception throws InvalidRoomType if room type is not valid.
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
 
     void removeRoom(Room* room);
-    /// Checks if floor is valid
+
+    /// Checks if floor is valid.
     ///
-    /// \param floor  floor to check
-    /// \exception throws FloorDoesNotExist if floor doesn't exist in the hotel
+    /// \param floor  floor to check.
+    /// \exception throws FloorDoesNotExist if floor doesn't exist in the hotel.
     void checkIfFloorIsValid(const unsigned int& floor);
 
-    /// Searches for a specific room
+    /// Searches for a specific room.
     ///
-    /// \param roomId  room ID of the room to find
-    /// \param roomNumber  room Number of the room to find
-    /// \return position of the room found
-    /// \exception throws NotAPositiveInt if capacity is a not a positive integer if roomId or roomNumber
-    /// \exception throws RoomWithThisRoomIdOrRoomNumberAlreadyExists if has only the same ID or only the same number
-    /// \exception throws RoomDoesNotExist if room does not exist
+    /// \param roomId  room ID of the room to find.
+    /// \param roomNumber  room Number of the room to find.
+    /// \return position of the room found.
+    /// \exception throws NotAPositiveInt if roomId or roomNumber are not positive integers.
+    /// \exception throws RoomWithThisRoomIdOrRoomNumberAlreadyExists if there is a room with only the same ID or only the same room number.
+    /// \exception throws RoomDoesNotExist if room does not exist.
     int searchForRoom(const std::string& roomId, const std::string& roomNumber);
 
-    /// Searches for room by its' roomID
+    /// Searches for room by its roomID.
     ///
-    /// \param roomId  room ID of the room to find
-    /// \return position of the room found
-    /// \exception throws RoomDoesNotExist if no room with RoomId exists
+    /// \param roomId  room ID of the room to find.
+    /// \return position of the room found.
+    /// \exception throws RoomDoesNotExist if no room with RoomId does not exist.
     int searchForRoomByRoomId(const unsigned int& roomId);
 
-    /// Returns rooms vector
+    /// Returns rooms' vector.
     ///
-    /// \return rooms vector
+    /// \return rooms.
     std::vector <Room*>& getRooms();
 
-    /// Modifies a room
+    /// Modifies room.
     ///
-    /// Changes the room's capacity and price per night
-    /// \param capacity  room capacity, if '.' doesn't change
-    /// \param pricePerNight  price per night, if '.' doesn't change
-    /// \param pos  position of the room to modify in the vector rooms
-    /// \exception throws NotAPositiveInt if capacity is a not a positive integer
-    /// \exception throws NotAPositiveFloat if price is not a positive float
+    /// Changes the room's capacity and/or price per night.
+    /// \param capacity  new room capacity. If '.' doesn't change.
+    /// \param pricePerNight  new price per night. If '.' doesn't change.
+    /// \param pos  position of the room to modify in the vector rooms.
+    /// \exception throws NotAPositiveInt if capacity is a not a positive integer.
+    /// \exception throws NotAPositiveFloat if price is not a positive float.
     void modifyRoom(const std::string& capacity, const std::string& pricePerNight, const int& pos);
 
-    /// Sorts Rooms
+    /// Sorts Rooms.
     ///
-    /// \param criteria  sorting criteria can be: Room ID, Room Number, Floor, Capacity, Price and Type
-    /// \param order  sorting order can be: Ascending or Descending
-    /// \exception throws SortingError if order or criteria is wrong
+    /// \param criteria  sorting criteria, can be "Room ID", "Room Number", "Floor", "Capacity", "Price" or "Type".
+    /// \param order  sorting order, can be "Ascending" or "Descending".
+    /// \exception throws SortingError if order or criteria is wrong.
     void sortRooms(const std::string& criteria,const std::string& order);
 
-    /// Activate Discount
+    /// Activates Discount.
     ///
-    /// \param type  room type to activate the discount
-    /// \exception throws AccessRestricted if someone not logged in tries to activate it
-    /// \exception throws InvalidRoomType if type is not a valid room type
+    /// \param type  room type to activate discount.
+    /// \exception throws AccessRestricted if someone not logged in tries to activate it.
+    /// \exception throws InvalidRoomType if type is not a valid room type.
     void activateDiscount(const std::string& type);
     /**/
 

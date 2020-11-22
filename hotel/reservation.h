@@ -60,12 +60,12 @@ public:
     /// Changes check in date.
     ///
     /// \param checkIn  new check in date.
-    void setCheckIn(const Date& checkIn);
+    void setCheckIn(Date* checkIn);
 
     /// Changes check ou date.
     ///
     /// \param checkOut  new check out date.
-    void setCheckOut(const Date& checkOut);
+    void setCheckOut(Date* checkOut);
 
     /// Changes the static ID.
     ///
@@ -83,8 +83,19 @@ public:
     /// \param isCurrent true or false depending on if a client is checkin in or checking out.
     void setIsCurrent(bool isCurrent);
 
+    /// Returns is current
+    ///
+    /// \return isCurrent
     bool getIsCurrent() const;
+
+    /// Changes room ID
+    ///
+    /// \param roomId new room ID
     void setRoomId(int roomId);
+
+    /// Changes reservation size
+    ///
+    /// \param reservationSize new reservation Size
     void setReservationSize(int reservationSize);
 
 private:

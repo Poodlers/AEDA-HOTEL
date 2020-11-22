@@ -988,4 +988,20 @@ public:
     }
 };
 
+/// Thrown if user attempts to modify a past or current reservation.
+class CantChangeReservation{
+public:
+    ///Constructor
+    CantChangeReservation(){};
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const CantChangeReservation& exception){
+        return     o << "Only future reservations can be altered."<<std::endl;
+    }
+};
+
 #endif

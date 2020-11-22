@@ -36,7 +36,7 @@ std::vector<int> Client::checkIn(Date* date) {
         else if ((futureReservations[i]->getCheckIn() < *date) && (futureReservations[i]->getCheckOut() > *date)) {
             std::cout << "The checkIn for room " << futureReservations[i]->getRoomId() << " was "
                       << *date - futureReservations[i]->getCheckIn() << " days late." << std::endl;
-            futureReservations[i]->setCheckIn(*date);
+            futureReservations[i]->setCheckIn(date);
             this->currentReservations.push_back(futureReservations[i]);
             currentReservations[i]->setIsCurrent(true);
             reservationIds.push_back(futureReservations[i]->getRoomId());
@@ -151,7 +151,7 @@ std::vector<int> Client::checkOut( Date* date){
             currentReservations[i]->setIsCurrent(false);
             std::cout << "The checkOut for room " << currentReservations[i]->getRoomId() << " was "
                       << currentReservations[i]->getCheckOut() - *date << " days early." << std::endl;
-            currentReservations[i]->setCheckOut(*date);
+            currentReservations[i]->setCheckOut(date);
             this->history.push_back(currentReservations[i]);
             roomIds.push_back(currentReservations[i]->getRoomId());
             this->currentReservations.erase(currentReservations.begin()+i);

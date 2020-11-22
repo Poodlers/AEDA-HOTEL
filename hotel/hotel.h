@@ -146,7 +146,23 @@ public:
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
 
-    void modifyReservation(Reservation* reservation, unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity,int posClient);
+    /// Modifies reservation.
+    ///
+    /// \param reservation pointer to reservation to modify.
+    /// \param roomId new room ID.
+    /// \param checkIn new check in date.
+    /// \param checkOut new check out date.
+    /// \param capacity new capacity.
+    /// \param posClient position of the client.
+    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations registered.
+    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger than the room's capacity.
+    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is claimed at the time intended for the reservation.
+    /// \exception throws ReservationHasInvalidDates if the check in date is after the check out date.
+    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
+    /// \exception throws DateIsNotValid is check in or check out date are not valid.
+    /// \exception throws NotAPositiveInt if room ID or capacity aren't positive integers.
+    /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
+    void modifyReservation(Reservation *reservation,const std::string & roomId, const std::string &checkIn, const std::string &checkOut, const std::string &capacity, const int& posClient);
     /**/
 
     /*ROOMS*/

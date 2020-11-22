@@ -316,7 +316,7 @@ void EditButton<N>::onClick(ButtonHandler& handler) {
         int reservationId;
         askReservation(roomId,checkIn,checkOut,capacity,reservationId);
         try{
-            this->OriginalButton->getHotel()->modifyReservation(this->getObject(),roomId,&checkIn,&checkOut,capacity,pos);
+            //this->OriginalButton->getHotel()->modifyReservation(this->getObject(),roomId,&checkIn,&checkOut,capacity,pos);
         }catch(RoomDoesNotExist& msg){
             gotoxy(0,15);
             std::cout << msg;

@@ -82,7 +82,7 @@ void reservation(Hotel * hotel){
             cout << "Date: " << hotel->getDate() << endl;
 
             std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
-                      << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                      << std::setw(25) << "Reservation Size" <<std::setw(16)<< "Check In"<< std::setw(16)
                       << "Check Out"
                       << std::setw(8) << "Room ID"<<std::endl;
             for (Reservation* reservation: hotel->getReservations()) {
@@ -172,10 +172,8 @@ void reservation(Hotel * hotel){
                     cin >> reservationId;
                     pos = hotel->searchReservations("ID", reservationId);
                     hotel->removeReservation(pos[0]);
-                } else if (input == "Modify") {
-
-                } else if (input == "Help") {
-                    cout << "Valid commands are: Search, Remove, Make, Sort, Modify, Search or Help" << endl;
+                }  else if (input == "Help") {
+                    cout << "Valid commands are: Search, Remove, Make, Sort, Search or Help" << endl;
                 } else {
                     cout << "Invalid command, please retry." << endl;
                 }

@@ -728,6 +728,9 @@ void Hotel::makeReservation(const unsigned int &roomId, Date *checkIn, Date *che
                 if (reservation->getRoomId() == roomId && reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
                     throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
                 }
+                if (reservation->getRoomId() == roomId && reservation->getCheckIn() <= *checkOut && *checkOut<= reservation->getCheckOut()){
+                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
+                }
             }
             try{
                 Reservation* reservation = new Reservation(capacity,checkIn,checkOut,roomId,reservationId);
@@ -803,44 +806,147 @@ void Hotel::removeRoom(Room* room){
     delete room;
 }
 
-void Hotel::modifyReservation(Reservation *reservation, unsigned int &roomId, Date *checkIn, Date *checkOut,
-                              const int &capacity, int posClient) {
-    //if reservation is not future throw shit
-    for (Room* room: rooms){
-        if (room->getRoomId() == roomId){
-            if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0){
-                throw ClientCantMakeThisReservation();
-            }
-            if (room->getCapacity() < capacity){
-                throw RoomDoesNotHaveTheNecessaryCapacity(roomId);
-            }
-            for(Reservation* reservation: reservations){
-                if (reservation->getRoomId() == roomId && reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
-                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
-                }
-            }
-            try{
-                clients[posClient]->deleteReservation(reservation);
-                reservation->setCheckIn(*checkIn);
-                reservation->setCheckOut(*checkOut);
-                reservation->setRoomId(roomId);
-                reservation->setReservationSize(capacity);
-                if(*checkOut < date){
-                    reservation->setIsCurrent(false);
-                    clients[posClient]->addToHistory(reservation);
-                }
-                else{
-                    clients[posClient]->addNewReservation(reservation);
-                    reservation->setIsCurrent(false);
-                }
+void Hotel::modifyReservation(Reservation *reservation,const std::string & roomId, const std::string &checkIn, const std::string &checkOut,
+                              const std::string &capacity, const int& posClient) {
+    for (Reservation* reservation1: clients[posClient]->getHistory()){
+        if (reservation1 == reservation){
 
-                this->reservations.push_back(reservation);
-            }
-            catch(...){
-                throw;
-            }
-            return;
         }
+    }
+    for (Reservation* reservation1: clients[posClient]->getCurrentReservations()){
+        if (reservation1 == reservation){
+
+        }
+    }
+    try {
+        if (roomId != ".") checkIfPositiveInteger(roomId, "Room ID");
+        if (capacity != ".") checkIfPositiveInteger(capacity, "Capacity");
+
+        if (roomId == ".") {
+            if (checkIn != "." && checkOut != ".") {
+                Date *date1 = new Date(checkIn);
+                Date *date2 = new Date(checkOut);
+                for (Reservation *reservation1: reservations) {
+                    if (reservation1 != reservation && reservation1->getRoomId() == reservation->getRoomId() &&
+                        reservation1->getCheckIn() <= *date1 && *date1 <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                    if (reservation1 != reservation && reservation1->getRoomId() == reservation->getRoomId() &&
+                        reservation1->getCheckIn() <= *date2 && *date2 <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                }
+                if (capacity != ".") {
+                    for (Room *room: rooms) {
+                        if (room->getRoomId() == reservation->getRoomId()) {
+                            if (room->getCapacity() < stoi(capacity)) {
+                                throw RoomDoesNotHaveTheNecessaryCapacity(reservation->getRoomId());
+                            }
+                        }
+                    }
+                }
+                reservation->setReservationSize(stoi(capacity));
+                reservation->setCheckIn(date1);
+                reservation->setCheckOut(date2);
+            } else if (checkIn == "." && checkOut != ".") {
+                Date *date2 = new Date(checkOut);
+                for (Reservation *reservation1: reservations) {
+                    if (reservation1 != reservation && reservation1->getRoomId() == reservation->getRoomId() &&
+                        reservation1->getCheckIn() <= *date2 && *date2 <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                }
+                if (capacity != ".") {
+                    for (Room *room: rooms) {
+                        if (room->getRoomId() == reservation->getRoomId()) {
+                            if (room->getCapacity() < stoi(capacity)) {
+                                throw RoomDoesNotHaveTheNecessaryCapacity(reservation->getRoomId());
+                            }
+                        }
+                    }
+                }
+                reservation->setReservationSize(stoi(capacity));
+                reservation->setCheckOut(date2);
+            } else if (checkIn != "." && checkOut == ".") {
+                Date *date1 = new Date(checkIn);
+                for (Reservation *reservation1: reservations) {
+                    if (reservation1 != reservation && reservation1->getRoomId() == reservation->getRoomId() &&
+                        reservation1->getCheckIn() <= *date1 &&
+                            *date1 <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                }
+                if (capacity != ".") {
+                    for (Room *room: rooms) {
+                        if (room->getRoomId() == reservation->getRoomId()) {
+                            if (room->getCapacity() < stoi(capacity)) {
+                                throw RoomDoesNotHaveTheNecessaryCapacity(reservation->getRoomId());
+                            }
+                        }
+                    }
+                }
+                reservation->setReservationSize(stoi(capacity));
+                reservation->setCheckIn(date1);
+            }
+        }
+        else{
+            if (checkIn != "." && checkOut != ".") {
+                Date *date1 = new Date(checkIn);
+                Date *date2 = new Date(checkOut);
+                for (Reservation *reservation1: reservations) {
+                    if (reservation1->getRoomId() == stoi(roomId) &&
+                        reservation1->getCheckIn() <= *date1 &&
+                        *date2 <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                }
+            } else if (checkIn == "." && checkOut != ".") {
+                Date *date2 = new Date(checkOut);
+                for (Reservation *reservation1: reservations) {
+                    if (reservation1->getRoomId() == stoi(roomId) &&
+                        reservation1->getCheckIn() <= reservation->getCheckIn() &&
+                        *date2 <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                }
+            } else if (checkIn == "." && checkOut != ".") {
+                Date *date1 = new Date(checkIn);
+                for (Reservation *reservation1: reservations) {
+                    if (reservation1->getRoomId() == stoi(roomId) &&
+                        reservation1->getCheckIn() <= *date1 &&
+                        reservation->getCheckOut() <= reservation1->getCheckOut()) {
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(reservation->getRoomId());
+                    }
+                }
+            }
+            if (capacity != ".") {
+                for (Room *room: rooms) {
+                    if (room->getRoomId() == stoi(roomId)) {
+                        if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0) {
+                            throw ClientCantMakeThisReservation();
+                        }
+                        if (room->getCapacity() < stoi(capacity)) {
+                            throw RoomDoesNotHaveTheNecessaryCapacity(reservation->getRoomId());
+                        }
+                    }
+                }
+            }
+            else{
+                for (Room *room: rooms) {
+                    if (room->getRoomId() == stoi(roomId)) {
+                        if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0) {
+                            throw ClientCantMakeThisReservation();
+                        }
+                        if (room->getCapacity() < reservation->getReservationSize()) {
+                            throw RoomDoesNotHaveTheNecessaryCapacity(reservation->getRoomId());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    catch(...){
+        throw;
     }
 }
 

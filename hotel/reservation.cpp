@@ -83,11 +83,11 @@ void Reservation::print() {
 }
 
 
-void Reservation::setCheckIn(const Date& checkIn){
-    this->checkIn =checkIn;
+void Reservation::setCheckIn(Date* checkIn){
+    this->checkIn = *checkIn;
 }
-void Reservation::setCheckOut(const Date& checkOut){
-    this->checkOut =checkOut;
+void Reservation::setCheckOut(Date* checkOut){
+    this->checkOut = *checkOut;
 }
 
 

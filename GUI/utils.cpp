@@ -4,20 +4,6 @@
 
 using namespace std;
 
-char waitForCharInput( int mili_seconds ){
-    int time_elapsed = 0;
-    char c = '_'; //default return
-    while( time_elapsed <= mili_seconds ) {
-        if( _kbhit() ) { 
-            c = _getch(); 
-            break; 
-        }
-        Sleep(10); 
-        time_elapsed += 10; 
-    }
-    return c;
-}
-
 Hotel* createHotel(){
     while(true){
         string input;
@@ -218,23 +204,6 @@ void checkIfValidPriceOrWage(std::string input,std::string check){
     catch(...){
         throw NotAPositiveFloat(check);
     }
-}
-
-bool CheckIfFloat(std::string input){
-    bool isfloat = false;
-    for(int i = 0; i < input.length();i++){
-        if(input[i] == '.'){
-            if(!isfloat){
-                isfloat = true;
-            }else{ //this is the second . and this input is invalid
-                return false;
-            }
-        }
-        else if(!isdigit(input[i])){
-            return false;
-        }
-    }
-    return true;
 }
 
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input)){

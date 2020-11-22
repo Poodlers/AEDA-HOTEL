@@ -111,9 +111,6 @@ public:
     /// Searches for reservations by searchCriteria which agree with value.
     /// \param searchCriteria  criteria used to search for reservations, can be "Date", "ID" or "Room".
     /// \param value  value that the reservation has to agree with.
-    /// \example searchReservations("Date",date1) will search for reservations with check in date equal to date1.
-    /// \example searchReservations("ID",reservationId) will search for the reservation with ID reservationID.
-    /// \example searchReservations("Room",roomID) will search for the reservations for the room with room ID roomId.
     /// \return list of positions in the vector reservations of the found reservations.
     /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date.
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
@@ -145,24 +142,6 @@ public:
     /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
-
-    /// Modifies reservation.
-    ///
-    /// \param reservation pointer to reservation to modify.
-    /// \param roomId new room ID.
-    /// \param checkIn new check in date.
-    /// \param checkOut new check out date.
-    /// \param capacity new capacity.
-    /// \param posClient position of the client.
-    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations registered.
-    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger than the room's capacity.
-    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is claimed at the time intended for the reservation.
-    /// \exception throws ReservationHasInvalidDates if the check in date is after the check out date.
-    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
-    /// \exception throws DateIsNotValid is check in or check out date are not valid.
-    /// \exception throws NotAPositiveInt if room ID or capacity aren't positive integers.
-    /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
-    void modifyReservation(Reservation *reservation,const std::string & roomId, const std::string &checkIn, const std::string &checkOut, const std::string &capacity, const int& posClient);
     /**/
 
     /*ROOMS*/

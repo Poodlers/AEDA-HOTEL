@@ -455,49 +455,120 @@ private:
     /// Button to be invoked to refresh the screen
     MenuButton<Room>* menu_button;
 public:
+    /// Initialize apply discount button
+    ///
+    /// \param x top left x coordinate of the button
+    /// \param y top left y coordinate of the button
+    /// \param width width of the button to be drawn
+    /// \param height height of the button to be drawn
+    /// \param text text to be displayed inside of the button
+    /// \param room pointer to room where the discount will be applied
+    /// \param button called button to refresh screen
     ApplyDiscountButton(const int x, const int y, const int width,const int height,const std::string text, Room* room,MenuButton<Room>* button);
+    /// Calls toggle discount on room
+    ///
+    /// \param handler ButtonHandler updating the buttons on Screen
     void onClick(ButtonHandler& handler) override;
 };
 
+/// Base class for edit and delete buttons
 template<class N>
 class ModifyButton: public BaseButton{
 private:
+    /// Pointer to object that will be modified/ deleted
     N* object;
 public:
+    ///
+    /// \return pointer to the modified object/ deleted
     N* getObject();
+    /// Calls correspondent modify/ delete method on the object
+    ///
+    /// \param handler ButtonHandler updating the buttons on Screen
     void onClick(ButtonHandler& handler) override;
+    /// Initialize base class
+    ///
+    /// \param x top left x coordinate of the button
+    /// \param y top left y coordinate of the button
+    /// \param width width of the button to be drawn
+    /// \param height height of the button to be drawn
+    /// \param text text to be displayed inside of the button
+    /// \param object pointer to object to modify/ delete
     ModifyButton(const int x, const int y, const int width,const int height,const std::string text,N* object);
 };
 
+/// Button that calls the delete method correspondent to a given class
 template <class N>
 class DeleteButton: public ModifyButton<N>{
 private:
+    /// Pointer to menu button that will refresh the screen
     MenuButton<N>* Button;
 public:
+    /// Initialize delete button
+    ///
+    /// \param x top left x coordinate of the button
+    /// \param y top left y coordinate of the button
+    /// \param width width of the button to be drawn
+    /// \param height height of the button to be drawn
+    /// \param text text to be displayed inside of the button
+    /// \param object pointer to object to delete
+    /// \param Button pointer to menu button that will refresh the screen
     DeleteButton(const int x, const int y, const int width,const int height,const std::string text,N* object,MenuButton<N>* Button);
+
+    /// Calls correspondent delete method on the object
+    ///
+    /// \param handler ButtonHandler updating the buttons on Screen
     void onClick(ButtonHandler& handler) override;
 };
 
+/// Button that calls the edit method correspondent to a given class
 template <class N>
 class EditButton: public ModifyButton<N>{
 private:
+    /// Pointer to menu button that will refresh the screen
     MenuButton<N>* OriginalButton;
 public:
+    /// Initialize edit button
+    ///
+    /// \param x top left x coordinate of the button
+    /// \param y top left y coordinate of the button
+    /// \param width width of the button to be drawn
+    /// \param height height of the button to be drawn
+    /// \param text text to be displayed inside of the button
+    /// \param object pointer to object to edit
+    /// \param button pointer to menu button that will refresh the screen
     EditButton(const int x, const int y, const int width,const int height,const std::string text,N* object,MenuButton<N>* button);
+
+    /// Calls correspondent edit method on the object
+    ///
+    /// \param handler ButtonHandler updating the buttons on Screen
     void onClick(ButtonHandler& handler) override;
 };
 
+/// Button that calls the add method correspondent to a given class
 template <class N>
 class AddButton: public BaseButton{
 private:
+    /// Pointer to menu button that will refresh the screen
     MenuButton<N>* Button;
 public:
+    /// Initialize add button
+    ///
+    /// \param x top left x coordinate of the button
+    /// \param y top left y coordinate of the button
+    /// \param width width of the button to be drawn
+    /// \param height height of the button to be drawn
+    /// \param text text to be displayed inside of the button
+    /// \param Button pointer to menu button that will refresh the screen
     AddButton(const int x, const int y, const int width,const int height,const std::string text,MenuButton<N>* Button);
+
+    /// Calls correspondent add method on the object
+    ///
+    /// \param handler ButtonHandler updating the buttons on Screen
     void onClick(ButtonHandler& handler) override;
 };
 
 
-
+/// Checks whether a button is pressed or not
 bool ButtonWasPressed(BaseButton *button, INPUT_RECORD &Input_Record);
 
 

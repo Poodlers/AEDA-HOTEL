@@ -859,10 +859,6 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
                 handler.AddButton(checkIn);
             }
              else if(!menu_items[i]->getIsCurrent()){
-                 if (this->client != nullptr && menu_items[i]->getCheckOut() > this->hotel->getDate()) {
-                     handler.AddButton(NewEditButton);
-                     NewEditButton->DrawButton();
-                 }
                 handler.AddButton(NewDeleteButton);
                 NewDeleteButton->DrawButton();
             }

@@ -126,6 +126,11 @@ public:
     /// \param reservation pointer to the reservation to remove.
     void deleteReservation(Reservation* reservation);
 
+    /// Removes reservation.
+    ///
+    /// \param pos position of the reservation to remove.
+    void removeReservation(const int& pos);
+
     /// Makes a reservation.
     ///
     /// Makes a reservation and adds it to the client's reservations and the reservations vector in the hotel.

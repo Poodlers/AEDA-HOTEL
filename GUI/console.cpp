@@ -84,9 +84,18 @@ void reservation(Hotel * hotel){
     int pos1;
     vector<int> pos;
     string type;
+
+    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+              << "Check Out"
+              << std::setw(8) << "Room ID"<<std::endl;
+    for (Reservation* reservation: hotel->getReservations()){
+        reservation->print();
+        cout << endl;
+
     while(true){
         cout << "Date: " << hotel->getDate() <<endl;
-        cout << "Do you wish to make a reservation (Make) or to search for reservations by date (Search)?"<<std::endl;
+        cout << "Write Help to see possible commands."<<endl;
         cin >> input;
         try{
             if (input == "Make"){
@@ -113,7 +122,7 @@ void reservation(Hotel * hotel){
                 hotel->makeReservation(stoi(roomId),checkIn,checkOut,stoi(capacity),pos1,-1,false);
             }
             else if (input == "Search"){
-                cout << "Do you want reservations for/from a specific date (Date), room (Room), a specific Id (ID) or all reservations (All)?"<<endl;
+                cout << "Do you want reservations for/from a specific date (Date), room (Room) or a specific Id (ID)?"<<endl;
                 cin >> type;
 
                 if (type == "Date"){
@@ -140,16 +149,6 @@ void reservation(Hotel * hotel){
                         hotel->getReservations()[position]->print();
                     }
                 }
-                else if (type == "All"){
-                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
-                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
-                              << "Check Out"
-                              << std::setw(8) << "Room ID"<<std::endl;
-                    for (Reservation* reservation: hotel->getReservations()){
-                        reservation->print();
-                        cout << endl;
-                    }
-                }
                 else if (type == "ID"){
                     cout << "Insert the room of the ID of the reservation you wish to find:"<<endl;
                     cin >> reservationId;
@@ -167,6 +166,18 @@ void reservation(Hotel * hotel){
             }
             else if (input == "Back"){
                 return;
+            }
+            else if (input == "Sort"){
+
+            }
+            else if (input == "Remove"){
+                cout << "Insert the room of the ID of the reservation you wish to remove:"<<endl;
+                cin >> reservationId;
+                pos = hotel->searchReservations("ID", reservationId);
+                hotel->removeReservation(pos[0]);
+            }
+            else if (input == "Help"){
+                cout << "Valid commands are: Search, Remove, Make, Sort, Modify, Search or Help"<<endl;
             }
             else{
                 cout << "Invalid command, please retry."<<endl;

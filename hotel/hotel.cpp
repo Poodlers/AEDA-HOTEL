@@ -691,6 +691,27 @@ int Hotel::getFirstFloor() const{
     return firstFloor;
 }
 
+void Hotel::removeReservation(const int& pos){
+    for (Client* client: clients){
+        for (int i = 0; i < client->getCurrentReservations().size(); i++){
+            if (client->getCurrentReservations()[i]->getReservationId() == reservations[pos]->getReservationId()){
+                client->getCurrentReservations().erase(client->getCurrentReservations().begin() + i);
+            }
+        }
+        for (int i = 0; i < client->getFutureReservations().size(); i++){
+            if (client->getFutureReservations()[i]->getReservationId() == reservations[pos]->getReservationId()){
+                client->getFutureReservations().erase(client->getFutureReservations().begin() + i);
+            }
+        }
+        for (int i = 0; i < client->getHistory().size(); i++){
+            if (client->getHistory()[i]->getReservationId() == reservations[pos]->getReservationId()){
+                client->getHistory().erase(client->getHistory().begin() + i);
+            }
+        }
+    }
+    reservations.erase(reservations.begin() + pos);
+}
+
 void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in){
     for (Room* room: rooms){
         if (room->getRoomId() == roomId){

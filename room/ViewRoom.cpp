@@ -42,3 +42,7 @@ void ViewRoom::print() {
         std::cout << "Occupied"<<std::endl;
     }
 }
+
+void ViewRoom::setDiscountState(const bool &discount) {
+    this->discount = discount;
+}

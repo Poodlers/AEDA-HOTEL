@@ -57,10 +57,35 @@ public:
     /// Abstract.
     virtual bool getDiscountState() const = 0;
 
+    /// change floor
+    ///
+    /// \param floor  new floor
+    void setFloor(const int &floor);
+
+    /// change room number
+    ///
+    /// \param roomNumber
+    void setRoomNumber(const unsigned int &roomNumber);
+
+    /// change room id
+    ///
+    /// \param roomId  new room id
+    void setRoomId(const unsigned int &roomId);
+
+    /// change capacity
+    ///
+    /// \param capacity  new capacity
+    void setCapacity(const unsigned int &capacity);
+
+    /// change price per night
+    ///
+    /// \param pricePerNight  new price per night
+    void setPricePerNight(const float &pricePerNight);
+
     /// Change availability.
     ///
     /// \param free  new state of room's availability.
-    void changeAvailability(const bool& free);
+    void setAvailability(const bool& free);
 
     /// Modifies rooms capacity and/or pricePerNight.
     ///
@@ -127,6 +152,11 @@ public:
     /// \return value of the possible discount.
     float getDiscountValue() const override;
 
+    /// changes discount state
+    ///
+    /// \param discount  new discount state
+    void setDiscountState(const bool &discount);
+
     /// Returns room type.
     ///
     /// \return "Suite".
@@ -174,6 +204,11 @@ public:
     /// \return value of the possible discount.
     float getDiscountValue() const override;
 
+    /// changes discount state
+    ///
+    /// \param discount  new discount state
+    void setDiscountState(const bool &discount);
+
     /// Returns room type.
     ///
     /// \return "ViewRoom".
@@ -218,6 +253,11 @@ public:
     ///
     /// \return value of the possible discount.
     float getDiscountValue() const override;
+
+    /// changes discount state
+    ///
+    /// \param discount  new discount state
+    void setDiscountState(const bool &discount);
 
     /// Returns room type.
     ///

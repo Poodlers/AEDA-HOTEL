@@ -41,3 +41,7 @@ void Suite::print() {
         std::cout << std::setw(9) << "Occupied"<<std::endl;
     }
 }
+
+void Suite::setDiscountState(const bool &discount) {
+    this->discount = discount;
+}

@@ -41,3 +41,7 @@ void NoViewRoom::print() {
         std::cout << "Occupied"<<std::endl;
     }
 }
+
+void NoViewRoom::setDiscountState(const bool &discount) {
+    this->discount = discount;
+}

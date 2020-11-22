@@ -37,7 +37,7 @@ void Room::print() {
 }
 
 
-void Room::changeAvailability(const bool& free){
+void Room::setAvailability(const bool& free){
     this->free = free;
 }
 
@@ -48,4 +48,24 @@ void Room::modify(const std::string& capacity, const std::string& pricePerNight)
     if (pricePerNight != "."){
         this->pricePerNight = stof(pricePerNight);
     }
+}
+
+void Room::setFloor(const int &floor) {
+    this->floor = floor;
+}
+
+void Room::setRoomNumber(const unsigned int &roomNumber) {
+    this->roomNumber = roomNumber;
+}
+
+void Room::setRoomId(const unsigned int &roomId) {
+    this->roomId = roomId;
+}
+
+void Room::setCapacity(const unsigned int &capacity) {
+    this->capacity = capacity;
+}
+
+void Room::setPricePerNight(const float &pricePerNight) {
+    this->pricePerNight = pricePerNight;
 }

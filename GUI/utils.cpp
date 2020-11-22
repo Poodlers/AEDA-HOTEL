@@ -202,7 +202,7 @@ void checkIfValidPriceOrWage(std::string input,std::string check){
         if(input[i] == '.'){
             if(!isfloat){
                 isfloat = true;
-            }else{ //this is the second . and this input is invalid
+            }else{ //this is the second, this input is invalid
                 throw NotAPositiveFloat(check);
             }
         }
@@ -210,7 +210,12 @@ void checkIfValidPriceOrWage(std::string input,std::string check){
             throw NotAPositiveFloat(check);
         }
     }
-    if (stoi(input) <= 0){
+    try{
+        if (stof(input) <= 0){
+            throw NotAPositiveFloat(check);
+        }
+    }
+    catch(...){
         throw NotAPositiveFloat(check);
     }
 }

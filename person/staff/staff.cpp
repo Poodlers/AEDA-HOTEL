@@ -43,7 +43,7 @@ void Staff::modifyStaffMember(const std::string& name, const std::string& NIF, c
         this->name = name;
     }
     if(NIF != "."){
-        this->NIF =stoi(NIF);
+        this->NIF = stoi(NIF);
     }
     if(wage != "."){
         this->wage = stof(wage);

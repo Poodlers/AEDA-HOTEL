@@ -973,4 +973,20 @@ public:
     }
 };
 
+/// Thrown when user tris to remove a manager.
+class CantRemoveManager{
+public:
+    /// Constructor.
+    CantRemoveManager(){};
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const CantRemoveManager& exception){
+        return     o << "Can't remove manager, if you wish to replace the manager add a new manager instead."<<std::endl;
+    }
+};
+
 #endif

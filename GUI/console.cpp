@@ -293,10 +293,10 @@ void rooms(Hotel * hotel){
                 hotel->sortRooms(sorting,order);
             }
             else if (input == "Search"){
-                cout << "Insert the Room ID of the room you wish to modify:"<<endl;
+                cout << "Insert the Room ID of the room you wish to search:"<<endl;
                 cin >> roomId;
 
-                cout << "Insert the Room Number of the room you wish to modify:"<<endl;
+                cout << "Insert the Room Number of the room you wish to search:"<<endl;
                 cin >> roomNumber;
                 pos = hotel->searchForRoom(roomId,roomNumber);
                 hotel->getRooms()[pos]->print();
@@ -716,6 +716,9 @@ void staff(Hotel *hotel){
         catch(NotAnInt& msg){
             cout <<msg;
         }
+        catch(CantRemoveManager& msg){
+            cout <<msg;
+        }
         catch(StaffMemberWithThisNIFAlreadyExists& msg){
             cout << msg;
         }
@@ -775,7 +778,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Reservations, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time and Exit"<<endl;
         }
         else if (input == "Reservations"){
             reservation(hotel);

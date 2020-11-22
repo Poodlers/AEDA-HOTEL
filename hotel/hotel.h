@@ -118,7 +118,9 @@ public:
     /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date.
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
 
-
+    /// Removes reservation.
+    ///
+    /// \param reservation pointer to the reservation to remove.
     void deleteReservation(Reservation* reservation);
 
     /// Makes a reservation.
@@ -335,11 +337,13 @@ public:
     /// Removes staff member.
     ///
     /// \param staff pointer to staff member to remove.
+    /// \exception throws CantRemoveManager if user tries to remove the manager.
     void removeStaffMember(Staff* staff);
 
     /// Removes staff member.
     ///
     /// \param pos  position of the staff member to remove.
+    /// \exception throws CantRemoveManager if user tries to remove the manager.
     void removeStaffMember(int pos);
 
     /// Adds staff member

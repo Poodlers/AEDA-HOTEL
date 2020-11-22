@@ -55,13 +55,13 @@ void Hotel::reduceNecessity(std::string type) {
 void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
-            if (productId == provider->getProducts()[i]->getId()){
+            if (productId == provider->getProducts()[i]->getId()){ // if product exists
                 Transaction* transaction = new Transaction;
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
-                accounting.push_back(transaction);
-                this->reduceNecessity(provider->getProducts()[i]->getType());
-                provider->getProducts()[i]->reduceStock();
+                accounting.push_back(transaction); //Creates and adds a new transaction
+                this->reduceNecessity(provider->getProducts()[i]->getType()); //Reduces the hotel's necessity for the product
+                provider->getProducts()[i]->reduceStock(); //Reduces product stock
                 return;
             }
         }
@@ -71,12 +71,12 @@ void Hotel::buy(const unsigned int &productId){
 
 void Hotel::autoBuy(){
     std::vector<Product*> products;
-    for (Provider* provider: providers){
+    for (Provider* provider: providers){ //Creates a vector with all products from all providers
         for (Product* product: provider->getProducts()){
             products.push_back(product);
         }
     }
-    sort(products.begin(),products.end(),[](Product* p1, Product* p2){
+    sort(products.begin(),products.end(),[](Product* p1, Product* p2){ //Sorts products by type and by lowest price so that we can find the cheapest of each category
         if (p1->getType() == p2->getType()){
             return p1->getPrice() < p2->getPrice();
         }
@@ -91,7 +91,7 @@ void Hotel::autoBuy(){
         }
     });
 
-    for (Product* product: products){
+    for (Product* product: products){ //Fulfills product necessity with the cheapest products of each type
         if (product->getType() == "Cleaning" && cleaningNecessity != 0){
             while(product->getStock()!= 0  && cleaningNecessity != 0){
                 buy(product->getId());
@@ -119,6 +119,12 @@ void Hotel::incrementDate(const int& i){
         for (Provider* provider: providers){
             provider->restock();
         }
+    }
+    if (date.getDay() % 5 == 0){
+        std::cout << "If no products are bought before tomorrow to fill the hotel's necessities the cheapest of each category will automatically be bought."<<std::endl;
+    }
+    if (date.getDay() % 5 == 1){
+        autoBuy();
     }
     if (date.getDay() == date.getDaysInMonth(date.getMonth())){
         payStaff();
@@ -149,6 +155,7 @@ void Hotel::checkIfFloorIsValid(const unsigned int& floor){
         }
     }
 }
+
 int Hotel::searchForRoom(const std::string& roomId, const std::string& roomNumber){
     try{
         checkIfPositiveInteger(roomId, "Room Id");
@@ -662,13 +669,31 @@ void Hotel::removeClient(int pos) {
 }
 
 void Hotel::removeStaffMember(Staff* staff){
-    auto find = std::find(this->staff.begin(),this->staff.end(),staff);
-    this->staff.erase(find);
-    delete staff;
+    if (staff->getType() == "Manager"){
+        throw CantRemoveManager();
+    }
+    if (staff->getType() == "Responsible"){
+        auto find = std::find(this->staff.begin(),this->staff.end(),staff);
+        this->staff.erase(find);
+        delete staff;
+        assignFloorsToResponsibles();
+    }
+    else{
+        auto find = std::find(this->staff.begin(),this->staff.end(),staff);
+        this->staff.erase(find);
+        delete staff;
+    }
 }
 
 void Hotel::removeStaffMember(int pos) {
-    this->staff.erase(this->staff.begin() + pos);
+    if (staff[pos]->getType() == "Manager"){
+        throw CantRemoveManager();
+    }
+    if (staff[pos]->getType() == "Responsible"){
+        this->staff.erase(this->staff.begin() + pos);
+        assignFloorsToResponsibles();
+    }
+    else this->staff.erase(this->staff.begin() + pos);
 }
 
 void Hotel::removeRoom(Room* room){
@@ -956,14 +981,14 @@ void Hotel::sortRooms(const std::string& input,const std::string& order1){
     else if (input == "Price"){
         if (order){
             sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
-                if (r1->getCapacity() == r2->getCapacity()) return r1->getRoomId()<r2->getRoomId();
-                else return r1->getCapacity() < r2->getCapacity();
+                if ((r1->getPricePerNight() - (r1->getPricePerNight() * r1->getDiscountValue())*r1->getDiscountState()) == (r2->getPricePerNight() - (r2->getPricePerNight() * r2->getDiscountValue())*r2->getDiscountState())) return r1->getRoomId()<r2->getRoomId();
+                else return ((r1->getPricePerNight() - (r1->getPricePerNight() * r1->getDiscountValue())*r1->getDiscountState()) < (r2->getPricePerNight() - (r2->getPricePerNight() * r2->getDiscountValue())*r2->getDiscountState()));
             });
         }
         else{
             sort(rooms.begin(),rooms.end(),[](Room* r1, Room* r2){
-                if (r1->getPricePerNight() == r2->getPricePerNight()) return r1->getRoomId()>r2->getRoomId();
-                else return r1->getPricePerNight() > r2->getPricePerNight();
+                if ((r1->getPricePerNight() - (r1->getPricePerNight() * r1->getDiscountValue())*r1->getDiscountState()) == (r2->getPricePerNight() - (r2->getPricePerNight() * r2->getDiscountValue())*r2->getDiscountState())) return r1->getRoomId()>r2->getRoomId();
+                else return ((r1->getPricePerNight() - (r1->getPricePerNight() * r1->getDiscountValue())*r1->getDiscountState()) > (r2->getPricePerNight() - (r2->getPricePerNight() * r2->getDiscountValue())*r2->getDiscountState()));
             });
         }
     }
@@ -1111,15 +1136,14 @@ void Hotel::modifyClient(const std::string & name, std::string& NIF, const int& 
 }
 
 void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::string& wage, const int& pos, const std::string& type, const std::string& shift,const std::string& password, const std::string& evaluation){
-    if (NIF != "."){
-        try{
-            validateNIF(NIF,name);
-            checkIfValidPriceOrWage(wage, "wage");
-        }
-        catch(...){
-            throw;
-        }
+    try{
+        if (NIF != ".") validateNIF(NIF,name);
+        if (wage != ".") checkIfValidPriceOrWage(wage, "wage");
     }
+    catch(...){
+        throw;
+    }
+
     if (evaluation != "." && type == "Manager"){
         try{
             checkIfInteger(evaluation,"manager evaluation");
@@ -1135,7 +1159,7 @@ void Hotel::modifyStaffMember(const std::string & name, std::string& NIF,std::st
         Janitor* janitor = dynamic_cast<Janitor*> (staff[pos]);
         staff.erase(staff.begin()+pos);
         try{
-            janitor->janitorModify(name,NIF,shift,wage);
+            janitor->janitorModify(name,NIF,wage,shift);
         }
         catch(InvalidShift& msg){
             throw;
@@ -1159,14 +1183,18 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
     std::string type1;
     bool shf;
     try{
-
         checkIfValidPriceOrWage(wage, "wage");
-        checkIfInteger(evaluation,"manager evaluation");
         int pos = search(name, NIF, type1 = "Staff");
         throw StaffMemberAlreadyExists(name, stoi(NIF));
     }
     catch(StaffMemberDoesNotExist& msg){
         if (type == "Manager"){
+            try{
+                checkIfInteger(evaluation,"manager evaluation");
+            }
+            catch(...){
+                throw;
+            }
             for (int i= 0; i< this->staff.size();i++){
                 Manager* manager = dynamic_cast<Manager*>(staff[i]);
                 if (manager != nullptr){
@@ -1196,6 +1224,7 @@ void Hotel::addStaffMember(const std::string& name, const std::string& NIF, cons
             Responsible* responsible = new Responsible(name, stoi(NIF), stof(wage));
             this->assignFloorsToResponsibles();
             this->staff.push_back(responsible);
+            assignFloorsToResponsibles();
         }
         else if (type == "Receptionist"){
             Receptionist* receptionist = new Receptionist(name, stoi(NIF), stof(wage));

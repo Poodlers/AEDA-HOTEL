@@ -11,10 +11,13 @@
 #include "date.h"
 #include <algorithm>
 
+/// Struct which represents a transaction.
+///
+/// Holds the value and the description of the transaction.
 struct Transaction{
-    ///value of the transaction
+    /// Value of the transaction.
     float value;
-    ///description of the transaction
+    /// Description of the transaction.
     std::string description;
 
     void print();
@@ -154,6 +157,9 @@ public:
     /// \exception throws InvalidRoomType if room type is not valid.
     void addRoom(const std::string &floor, const std::string & roomNumber ,const std::string & roomId, const std::string & capacity, const std::string &pricePerNight, const std::string& type);
 
+    /// Removes Room
+    ///
+    /// \param room pointer to room to remove.
     void removeRoom(Room* room);
 
     /// Checks if floor is valid.
@@ -211,226 +217,242 @@ public:
 
     /*DATE*/
 
-    /// Returns the date
+    /// Returns date.
     ///
-    /// \return date
+    /// \return date.
     Date getDate() const;
 
-    /// Increments the date by i days and updates necessary categories
+    /// Increments date by i days and updates necessary categories.
     ///
-    /// Archives expired reservations (check out date has passed)
-    /// Restocks providers (first day of the month)
-    /// Adds an year to the years of work of all staff members (first day of january of the year)
-    /// Checks every five days if the hotel is in need of buying products and warns the user
-    /// If there are products missing every six days it automatically buys them
-    /// Pays staff (last day of the month)
-    /// \param i  number of days to increment
+    /// Archives expired reservations (check out date has passed).
+    /// Restocks providers (first day of the month).
+    /// Adds an year to the years of work of all staff members (first day of january of the year).
+    /// Checks every five days if the hotel is in need of buying products and warns the user.
+    /// If there are products missing every six days it automatically buys them.
+    /// Pays staff (last day of the month).
+    /// \param i  number of days to increment.
     /// \see Client#archiveExpiredReservations, Provider#restock, payStaff and autoBuy
     void incrementDate(const int& i);
 
     /*PEOPLE*/
-    ///Searches for a person
+
+    /// Searches for a person
     ///
-    /// \param name  name of the person to find
-    /// \param NIF  NIF of the person to find
-    /// \param type  can be "Client" for finding a client or "Staff" for finding a staff member
-    /// \return position of the person in its vector
-    /// \note for staff members return their position in the type variable
-    /// \exception throws NIFIsNotValid if NIF is not valid
-    /// \exception throws ClientWithThisNIFAlreadyExists if there is a client with NIF with a different name
-    /// \exception throws ClientDoesNotExist if client does not exist
-    /// \exception throws StaffMemberWithThisNIFAlreadyExists if is a staff member with NIF with a different name
-    /// \exception throws StaffMemberDoesNotExist if staff member does not exist
+    /// \param name  name of the person to find.
+    /// \param NIF  NIF of the person to find.
+    /// \param type  can be "Client" for finding a client or "Staff" for finding a staff member.
+    /// \return position of the person in their own vector.
+    /// \note for staff members it returns their position ('Manager', 'Receptionist', 'Respondible' or 'Janitor') in the type variable.
+    /// \exception throws NIFIsNotValid if NIF is not valid.
+    /// \exception throws ClientWithThisNIFAlreadyExists if there is a client with the selected NIF but a different name.
+    /// \exception throws ClientDoesNotExist if client does not exist.
+    /// \exception throws StaffMemberWithThisNIFAlreadyExists if there is a staff member with the selected NIF but a different name.
+    /// \exception throws StaffMemberDoesNotExist if staff member does not exist.
     int search(const std::string& name, const std::string& NIF, std::string& type);
     /**/
 
     /*CLIENTS*/
-    /// Returns the vector clients
+    /// Returns clients' vector.
     ///
-    /// \return vector clients
+    /// \return clients.
     std::vector <Client*>& getClients();
 
-    /// Check In
+    /// Check in.
     ///
-    /// If the client has any reservations to check in at the time it does so
-    /// \param pos  position of the client who wants to check In
+    /// If the client has any reservations to check in at the time it does so.
+    /// Increases the hotel necessities according to the number of days of the reservation checked in.
+    /// \param pos  position of the client who wants to check in.
     /// \see Client#checkIn
-    /// \exception throws NoReservationsToCheckIn if there are no reservations of client in position pos to check In
+    /// \exception throws NoReservationsToCheckIn if there are no reservations of client in position pos to check in.
     void checkIn(const int& pos);
 
-    /// Check Out
+    /// Check out.
     ///
-    /// if the client has any reservations to check out at the time it does so
-    /// \param pos  position of the client who wants to check Out
+    /// If the client has any reservations to check out at the time it does so.
+    /// \param pos  position of the client who wants to check out.
     /// \see Client#checkOut
-    /// \exception throws NoReservationsToCheckOut if there are no reservations to check Out
+    /// \exception throws NoReservationsToCheckOut if there are no reservations to check out.
     void checkOut(const int& pos);
 
-    /// Modifies a client
+    /// Modifies client.
     ///
-    /// Modifies the client in position pos
-    /// \param name  name to change to, if '.' then doesn't change
-    /// \param NIF  NIF to change to, if '.' then doesn't change
-    /// \param pos  position of the client in the vector clients
-    /// \exception throws NIFIsNotValid if NIF is invalid
+    /// Modifies client in position pos.
+    /// \param name  new name. If '.' then doesn't change.
+    /// \param NIF  new NIF. If '.' then doesn't change.
+    /// \param pos  position of the client in the vector clients.
+    /// \exception throws NIFIsNotValid if NIF is invalid.
     void modifyClient(const std::string & name, std::string& NIF, const int& pos);
 
-    /// Removes a client
+    /// Removes Client.
     ///
-    /// \param pos  position of the client to remove
-    void removeClient(Client* client);
+    /// \param pos  position of the client to remove.
     void removeClient(int pos);
 
-    /// Adds Client
+    /// Removes Client.
     ///
-    /// \param name  name of the new client
-    /// \param NIF   NIF of the new client
-    /// \exception throws ClientAlreadyExists if client already exists
-    /// \exception throws ClientWithThisNIFAlreadyExists if a client already exists with the same NIF
+    /// \param client pointer to the client to remove.
+    void removeClient(Client* client);
+
+    /// Adds Client.
+    ///
+    /// \param name  name of the new client.
+    /// \param NIF   NIF of the new client.
+    /// \exception throws ClientAlreadyExists if client already exists.
+    /// \exception throws ClientWithThisNIFAlreadyExists if client already exists with the same NIF.
     void addClient(const std::string& name, const std::string& NIF);
 
-    /// Sorts vector clients
+    /// Sorts clients
     ///
-    /// \param criteria  sorting criteria can be: Name, NIF, Future reservations, Past reservations, Current reservations, Amount of reservations and Most recent Reservation
-    /// \param order  ascending and descending can be: Ascending or Descending
-    /// \exception throws SortingError if criteria or order is incorrect
+    /// \param criteria  sorting criteria, can be "Name", "NIF", "Future reservations", "Past reservations", "Current reservations", "Amount of reservations" or "Most recent reservation".
+    /// \param order  sorting order, can be "Ascending" or "Descending".
+    /// \exception throws SortingError if criteria or order is incorrect.
     void clientSort(const std::string& criteria,const std::string& order);
     /**/
 
     /*Staff*/
-    /// Returns the staff vector
+    /// Returns staff's vector.
     ///
-    /// \return vector staff
+    /// \return staff.
     std::vector <Staff*>& getStaff();
 
-    /// Modifies a Staff Member
+    /// Modifies Staff Member.
     ///
-    /// \param name  new name
-    /// \param NIF  new NIF
-    /// \param pos  position of the staff member in the vector staff
-    /// \param type  type of staff member, can be: Janitor, Manager or something else if something else will act as if modifying a receptionist or a responsible
-    /// \param shift  for Janitor, can be: night or day
-    /// \param password  for manager
-    /// \exception throws NIFIsNotValid if NIF is invalid
-    /// \exception throws InvalidEvaluation is evaluation is invalid
-    /// \exception throws NotAnInt if evaluation is not an int
-    /// \exception throws NotAPositiveFloat if wage is not a positive number
+    /// \param name  new name.  If '.' then doesn't change.
+    /// \param NIF  new NIF.  If '.' then doesn't change.
+    /// \param wage new Wage.  If '.' then doesn't change.
+    /// \param pos  position of the staff member in the vector staff.  If '.' then doesn't change.
+    /// \param type  type of staff member, can be "Janitor", "Manager" or something else. If something else, will act as if modifying a "Receptionist" or a "Responsibles".
+    /// \param shift  for Janitor, can be "night" or "day".  If '.' then doesn't change.
+    /// \param evaluation for Manager, can be a number between 1 and 5.  If '.' then doesn't change.
+    /// \param password  for Manager.  If '.' then doesn't change.
+    /// \exception throws NIFIsNotValid if NIF is invalid.
+    /// \exception throws InvalidEvaluation if evaluation is invalid.
+    /// \exception throws NotAnInt if evaluation is not an integer.
+    /// \exception throws NotAPositiveFloat if wage is not a positive number.
+    /// \exception throws InvalidShift if type is Janitor and the shift isn't either night or day.
     void modifyStaffMember(const std::string & name, std::string& NIF, std::string& wage,const int& pos, const std::string& type, const std::string& shift,const std::string& password, const std::string& evaluation);
 
-
-    void removeStaffMember(Staff* staff);
-    /// Removes a staff member
+    /// Removes staff member.
     ///
-    /// \param pos  position of the staff member to remove
+    /// \param staff pointer to staff member to remove.
+    void removeStaffMember(Staff* staff);
+
+    /// Removes staff member.
+    ///
+    /// \param pos  position of the staff member to remove.
     void removeStaffMember(int pos);
-    /// Adds a staff member
+
+    /// Adds staff member
     ///
     /// \param name  name of the new staff member
     /// \param NIF   NIF of the new staff member
-    /// \param position  type of the new staff member, can be: Janitor, Manager, Receptionist or Responsible
-    /// \param password  password for a manager
-    /// \param shift  shift for a Janitor
-    /// \param wage  wage of the new staff member
-    /// \exception throws NotAPositiveFloat if wage is invalid
-    /// \exception throws InvalidShift if the new staff member is a janitor and the shift isn't either night or day
-    /// \exception throws InvalidPosition if type isn't one of the possible ones
-    /// \exception throws StaffMemberAlreadyExists if staff member already exists
-    /// \exception throws InvalidEvaluation is evaluation is invalid
-    /// \exception throws NotAnInt if evaluation is not an int
-    /// \warning adding a manager switches out the current manager for the new one
+    /// \param position  type of the new staff member, can be "Janitor", "Manager", "Receptionist" or "Responsible".
+    /// \param password  password for Manager.
+    /// \param shift  shift for a Janitor.
+    /// \param wage  wage of the new staff member.
+    /// \param evaluation evaluation of the Manager.
+    /// \exception throws NotAPositiveFloat if wage is not a positive number.
+    /// \exception throws InvalidShift if the new staff member is a janitor and the shift isn't either night or day.
+    /// \exception throws InvalidPosition if type isn't one of the possible ones.
+    /// \exception throws StaffMemberAlreadyExists if staff member already exists.
+    /// \exception throws InvalidEvaluation if evaluation is invalid.
+    /// \exception throws NotAnInt if evaluation is not an integer.
+    /// \warning adding a manager switches out the current manager for the new one.
     void addStaffMember(const std::string& name, const std::string& NIF, const std::string& type,const std::string& password, const std::string& shift, const std::string& wage, const std::string& evaluation);
 
-    /// Sorts vector staff
+    /// Sorts staff.
     ///
-    /// \param criteria  sorting criteria can be: Name, NIF, Wage, Years of service and Position
-    /// \param order  ascending and descending can be: Ascending or Descending
-    /// \exception throws SortingError if criteria or order is incorrect
+    /// \param criteria  sorting criteria, can be "Name", "NIF", "Wage", "Years of service" or "Position".
+    /// \param order  sorting order, can be "Ascending" or "Descending".
+    /// \exception throws SortingError if criteria or order is incorrect.
     void staffSort(const std::string& input,const std::string& order1);
 
-    ///Reassigns or assigns for the first time floors between responsibles
+    ///Reassigns or assigns for the first time floors between responsibles.
     void assignFloorsToResponsibles();
     /**/
 
     /*LOGIN-LOGOUT*/
-    ///Log In
+    /// Log in.
     ///
-    /// \param name  name to log In
-    /// \param password  password to log in
-    /// \exception throws IncorrectCredentials if name is not the mangers name and/or password is not the managers password
-    /// \exception throws AlreadyLoggedIn if user is already logged in
+    /// \param name  name to log In.
+    /// \param password  password to log in.
+    /// \exception throws IncorrectCredentials if name is not the mangers name and/or password is not the managers password.
+    /// \exception throws AlreadyLoggedIn if user is already logged in.
     void logIn(const std::string& name, const std::string& password);
 
-    ///Log Out
+    /// Log out.
     ///
-    ///\exception throws NotLoggedIn if user is not logged in
+    /// \exception throws NotLoggedIn if user is not logged in.
     void logOut();
 
-    /// Returns the manager's name
+    /// Returns manager's name.
     ///
-    /// \return the managers name
+    /// \return managers name.
     std::string getManagerName() const;
 
-    /// Returns the manager's password
+    /// Returns manager's password.
     ///
-    /// \return the managers passwor
+    /// \return managers password.
     std::string getManagerPassword() const;
 
-    /// Checks if someone is logged in
+    /// Checks if someone is logged in.
     ///
-    /// \return true if someone is logged in and false if not
+    /// \return true if someone is logged in and false if not.
     bool getLoggedInState() const;
     /**/
 
+    /// Reduces the necessity of type 'type' by one.
+    ///
+    /// \param type type of the necessity.
     void reduceNecessity(std::string type);
 
-
-    /// Returns the cleaning necessity
+    /// Returns the cleaning necessity.
     ///
-    /// \return cleaningNecessity
+    /// \return cleaningNecessity.
     unsigned int getCleaningNecessity() const;
 
-    /// Returns the catering necessity
+    /// Returns the catering necessity.
     ///
-    /// \return cateringNecessity
+    /// \return cateringNecessity.
     unsigned int getCateringNecessity() const;
 
-    /// Returns the other necessity
+    /// Returns the other necessity.
     ///
-    /// \return otherNecessity
+    /// \return otherNecessity.
     unsigned int getOtherNecessity() const;
 
 private:
-    ///Vector of the hotel's clients
+    /// Vector of the hotel's clients.
     std::vector <Client*> clients;
-    ///Vector of the hotel's staff members
+    /// Vector of the hotel's staff members.
     std::vector<Staff* > staff;
-    ///Vector of the hotel's rooms
+    /// Vector of the hotel's rooms.
     std::vector<Room*> rooms;
-    ///Vector of the hotel's reservations
+    /// Vector of the hotel's reservations.
     std::vector<Reservation*> reservations;
-    ///Vector of the hotel's providers
+    /// Vector of the hotel's providers.
     std::vector<Provider*> providers;
-    ///Vector with the transactions make in the hotel
+    /// Vector of the transactions made by the hotel.
     std::vector<Transaction*> accounting;
 
-    ///Logged in state
-    ///True if the manager is logged in, false otherwise
+    /// Logged in state.
+    /// True if the manager is logged in, false otherwise.
     bool loggedIn = false;
 
-    ///Cleaning necessity
+    /// Cleaning necessity.
     int cleaningNecessity = 20;
-    ///Catering necessity
+    /// Catering necessity.
     int cateringNecessity = 20;
-    ///Other necessity
+    /// Other necessity.
     int otherNecessity = 20;
-    ///Number of floors of the hotel
+    /// Number of floors of the hotel.
     unsigned int numberOfFloors;
-    ///Number of rooms of the hotel
+    /// Number of rooms of the hotel.
     unsigned int numberOfRooms;
-    ///Number of the first floor
+    /// Number of the first floor.
     int firstFloor;
 
-    ///Current date
+    /// Current date.
     Date date;
 };
 

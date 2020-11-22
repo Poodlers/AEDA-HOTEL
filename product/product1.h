@@ -5,86 +5,78 @@
 #include <iomanip>
 
 
-/// Class which represents a product
+/// Class which represents a Product.
 ///
-/// Defined by quality, price, ID, type and stock
+/// Defined by quality, price, ID, type and stock.
 class Product {
 public:
-    /// Product Initializer
+    /// Product constructor.
     ///
-    /// Creates a random product with stock of 100
+    /// Creates a random product with stock of 100.
     Product();
 
-    /// Product Initializer
+    /// Product constructor for a specific product.
     ///
-    /// \param quality  quality of the product
-    /// \param price  price of the product
-    /// \param type  type of product
+    /// \param quality  quality of the product.
+    /// \param price  price of the product.
+    /// \param type  type of product.
     Product(const unsigned int& quality, const float& price, const std::string & type);
 
-    /// Returns the quality
+    /// Returns the quality.
     ///
-    /// \return quality of the product
+    /// \return quality of the product.
     unsigned int getQuality() const;
 
-    /// Returns the price
+    /// Returns the price.
     ///
-    /// \return price of the product
+    /// \return price of the product.
     float getPrice() const;
 
-    /// Returns the ID
+    /// Returns the ID.
     ///
-    /// \return id of the product
+    /// \return id of the product.
     unsigned int getId() const;
 
-    /// Returns the product type
+    /// Returns the product type.
     ///
-    /// \return type of product
+    /// \return type of product.
     std::string getType() const;
 
-    /// Changes the quality type
+    /// Changes the type.
     ///
-    /// \param quality - quality to set to product
-    void setQuality(const unsigned int& quality);
-
-    /// Changes the price type
-    ///
-    /// \param price - price to set to product
-    void setPrice(const float& price);
-
-    /// Changes the type
-    ///
-    /// \param type - type to set to product
+    /// \param type  type to set to product.
     void setType(const std::string & type);
 
-    /// reduces the parameter stock of the product object by 1
+    /// Reduces the parameter stock of the product by 1.
     void reduceStock();
 
-    /// Returns the stock of the product
+    /// Returns the stock of the product.
     ///
-    /// \return stock
+    /// \return stock.
     unsigned int getStock() const;
 
-    /// Changes the stock of the product
+    /// Changes the stock of the product.
     /// \param stock
     void setStock(const unsigned int& stock);
 
-    ///Overloaded operator << to print the product's info in a formatted way
+    /// Prints product in format:
+    ///
+    /// stock type id price quality
     void print();
 
 private:
-    /// quality of the product
+    /// Quality of the product.
     unsigned int quality;
-    /// price of the product
+    /// Price of the product.
     float price;
-    /// id of the product
+    /// ID of the product.
     unsigned int id;
-    /// variable to keep product ids unique
+    /// Variable to keep product ids unique.
     static int totalId;
-    /// type of product
-    /// can be catering, cleaning or other
+    /// Type of product.
+    /// Can be catering, cleaning or other.
     std::string type;
-    ///amount of the product in the warehouse
+    /// Amount of the product in the provider.
     unsigned int stock;
 };
 

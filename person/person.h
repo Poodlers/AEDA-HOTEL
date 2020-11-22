@@ -10,8 +10,8 @@ class Person{
 public:
     /// Person constructor.
     ///
-    /// \param name  person's name
-    /// \param NIF   person's NIF
+    /// \param name  person's name.
+    /// \param NIF   person's NIF.
     Person(const std::string& name, const unsigned int & NIF);
 
     /// Returns name.

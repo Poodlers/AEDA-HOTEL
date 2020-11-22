@@ -7,7 +7,7 @@
 #include "../../exceptions/exceptions.h"
 
 /// \class Client
-/// Class which represents a Client
+/// Class which represents a Client.
 ///
 /// Is defined by a NIF and a name (inherited from class person), a vector with the history of the client's reservations, a vector with the client's future reservations and a vector
 /// for current reservations i.e. the client is at the hotel at the moment.
@@ -59,7 +59,7 @@ public:
     /// \exception throws NoReservationsToCheckOut if there are no reservations from the client to check out currently.
     std::vector<int> checkOut (Date* date);
 
-    /// Check In,
+    /// Check In.
     ///
     /// Goes through the vector 'futureReservations' and if the date is bigger or equal to the check in date for a specific reservation, proceeds
     /// to remove it from the vector 'futureReservations' vector and put it in the vector 'currentReservations'.
@@ -86,12 +86,15 @@ public:
     ///...
     void printConsole();
 
-    ///overload for ==
+    /// Overload for ==.
     ///
     /// \param client
-    /// \return this-> == client
+    /// \return this-> == client.
     bool operator==(Client* client);
 
+    /// Return all reservation.
+    ///
+    /// \return all reservations.
     std::vector<Reservation*>& getAllReservations();
 
 private:
@@ -101,7 +104,7 @@ private:
     std::vector<Reservation*> futureReservations;
     /// Vector with current reservation i.e. the person is currently staying at the hotel
     std::vector<Reservation*> currentReservations;
-
+    /// Vector with all reservations
     std::vector<Reservation*> allReservations;
 };
 #endif

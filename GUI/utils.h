@@ -18,48 +18,58 @@ void SetConsoleDefinitions(DWORD &fdwMode,HANDLE &hin,HANDLE &hout, CONSOLE_CURS
 void fill_month_map(std::map<int,std::string> &map_month);
 void getStringInput(std::string& input, int x, int y);
 std::string GetNumberInput(int x,int y,bool(*CheckCorrectType)(std::string input));
-/// Asks for the name of the Hotel file and creates the hotel
+
+/// Asks for the name of the hotel file and creates the hotel.
 Hotel* createHotel();
 
+/// Check if input is integer.
+///
+/// \param input  input to be checked.
+/// \return true if input is integer, false otherwise.
 bool CheckIfInteger(std::string input);
+
+/// Check if input is float.
+///
+/// \param input  input to be checked.
+/// \return true if input is float, false otherwise.
 bool CheckIfFloat(std::string input);
 
-/// Check if input is integer
+/// Check if input is integer.
 ///
-/// \param input  input to be checked
-/// \param check  description of the input
-/// \exception throw <NotAnInt> if input is not an int.
+/// \param input  input to be checked.
+/// \param check  description of the input.
+/// \exception throw NotAnInt if input is not an integer.
 void checkIfInteger(std::string input, std::string check);
 
-/// Check if input is a positive integer
+/// Check if input is a positive integer.
 ///
-/// \param input  input to be checked
-/// \param check  description of the input
-/// \exception throw <NotAPositiveInt> if input is not a positive int.
+/// \param input  input to be checked.
+/// \param check  description of the input.
+/// \exception throw NotAPositiveInt if input is not a positive integer.
 void checkIfPositiveInteger(std::string input, std::string check);
 
-/// Check if price or wage is valid
+/// Check if price or wage is valid.
 ///
-/// \param input  price or wage
-/// \param check  description of the input
-/// \exception throw <checkIfValidPriceOrWage> if input is not a positive number (int or float)
+/// \param input  price or wage.
+/// \param check  description of the input.
+/// \exception throw NotAPositiveFloat if input is not a positive number (int or float).
 void checkIfValidPriceOrWage(std::string input, std::string check);
 
-/// Overload for printing vectors
+/// Overload for << for vectors.
 /// \param o
 /// \param v
-/// \return
+/// \return o
 std::ostream& operator<<(std::ostream &o, std::vector<int> v);
 
-/// Check if NIF is valid
+/// Check if NIF is valid.
 ///
-/// \param NIF  NIF
-/// \param name  person's name
-/// \exception throw <NIFIsNotValid> if NIF is not valid
+/// \param NIF  NIF.
+/// \param name  person's name.
+/// \exception throw NIFIsNotValid if NIF is not valid.
 void validateNIF(const std::string& NIF,const std:: string& name);
 
-///Cleans the cin buffer
-/// To use before an std::getline(cin,variable)
+/// Cleans the cin buffer.
+/// To use before an std::getline(cin,variable).
 void cleanCinBuffer();
 
 std::vector<std::string> askClient();

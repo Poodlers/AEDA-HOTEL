@@ -45,10 +45,10 @@ int main(){
     ButtonHandler ButtonHandler(InitialButtons);
     printTime(hotel->getDate(),map_month);
     while(true){
-        gotoxy(60, 1);
+        gotoxy(70, 1);
         cout << setfill(' ') << setw(20) << "                      ";
         if(ButtonHandler.getButtons() == InitialButtons || ButtonHandler.getButtons() == InitialButtons2) {
-            gotoxy(60, 1);
+            gotoxy(70, 1);
             cout << setfill(' ') << setw(20) << "Hit Enter to advance one day!";
         }
         printTime(hotel->getDate(),map_month);

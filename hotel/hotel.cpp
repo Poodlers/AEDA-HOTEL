@@ -121,7 +121,7 @@ void Hotel::incrementDate(const int& i){
         }
     }
     if (date.getDay() % 5 == 0){
-        std::cout << "If no products are bought before tomorrow to fill the hotel's necessities the cheapest of each category will automatically be bought."<<std::endl;
+        std::cout << "If no products are bought before tomorrow to fill the hotel's necessities, \n the cheapest of each category will automatically be bought." << std::endl;
     }
     if (date.getDay() % 5 == 1){
         autoBuy();

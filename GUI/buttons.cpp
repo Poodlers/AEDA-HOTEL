@@ -639,15 +639,17 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         handler.AddButton(ChangePage4);
         sortRoomsButton->DrawButton();
         handler.AddButton(sortRoomsButton);
-        auto ApplyMultipleDiscount = new ApplyDiscountToTypeOfRoom(40,5,10,2,"Suite",this->hotel,this);
-        auto ApplyMultipleDiscount2 = new ApplyDiscountToTypeOfRoom(55,5,12,2,"ViewRoom",this->hotel,this);
-        auto ApplyMultipleDiscount3 = new ApplyDiscountToTypeOfRoom(68,5,12,2,"NoViewRoom",this->hotel,this);
-        ApplyMultipleDiscount->DrawButton();
-        handler.AddButton(ApplyMultipleDiscount);
-        ApplyMultipleDiscount2->DrawButton();
-        handler.AddButton(ApplyMultipleDiscount2);
-        ApplyMultipleDiscount3->DrawButton();
-        handler.AddButton(ApplyMultipleDiscount3);
+        if(this->hotel->getLoggedInState()) {
+            auto ApplyMultipleDiscount = new ApplyDiscountToTypeOfRoom(40, 5, 10, 2, "Suite", this->hotel, this);
+            auto ApplyMultipleDiscount2 = new ApplyDiscountToTypeOfRoom(55, 5, 12, 2, "ViewRoom", this->hotel, this);
+            auto ApplyMultipleDiscount3 = new ApplyDiscountToTypeOfRoom(68, 5, 12, 2, "NoViewRoom", this->hotel, this);
+            ApplyMultipleDiscount->DrawButton();
+            handler.AddButton(ApplyMultipleDiscount);
+            ApplyMultipleDiscount2->DrawButton();
+            handler.AddButton(ApplyMultipleDiscount2);
+            ApplyMultipleDiscount3->DrawButton();
+            handler.AddButton(ApplyMultipleDiscount3);
+        }
         ChangePagesBack = new ChangePage<N>(8,5,2,0,"<","page_id",this);
         ChangePagesFront = new ChangePage<N>(18,5,2,0,">","page_id",this);
         gotoxy(1,3);
@@ -719,6 +721,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         BaseButton *NewDeleteButton = new DeleteButton<N>(edit_delete_x, 10 + increment_y, 8, 0, "Delete",
                                                           menu_items[i], this);
         if constexpr (std::is_same_v<N, Room>) {
+            if(this->hotel->getLoggedInState()){
+
             if (menu_items[i]->getDiscountState()) {
                 ApplyDiscountButton *applyDiscountButton = new ApplyDiscountButton(edit_delete_x - 20,
                                                                                    9 + increment_y, 19, 2,
@@ -739,6 +743,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
                 NewEditButton->DrawButton();
                 handler.AddButton(NewDeleteButton);
                 NewDeleteButton->DrawButton();
+            }
             }
         }else if constexpr (std::is_same_v<N,Product>){
             if(this->hotel->getProfit() - menu_items[i]->getPrice() <= 0.0){
@@ -1171,8 +1176,15 @@ void MenuButton<N>::EraseObject(N* item) {
         this->hotel->removeClient(item);
     }
     else if constexpr (std::is_same_v<N,Staff>){
-        this->hotel->removeStaffMember(item);
-    }
+        try {
+            this->hotel->removeStaffMember(item);
+        }catch(CantRemoveManager& msg){
+            clearscreen();
+            gotoxy(0,0);
+            std::cout << msg << std::endl;
+            Sleep(2000);
+        }
+        }
     else if constexpr (std::is_same_v<N,Room>){
         this->hotel->removeRoom(item);
     }else if constexpr (std::is_same_v<N,Reservation>){

@@ -145,6 +145,8 @@ public:
     /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
+
+    void modifyReservation(Reservation* reservation, unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity,int posClient);
     /**/
 
     /*ROOMS*/

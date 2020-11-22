@@ -43,18 +43,18 @@ public:
     ///Draws the Button to the Screen
     void DrawButton();
     ///Gets the top left x coordinate of the Button
-    int getX();
+    int getX() const;
     ///Gets the top left y coordinate of the Button
-    int getY();
+    int getY() const;
     ///Gets the width of the button
-    int getWidth();
+    int getWidth() const;
     ///Gets the height of the button
-    int getHeight();
+    int getHeight() const;
     ///Gets text that the button is displaying
     ///\return text
-    std::string getText();
+    std::string getText() const;
     ///Alters the text that the button will display
-    void setText(std::string text);
+    void setText(const std::string& text);
 
 };
 
@@ -67,7 +67,7 @@ private:
     std::vector<BaseButton*> CurrentButtons;
 public:
     ///Initialize the ButtonHandler object with a vector of Initial Buttons
-    ButtonHandler(std::vector<BaseButton*>  InitialButtons);
+    explicit ButtonHandler(std::vector<BaseButton*>  InitialButtons);
     ///Add a button to the Current Buttons on Screen
     ///
     /// \param button button to be added to the Current Buttons

@@ -24,9 +24,16 @@ void Reservation::setIsCurrent(bool isCurrent) {
     this->isCurrent = isCurrent;
 }
 
+void Reservation::setRoomId(int roomId) {
+    this->roomId = roomId;
+}
 
 bool Reservation::getIsCurrent() const {
     return this->isCurrent;
+}
+
+void Reservation::setReservationSize(int reservationSize) {
+    this->reservationSize = reservationSize;
 }
 
 Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&monthIn, const int &yearIn,const int& dayOut, const int&monthOut, const int &yearOut, const int & roomId){

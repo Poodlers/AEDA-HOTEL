@@ -1,16 +1,9 @@
 #include "console.h"
-#include "../hotel/hotel.h"
-#include "../provider/provider.h"
-#include "../product/product1.h"
-#include "../person/client/client.h"
-#include "../room/room.h"
-#include "../person/staff/staff.h"
-#include "../exceptions/exceptions.h"
 #include "utils.h"
 #include <string>
 #include <iostream>
 #include <random>
-#include <time.h>
+
 using namespace std;
 
 void accounting(Hotel* hotel){

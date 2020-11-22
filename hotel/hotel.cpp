@@ -121,7 +121,8 @@ void Hotel::incrementDate(const int& i){
         }
     }
     if (date.getDay() % 5 == 0){
-        std::cout << "If no products are bought before tomorrow to fill the hotel's necessities, \n the cheapest of each category will automatically be bought." << std::endl;
+        gotoxy(0,3);
+        std::cout << "WARNING: If no products are bought before tomorrow to fill the hotel's necessities, \n the cheapest of each category will automatically be bought." << std::endl;
     }
     if (date.getDay() % 5 == 1){
         autoBuy();
@@ -712,7 +713,8 @@ void Hotel::removeReservation(const int& pos){
     reservations.erase(reservations.begin() + pos);
 }
 
-void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in){
+void Hotel::makeReservation(const unsigned int &roomId, Date *checkIn, Date *checkOut, const int &capacity,
+                            const int &posClient, const int &reservationId, const int &in) {
     for (Room* room: rooms){
         if (room->getRoomId() == roomId){
             Suite* suite = dynamic_cast<Suite*>(room);
@@ -799,6 +801,47 @@ void Hotel::removeRoom(Room* room){
     auto find = std::find(this->rooms.begin(),this->rooms.end(),room);
     this->rooms.erase(find);
     delete room;
+}
+
+void Hotel::modifyReservation(Reservation *reservation, unsigned int &roomId, Date *checkIn, Date *checkOut,
+                              const int &capacity, int posClient) {
+    //if reservation is not future throw shit
+    for (Room* room: rooms){
+        if (room->getRoomId() == roomId){
+            if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0){
+                throw ClientCantMakeThisReservation();
+            }
+            if (room->getCapacity() < capacity){
+                throw RoomDoesNotHaveTheNecessaryCapacity(roomId);
+            }
+            for(Reservation* reservation: reservations){
+                if (reservation->getRoomId() == roomId && reservation->getCheckIn() <= *checkIn && *checkIn<= reservation->getCheckOut()){
+                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(roomId);
+                }
+            }
+            try{
+                clients[posClient]->deleteReservation(reservation);
+                reservation->setCheckIn(*checkIn);
+                reservation->setCheckOut(*checkOut);
+                reservation->setRoomId(roomId);
+                reservation->setReservationSize(capacity);
+                if(*checkOut < date){
+                    reservation->setIsCurrent(false);
+                    clients[posClient]->addToHistory(reservation);
+                }
+                else{
+                    clients[posClient]->addNewReservation(reservation);
+                    reservation->setIsCurrent(false);
+                }
+
+                this->reservations.push_back(reservation);
+            }
+            catch(...){
+                throw;
+            }
+            return;
+        }
+    }
 }
 
 void Hotel::deleteReservation(Reservation *reservation) {

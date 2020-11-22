@@ -7,30 +7,31 @@
 BaseButton::BaseButton(const int x, const int y, const int width, const int height, const std::string &text):
         x(x),y(y),width(width),height(height),text(text){};
 
-int BaseButton::getHeight() {
+int BaseButton::getHeight() const {
     return this->height;
 }
-int BaseButton::getWidth() {
+
+int BaseButton::getWidth() const {
     return this->width;
 }
 
-int BaseButton::getX() {
+int BaseButton::getX() const{
     return this->x;
 }
 
-int BaseButton::getY() {
+int BaseButton::getY() const{
     return this->y;
 }
 
-std::string BaseButton::getText() {
+std::string BaseButton::getText() const{
     return this->text;
 }
 
-void BaseButton::setText(std::string text) {
+void BaseButton::setText(const std::string& text) {
     this->text = text;
 }
 
-ButtonHandler::ButtonHandler(std::vector<BaseButton*>  InitialButtons) {
+ButtonHandler::ButtonHandler(std::vector<BaseButton*> InitialButtons) {
     this->CurrentButtons = InitialButtons;
 }
 
@@ -304,6 +305,79 @@ void EditButton<N>::onClick(ButtonHandler& handler) {
             std::cout << msg;
             Sleep(waitSeeMessage);
         }
+    }else if constexpr (std::is_same_v<N,Reservation>){
+        int pos = std::find(this->OriginalButton->getHotel()->getClients().begin(),this->OriginalButton->getHotel()->getClients().end(),this->OriginalButton->getClient()
+        ) -  this->OriginalButton->getHotel()->getClients().begin();
+        unsigned int roomId;
+        Date checkIn;
+        Date checkOut;
+        int capacity;
+        int posClient;
+        int reservationId;
+        askReservation(roomId,checkIn,checkOut,capacity,reservationId);
+        try{
+            this->OriginalButton->getHotel()->modifyReservation(this->getObject(),roomId,&checkIn,&checkOut,capacity,pos);
+        }catch(RoomDoesNotExist& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(NotAPositiveInt& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(NotAnInt& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(DateIsNotValid& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(NIFIsNotValid& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(ClientWithThisNIFAlreadyExists& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(ReservationHasInvalidDates& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(RoomWithThisRoomIdOrRoomNumberAlreadyExists& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(ClientCantMakeThisReservation& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(AnotherReservationForThisRoomAlreadyExistsAtThisTime& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+        catch(NoReservationsToCheckIn& msg){
+            gotoxy(0,15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+
     }
     this->OriginalButton->onClick(handler);
 
@@ -745,6 +819,14 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
                 NewDeleteButton->DrawButton();
             }
             }
+           else if constexpr (std::is_same_v<N,Staff>){
+               if (menu_items[i]->getType() != "Manager"){
+                   NewDeleteButton->DrawButton();
+                   handler.AddButton(NewDeleteButton);
+               }
+               NewEditButton->DrawButton();
+               handler.AddButton(NewEditButton);
+           }
         }else if constexpr (std::is_same_v<N,Product>){
             if(this->hotel->getProfit() - menu_items[i]->getPrice() <= 0.0){
                 gotoxy(edit_delete_x,10 + increment_y);
@@ -777,8 +859,10 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
                 handler.AddButton(checkIn);
             }
              else if(!menu_items[i]->getIsCurrent()){
-                handler.AddButton(NewEditButton);
-                NewEditButton->DrawButton();
+                 if (this->client != nullptr && menu_items[i]->getCheckOut() > this->hotel->getDate()) {
+                     handler.AddButton(NewEditButton);
+                     NewEditButton->DrawButton();
+                 }
                 handler.AddButton(NewDeleteButton);
                 NewDeleteButton->DrawButton();
             }

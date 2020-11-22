@@ -84,7 +84,8 @@ public:
     void setIsCurrent(bool isCurrent);
 
     bool getIsCurrent() const;
-
+    void setRoomId(int roomId);
+    void setReservationSize(int reservationSize);
 
 private:
     /// Reservation ID.

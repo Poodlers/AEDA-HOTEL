@@ -8,11 +8,11 @@
 using namespace std;
 
 int main(){
+    srand(time(nullptr));
     std::string input;
     std::cout << "Do you wish to boot up in Console Mode or GUI mode? (Console/GUI): " << std::endl;
     std::getline(cin,input);
     if(input == "Console"){
-        srand(time(NULL));
         Hotel* hotel = createHotel();
         system(hotel);
         return 0;
@@ -46,7 +46,7 @@ int main(){
     printTime(hotel->getDate(),map_month);
     while(true){
         gotoxy(70, 1);
-        cout << setfill(' ') << setw(20) << "                      ";
+        cout << setfill(' ') << setw(20) << "              ";
         if(ButtonHandler.getButtons() == InitialButtons || ButtonHandler.getButtons() == InitialButtons2) {
             gotoxy(70, 1);
             cout << setfill(' ') << setw(20) << "Hit Enter to advance one day!";

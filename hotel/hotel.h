@@ -43,9 +43,6 @@ public:
     /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
     Hotel(const std::string &hotelFile);
 
-    /// Hotel Destructor;
-    ~Hotel() = default;
-
     /// Save Hotel.
     ///
     /// Creates a '.txt' file with the current hotel that can be read by the constructor.

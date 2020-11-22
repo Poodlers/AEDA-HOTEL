@@ -112,6 +112,16 @@ public:
     /// \return floors assigned.
     std::vector<int> getFloorsAssigned() const;
 
+    /// Returns number of floors assigned
+    ///
+    /// \return number of floors assigned
+    int getNumFloorsAssigned() const;
+
+    /// sets floors assigned and number of floors assigned
+    ///
+    /// \param floorsAssigned  new assigned floors
+    void setFloorsAssigned(const std::vector<int> &floorsAssigned);
+
     /// Returns staff type.
     ///
     /// \return "Responsible".
@@ -151,6 +161,11 @@ public:
     ///
     /// \return true for day shift, false for night shift.
     bool getShift() const;
+
+    /// sets shift
+    ///
+    /// \param shift  new shift
+    void setShift(const bool &shift);
 
     /// Returns staff type.
     ///
@@ -209,6 +224,16 @@ public:
     ///
     /// \return manager's password.
     std::string getPassword();
+
+    /// sets evaluation
+    ///
+    /// \param evaluation  new evaluation
+    void setEvaluation(const unsigned int &evaluation);
+
+    /// sets password
+    ///
+    /// \param password  new password
+    void setPassword(const std::string &password);
 
     /// Prints the manager info in format:
     ///

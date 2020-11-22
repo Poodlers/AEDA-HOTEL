@@ -10,6 +10,10 @@ bool Janitor:: getShift() const{
     return this->shift;
 }
 
+void Janitor::setShift(const bool &shift) {
+    this->shift = shift;
+}
+
 std::string Janitor::getType() {
     return "Janitor";
 }

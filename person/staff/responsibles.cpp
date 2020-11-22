@@ -16,6 +16,15 @@ std::vector<int> Responsible::getFloorsAssigned() const {
     return this->floorsAssigned;
 }
 
+int Responsible::getNumFloorsAssigned() const {
+    return this->numberOfFloorsBeingMonitored;
+}
+
+void Responsible::setFloorsAssigned(const std::vector<int> &floorsAssigned) {
+    this->floorsAssigned = floorsAssigned;
+    this->numberOfFloorsBeingMonitored = floorsAssigned.size();
+}
+
 void Responsible::clearAssignedFloors(){
     this->numberOfFloorsBeingMonitored = 0;
     this->floorsAssigned.clear();

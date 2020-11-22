@@ -50,3 +50,11 @@ void Manager::managerModify(const std::string& name, const std::string& NIF, con
         this->evaluation = stoi(evaluation);
     }
 }
+
+void Manager::setEvaluation(const unsigned int &evaluation) {
+    this->evaluation = evaluation;
+}
+
+void Manager::setPassword(const std::string &password) {
+    this->password = password;
+}

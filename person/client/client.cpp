@@ -160,3 +160,19 @@ std::vector<int> Client::checkOut( Date* date){
     return roomIds;
 }
 
+void Client::setHistory(const std::vector<Reservation *> &history) {
+    this->history = history;
+}
+
+void Client::setFutureReservations(const std::vector<Reservation *> &futureReservations) {
+    this->futureReservations = futureReservations;
+}
+
+void Client::setCurrentReservations(const std::vector<Reservation *> &currentReservations) {
+    this->currentReservations = currentReservations;
+}
+
+void Client::setAllReservations(const std::vector<Reservation *> &allReservations) {
+    this->allReservations = allReservations;
+}
+

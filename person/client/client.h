@@ -97,6 +97,26 @@ public:
     /// \return all reservations.
     std::vector<Reservation*>& getAllReservations();
 
+    /// Changes history
+    ///
+    /// \param history  new history
+    void setHistory(const std::vector<Reservation*> &history);
+
+    /// Changes future reservations
+    ///
+    /// \param futureReservations  new future reservations
+    void setFutureReservations(const std::vector<Reservation*> &futureReservations);
+
+    /// Changes current reservations
+    ///
+    /// \param currentReservations  new current reservations
+    void setCurrentReservations(const std::vector<Reservation*> &currentReservations);
+
+    /// Changes all reservations
+    ///
+    /// \param allReservations  all new reservations
+    void setAllReservations(const std::vector<Reservation*> &allReservations);
+
 private:
     /// Vector with past reservations
     std::vector<Reservation*> history;

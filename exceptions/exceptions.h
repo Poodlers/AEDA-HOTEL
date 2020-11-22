@@ -126,7 +126,6 @@ public:
 };
 
 
-
 /// Thrown when input is not an integer.
 class NotAnInt{
 private:
@@ -183,7 +182,6 @@ public:
     }
 };
 
-
 /// Thrown if the input is not a float bigger than 0
 class NotAPositiveFloat{
 private:
@@ -211,6 +209,7 @@ public:
         return o << exception.getMsg() << " should be a positive float."<<std::endl;
     }
 };
+
 
 /// Thrown if room type is not valid (valid : "Suite", "NoViewRoom" or "ViewRoom").
 class InvalidRoomType{

@@ -29,6 +29,11 @@ public:
     /// \param name  new name.
     void setName(const std::string& name);
 
+    /// Changes NIF
+    ///
+    /// \param NIF  new NIF
+    void setNIF(const unsigned int& NIF);
+
     /// Prints person in format:
     ///
     /// name NIF

@@ -444,11 +444,11 @@ private:
     bool loggedIn = false;
 
     /// Cleaning necessity.
-    int cleaningNecessity = 20;
+    int cleaningNecessity;
     /// Catering necessity.
-    int cateringNecessity = 20;
+    int cateringNecessity;
     /// Other necessity.
-    int otherNecessity = 20;
+    int otherNecessity;
     /// Number of floors of the hotel.
     unsigned int numberOfFloors;
     /// Number of rooms of the hotel.

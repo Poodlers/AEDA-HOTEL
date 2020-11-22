@@ -265,7 +265,10 @@ void Hotel::saveHotel(const std::string &hotelFile){
     for (Transaction* transaction: accounting){
         file << transaction->value << " " << transaction->description<<"\n";
     }
-
+    file << "Necessities\n";
+    file << cleaningNecessity<<"\n";
+    file << cateringNecessity<<"\n";
+    file << otherNecessity<<"\n";
     file<<"End\n";
 }
 
@@ -584,7 +587,7 @@ Hotel::Hotel(const std::string &hotelFile) {
     }
     std::string description;
     float value;
-    while (std::getline(file,getData) && getData != "End"){
+    while (std::getline(file,getData) && getData != "Necessities"){
         ss << getData;
         ss >> value;
         if (ss.fail()){
@@ -598,14 +601,46 @@ Hotel::Hotel(const std::string &hotelFile) {
         ss.clear();
     }
 
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    if (getData != "Necessities"){
+        throw HotelFileHasWrongFormat("Line should be 'Transactions'");
+    }
+    getline(file,getData);
+    try{
+        checkIfPositiveInteger(getData, "CleaningNecessity");
+        cleaningNecessity = stoi(getData);
+    }
+    catch(NotAPositiveInt& msg){
+        std::cout << msg;
+        throw HotelFileHasWrongFormat("Should be cleaning necessity");
+    }
+    getline(file,getData);
+    try{
+        checkIfPositiveInteger(getData, "CateringNecessity");
+        cateringNecessity = stoi(getData);
+    }
+    catch(NotAPositiveInt& msg){
+        std::cout << msg;
+        throw HotelFileHasWrongFormat("Should be catering necessity");
+    }
+    getline(file,getData);
+    try{
+        checkIfPositiveInteger(getData, "OtherNecessity");
+        otherNecessity = stoi(getData);
+    }
+    catch(NotAPositiveInt& msg){
+        std::cout << msg;
+        throw HotelFileHasWrongFormat("Should be other necessity");
+    }
+    file.close();
     Provider* provider1 = new Provider("provider1", 50);
     Provider* provider2 = new Provider("provider 2", 55);
     Provider* provider3 = new Provider("provider 3", 65);
     this->addProvider(provider1);
     this->addProvider(provider2);
     this->addProvider(provider3);
-
-    file.close();
 
 }
 

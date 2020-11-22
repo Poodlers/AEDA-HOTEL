@@ -46,3 +46,12 @@ void Provider::setName(const std::string &n) {
     this->name = n;
 }
 
+unsigned Provider::getNumProducts() const {
+    return this->numProducts;
+}
+
+void Provider::setProducts(const std::vector<Product *> &products) {
+    this->products = products;
+    this->numProducts = products.size();
+}
+

@@ -34,10 +34,20 @@ public:
     /// \return vector of products.
     std::vector<Product *> getProducts() const;
 
+    /// returns numProducts
+    ///
+    /// \return number of products
+    unsigned getNumProducts() const;
+
     /// Changes name.
     ///
     /// \param name  new name.
     void setName(const std::string &name);
+
+    /// Changes products and numProducts
+    ///
+    /// \param products  new products
+    void setProducts(const std::vector<Product*> &products);
 
     /// Prints the provider in format
     ///

@@ -63,4 +63,16 @@ void Product::setStock(const unsigned int& stock){
     this->stock = stock;
 }
 
+void Product::setQuality(const unsigned int &quality) {
+    this->quality = quality;
+}
+
+void Product::setPrice(const float &price) {
+    this->price = price;
+}
+
+void Product::setId(const unsigned int &id) {
+    this->id = id;
+}
+
 

@@ -42,6 +42,21 @@ public:
     /// \return type of product.
     std::string getType() const;
 
+    /// sets quality
+    ///
+    /// \param quality  new quality
+    void setQuality(const unsigned int &quality);
+
+    /// sets price
+    ///
+    /// \param price  new price
+    void setPrice(const float &price);
+
+    /// sets id
+    ///
+    /// \param id  new id
+    void setId(const unsigned int &id);
+
     /// Changes the type.
     ///
     /// \param type  type to set to product.

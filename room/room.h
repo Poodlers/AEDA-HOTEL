@@ -102,6 +102,9 @@ public:
     /// Abstract.
     virtual std::string getType() = 0;
 
+    /// Changes room availability.
+    void changeAvailability(const bool& availability);
+
 private:
     /// Room's floor.
     int floor;

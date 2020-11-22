@@ -89,141 +89,145 @@ void reservation(Hotel * hotel){
               << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
               << "Check Out"
               << std::setw(8) << "Room ID"<<std::endl;
-    for (Reservation* reservation: hotel->getReservations()){
+    for (Reservation* reservation: hotel->getReservations()) {
         reservation->print();
         cout << endl;
 
-    while(true){
-        cout << "Date: " << hotel->getDate() <<endl;
-        cout << "Write Help to see possible commands."<<endl;
-        cin >> input;
-        try{
-            if (input == "Make"){
-                cout << endl << "Input the name and NIF of the client making the reservation."<<endl;
-                cout << "Name: "<<endl;
-                cleanCinBuffer();
-                getline(cin, name);
-                cout << "NIF: "<<endl;
-                cin >>NIF;
+        while (true) {
+            cout << "Date: " << hotel->getDate() << endl;
+            cout << "Write Help to see possible commands." << endl;
+            cin >> input;
+            try {
+                if (input == "Make") {
+                    cout << endl << "Input the name and NIF of the client making the reservation." << endl;
+                    cout << "Name: " << endl;
+                    cleanCinBuffer();
+                    getline(cin, name);
+                    cout << "NIF: " << endl;
+                    cin >> NIF;
 
-                pos1 = hotel->search(name,NIF, type ="Client");
-                cout << "Insert the reservation size: "<<endl;
-                cin>>capacity;
-                checkIfPositiveInteger(capacity, "capacity");
-                cout << "Choose Room (type in room ID): "<<endl;
-                cin>>roomId;
-                checkIfPositiveInteger(roomId, "roomId");
-                cout << "Choose Check In date (in format day-month-year): "<<endl;
-                cin>>date;
-                Date* checkIn = new Date(date);
-                cout << "Choose Check Out date (in format day-month-year): "<<endl;
-                cin>>date;
-                Date* checkOut = new Date(date);
-                hotel->makeReservation(stoi(roomId),checkIn,checkOut,stoi(capacity),pos1,-1,false);
-            }
-            else if (input == "Search"){
-                cout << "Do you want reservations for/from a specific date (Date), room (Room) or a specific Id (ID)?"<<endl;
-                cin >> type;
-
-                if (type == "Date"){
-                    cout << "Insert the date of the reservations you wish to find (dd-mm-yyyy):"<<endl;
-                    cin >> date;
-                    pos = hotel->searchReservations("Date", date);
-                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
-                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
-                              << "Check Out"
-                              << std::setw(8) << "Room ID"<<std::endl;
-                    for (int position: pos){
-                        hotel->getReservations()[position]->print();
-                    }
-                }
-                else if (type == "Room"){
-                    cout << "Insert the room ID of the reservations you wish to find:"<<endl;
+                    pos1 = hotel->search(name, NIF, type = "Client");
+                    cout << "Insert the reservation size: " << endl;
+                    cin >> capacity;
+                    checkIfPositiveInteger(capacity, "capacity");
+                    cout << "Choose Room (type in room ID): " << endl;
                     cin >> roomId;
-                    pos = hotel->searchReservations("Room", roomId);
-                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
-                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
-                              << "Check Out"
-                              << std::setw(8) << "Room ID"<<std::endl;
-                    for (int position: pos){
-                        hotel->getReservations()[position]->print();
+                    checkIfPositiveInteger(roomId, "roomId");
+                    cout << "Choose Check In date (in format day-month-year): " << endl;
+                    cin >> date;
+                    Date *checkIn = new Date(date);
+                    cout << "Choose Check Out date (in format day-month-year): " << endl;
+                    cin >> date;
+                    Date *checkOut = new Date(date);
+                    hotel->makeReservation(stoi(roomId), checkIn, checkOut, stoi(capacity), pos1, -1, false);
+                } else if (input == "Search") {
+                    cout
+                            << "Do you want reservations for/from a specific date (Date), room (Room) or a specific Id (ID)?"
+                            << endl;
+                    cin >> type;
+
+                    if (type == "Date") {
+                        cout << "Insert the date of the reservations you wish to find (dd-mm-yyyy):" << endl;
+                        cin >> date;
+                        pos = hotel->searchReservations("Date", date);
+                        std::cout << std::left << std::setw(20) << std::setfill(' ') << "Reservation ID"
+                                  << std::setw(25) << "Reservation Size" << std::setw(19) << "Check In" << std::setw(19)
+                                  << "Check Out"
+                                  << std::setw(8) << "Room ID" << std::endl;
+                        for (int position: pos) {
+                            hotel->getReservations()[position]->print();
+                        }
+                    } else if (type == "Room") {
+                        cout << "Insert the room ID of the reservations you wish to find:" << endl;
+                        cin >> roomId;
+                        pos = hotel->searchReservations("Room", roomId);
+                        std::cout << std::left << std::setw(20) << std::setfill(' ') << "Reservation ID"
+                                  << std::setw(25) << "Reservation Size" << std::setw(19) << "Check In" << std::setw(19)
+                                  << "Check Out"
+                                  << std::setw(8) << "Room ID" << std::endl;
+                        for (int position: pos) {
+                            hotel->getReservations()[position]->print();
+                        }
+                    } else if (type == "ID") {
+                        cout << "Insert the room of the ID of the reservation you wish to find:" << endl;
+                        cin >> reservationId;
+                        pos = hotel->searchReservations("ID", reservationId);
+                        std::cout << std::left << std::setw(20) << std::setfill(' ') << "Reservation ID"
+                                  << std::setw(25) << "Reservation Size" << std::setw(19) << "Check In" << std::setw(19)
+                                  << "Check Out"
+                                  << std::setw(8) << "Room ID" << std::endl;
+                        hotel->getReservations()[pos[0]]->print();
+                    } else {
+                        cout << "Invalid command, please retry." << endl;
                     }
-                }
-                else if (type == "ID"){
-                    cout << "Insert the room of the ID of the reservation you wish to find:"<<endl;
+                    pos.clear();
+                } else if (input == "Back") {
+                    return;
+                } else if (input == "Sort") {
+                    cout << "Insert the type of sorting to be done. Options are: Room Id, Check In or Check Out "
+                         << endl;
+                    string sorting, order;
+                    cleanCinBuffer();
+                    getline(cin, sorting);
+                    cout << "Should the order by Ascending or Descending?" << endl;
+                    cin >> order;
+
+                    sortReservations(hotel->getReservations(), sorting, order);
+                } else if (input == "Remove") {
+                    cout << "Insert the room of the ID of the reservation you wish to remove:" << endl;
                     cin >> reservationId;
                     pos = hotel->searchReservations("ID", reservationId);
-                    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
-                              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
-                              << "Check Out"
-                              << std::setw(8) << "Room ID"<<std::endl;
-                    hotel->getReservations()[pos[0]]->print();
-                }
-                else{
-                    cout << "Invalid command, please retry."<<endl;
-                }
-                pos.clear();
-            }
-            else if (input == "Back"){
-                return;
-            }
-            else if (input == "Sort"){
+                    hotel->removeReservation(pos[0]);
+                } else if (input == "Modify") {
 
+                } else if (input == "Help") {
+                    cout << "Valid commands are: Search, Remove, Make, Sort, Modify, Search or Help" << endl;
+                } else {
+                    cout << "Invalid command, please retry." << endl;
+                }
             }
-            else if (input == "Remove"){
-                cout << "Insert the room of the ID of the reservation you wish to remove:"<<endl;
-                cin >> reservationId;
-                pos = hotel->searchReservations("ID", reservationId);
-                hotel->removeReservation(pos[0]);
+            catch (RoomDoesNotExist &msg) {
+                cout << msg;
             }
-            else if (input == "Help"){
-                cout << "Valid commands are: Search, Remove, Make, Sort, Modify, Search or Help"<<endl;
+            catch (ClientDoesNotExist &msg) {
+                cout << msg;
             }
-            else{
-                cout << "Invalid command, please retry."<<endl;
+            catch (NotAPositiveInt &msg) {
+                cout << msg;
             }
+            catch (NotAnInt &msg) {
+                cout << msg;
+            }
+            catch (DateIsNotValid &msg) {
+                cout << msg;
+            }
+            catch (NIFIsNotValid &msg) {
+                cout << msg;
+            }
+            catch (ClientWithThisNIFAlreadyExists &msg) {
+                cout << msg;
+            }
+            catch (ReservationHasInvalidDates &msg) {
+                cout << msg;
+            }
+            catch (RoomWithThisRoomIdOrRoomNumberAlreadyExists &msg) {
+                cout << msg;
+            }
+            catch (RoomDoesNotHaveTheNecessaryCapacity &msg) {
+                cout << msg;
+            }
+            catch (ClientCantMakeThisReservation &msg) {
+                cout << msg;
+            }
+            catch (AnotherReservationForThisRoomAlreadyExistsAtThisTime &msg) {
+                cout << msg;
+            }
+            catch (NoReservationsToCheckIn &msg) {
+                cout << msg;
+            }
+            system("pause");
+            system("CLS");
         }
-        catch(RoomDoesNotExist& msg){
-            cout << msg;
-        }
-        catch(ClientDoesNotExist&msg){
-            cout << msg;
-        }
-        catch(NotAPositiveInt& msg){
-            cout << msg;
-        }
-        catch(NotAnInt& msg){
-            cout << msg;
-        }
-        catch(DateIsNotValid& msg){
-            cout << msg;
-        }
-        catch(NIFIsNotValid& msg){
-            cout <<msg;
-        }
-        catch(ClientWithThisNIFAlreadyExists& msg){
-            cout <<msg;
-        }
-        catch(ReservationHasInvalidDates& msg){
-            cout << msg;
-        }
-        catch(RoomWithThisRoomIdOrRoomNumberAlreadyExists& msg){
-            cout <<msg;
-        }
-        catch(RoomDoesNotHaveTheNecessaryCapacity& msg){
-            cout << msg;
-        }
-        catch(ClientCantMakeThisReservation& msg){
-            cout << msg;
-        }
-        catch(AnotherReservationForThisRoomAlreadyExistsAtThisTime& msg){
-            cout << msg;
-        }
-        catch(NoReservationsToCheckIn& msg){
-            cout <<msg;
-        }
-        system("pause");
-        system("CLS");
     }
 }
 

@@ -30,6 +30,9 @@ float Room::getPricePerNight() const{
     return this->pricePerNight;
 }
 
+void Room::changeAvailability(const bool& availability){
+    free = availability;
+}
 void Room::print() {
     std::cout << std::left <<  std::setw(10) << std::setfill(' ') << this->roomId << std::setw(15)
               << this->roomNumber << std::setw(8)<< this->floor << std::setw(10) << this->capacity << std::setw(18)

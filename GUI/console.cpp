@@ -85,16 +85,17 @@ void reservation(Hotel * hotel){
     vector<int> pos;
     string type;
 
-    std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
-              << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
-              << "Check Out"
-              << std::setw(8) << "Room ID"<<std::endl;
-    for (Reservation* reservation: hotel->getReservations()) {
-        reservation->print();
-        cout << endl;
-
         while (true) {
             cout << "Date: " << hotel->getDate() << endl;
+
+            std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
+                      << std::setw(25) << "Reservation Size" <<std::setw(19)<< "Check In"<< std::setw(19)
+                      << "Check Out"
+                      << std::setw(8) << "Room ID"<<std::endl;
+            for (Reservation* reservation: hotel->getReservations()) {
+                reservation->print();
+                cout << endl;}
+
             cout << "Write Help to see possible commands." << endl;
             cin >> input;
             try {
@@ -228,8 +229,8 @@ void reservation(Hotel * hotel){
             system("pause");
             system("CLS");
         }
-    }
 }
+
 
 void rooms(Hotel * hotel){
     string input, order, sort;

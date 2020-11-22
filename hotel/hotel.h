@@ -43,6 +43,9 @@ public:
     /// \exception throws HotelFileHasWrongFormat if the file's format is incorrect.
     Hotel(const std::string &hotelFile);
 
+    /// Hotel Destructor;
+    ~Hotel() = default;
+
     /// Save Hotel.
     ///
     /// Creates a '.txt' file with the current hotel that can be read by the constructor.
@@ -425,6 +428,61 @@ public:
     /// \return otherNecessity.
     unsigned int getOtherNecessity() const;
 
+    /// Adds transaction.
+    ///
+    /// \param transaction transaction to add.
+    void addTransaction(Transaction* transaction);
+
+    /// Remove transaction.
+    ///
+    /// \param pos position of the transaction to remove.
+    void removeTransaction(const int& pos);
+
+    /// Adds reservation.
+    ///
+    /// \param reservation reservation to add
+    void addReservation(Reservation* reservation);
+
+    /// Remove provider.
+    ///
+    /// \param pos position of the provider to remove.
+    void removeProvider(const int & pos);
+
+    /// Change logged in state.
+    ///
+    /// \param state state to change to.
+    void setLoggedInState(const bool& state);
+
+    /// Change cleaning necessity.
+    ///
+    /// \param necessity necessity to change to.
+    void setSetCleaningNecessity(const int& necessity);
+
+    /// Change catering necessity.
+    ///
+    /// \param necessity necessity to change to.
+    void setSetCateringNecessity(const int& necessity);
+
+    /// Change other necessity.
+    ///
+    /// \param necessity necessity to change to.
+    void setSetOtherNecessity(const int& necessity);
+
+    /// Returns number of floors.
+    ///
+    /// \return number of floors.
+    int getNumberOfFloors() const;
+
+    /// Returns number of rooms.
+    ///
+    /// \return number of rooms.
+    int getNumberOfRooms() const;
+
+    /// Returns first floor.
+    ///
+    /// \return first floor.
+    int getFirstFloor() const;
+
 private:
     /// Vector of the hotel's clients.
     std::vector <Client*> clients;
@@ -462,27 +520,32 @@ private:
 
 
 /**
-  \file "C:\Users\Joana\Documents\Uni\Algoritmos e Estruturas de dados\Projeto\aeda_hotel_projeto\cmake-build-debug\hotel_exemplo.txt"
+  \file "..\cmake-build-debug\hotel_exemplo.txt"
   File used to build a hotel, must have the following format:
   ### Example
   ~~~~~~~~~~~~~~~~~~~.cpp
       //Hotel-File
-      //#number of floors
-      //#first floor with rooms
+      //"in program date of the state of the hotel"
+      //"number of floors"
+      //"first floor with rooms"
       //Rooms
-      //#floor #room number #capacity #price #type (can be Suite, NoViewRoom or ViewRoom [case sensitive])
+      //"floor" "room number" "capacity" "price" "type"
       //(...) more rooms
       //Staff
-      //#name[can have spaces, only two names] #NIF[must be valid] #first year of work #wage #position (can be Janitor, Responsible, Receptionist or Manager[only one manager per hotel] [case sensitive]) if Janitor #shift (can be night or day [case sensitive]) else if Manager #password
+      //"name" "NIF" "first year of work" "wage" "position" "shift"/"password"/nothing "evaluation"/nothing
       //(...) more staff
       //Client
-      //#name[can have spaces, only two names] #NIF[must be valid] #reservations[separated by a space]
-      //                                                          (#room ID,#Check In date[dd-mm-yyyy],#Check Out date[dd-mm-yyyy],#Reservation ID,#Reservation Size,#0 if in history or future 1 if in current reservations[client is currently at the hotel])-> no spaces in between
-      //                                                           [-Can have no reservations]
+      //"name" "NIF" "reservation" (… more reservations)
       //(...) more clients
       //Transactions
-      //#value #description
+      //"value" "description"
+      //Necessities
+      //"cleaning necessity"
+      //"catering necessity"
+      //"other necessity"
       //End
+
+      //"reservation" :"room ID","Check In date","Check Out date","Reservation ID","Reservation Size","Vector marker"(without spaces)
   ~~~~~~~~~~~~~~~~~~~
  */
 

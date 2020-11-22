@@ -648,6 +648,49 @@ std::vector<Reservation*>& Hotel::getReservations() {
     return reservations;
 }
 
+void Hotel::addTransaction(Transaction* transaction){
+    accounting.push_back(transaction);
+}
+
+void Hotel::removeTransaction(const int& pos){
+    accounting.erase(accounting.begin()+pos);
+}
+
+void Hotel::addReservation(Reservation* reservation){
+    reservations.push_back(reservation);
+}
+
+void Hotel::removeProvider(const int & pos){
+    providers.erase(providers.begin() + pos);
+}
+
+void Hotel::setLoggedInState(const bool& state){
+    loggedIn = state;
+}
+
+void Hotel::setSetCleaningNecessity(const int& necessity){
+    cleaningNecessity = necessity;
+}
+
+void Hotel::setSetCateringNecessity(const int& necessity){
+    cateringNecessity = necessity;
+}
+
+void Hotel::setSetOtherNecessity(const int& necessity){
+    otherNecessity = necessity;
+}
+
+int Hotel::getNumberOfFloors() const{
+    return numberOfFloors;
+}
+
+int Hotel::getNumberOfRooms() const{
+    return numberOfRooms;
+}
+int Hotel::getFirstFloor() const{
+    return firstFloor;
+}
+
 void Hotel::makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in){
     for (Room* room: rooms){
         if (room->getRoomId() == roomId){

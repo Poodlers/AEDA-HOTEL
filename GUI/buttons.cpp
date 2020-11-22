@@ -328,8 +328,7 @@ MenuButton<N>::MenuButton(const int x, const int y, const int width, const int h
         BaseButton(x,y,width,height,text){
     this->hotel = hotel;
     this->CurrentPage = currentPage;
-    this->Parent_Button = ParentButton;
-    this->GoBack_Button = nullptr;
+    this->GoBack_Button = ParentButton;
     this->client = nullptr;
     this->type_id = 0;
     this->order_id = 0;
@@ -361,8 +360,7 @@ MenuButton<N>::MenuButton(const int x, const int y, const int width, const int h
                           BaseButton* ParentButton): BaseButton(x,y,width,height,text){
     this->client = client;
     this->CurrentPage = currentPage;
-    this->Parent_Button = ParentButton;
-    this->GoBack_Button = nullptr;
+    this->GoBack_Button = ParentButton;
     this->hotel = hotel;
     this->type_id = 0;
     this->order_id = 0;
@@ -371,7 +369,7 @@ MenuButton<N>::MenuButton(const int x, const int y, const int width, const int h
 template<class N>
 MenuButton<N>::MenuButton(const int x, const int y, const int width, const int height, const std::string &text,const int currentPage, Hotel* hotel,Provider *provider, BaseButton *ParentButton):BaseButton(x,y,width,height,text) {
     this->provider = provider;
-    this->Parent_Button = ParentButton;
+    this->GoBack_Button = ParentButton;
     this->client = nullptr;
     this->hotel = hotel;
     this->type_id = 0;
@@ -395,11 +393,10 @@ template <typename N>
 void MenuButton<N>::onClick(ButtonHandler& handler) {
     std::vector <N*> menu_items = {};
     if(this->GoBack_Button == nullptr){
-        if(this->Parent_Button == nullptr){
-            this->GoBack_Button = new ParentButton(90,0,6,2,"Back",handler.getButtons());
-        }else{
-            this->GoBack_Button = new GoBackButton(90,0,6,2,"Back",this->Parent_Button);
-        }
+        this->GoBack_Button = new ParentButton(90,0,6,2,"Back",handler.getButtons());
+    }
+    else{
+        this->GoBack_Button = new GoBackButton(90,0,6,2,"Back",this->GoBack_Button);
     }
     handler.ClearButtons();
     int MaxObjectsOnScreen = 7;
@@ -408,8 +405,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
     int increment_y = 0;
     this->GoBack_Button->DrawButton();
     handler.AddButton(this->GoBack_Button);
-    ChangeTypeOfSort<N>* ChangePagesBack;
-    ChangeTypeOfSort<N>* ChangePagesFront;
+    ChangePage<N>* ChangePagesBack;
+    ChangePage<N>* ChangePagesFront;
     if constexpr (std::is_same_v<N,Reservation>){
         SearchButton<N>* searchButton = new SearchButton<N>(30,0,8,2,"Search",this->hotel,this);
         handler.AddButton(searchButton);
@@ -444,8 +441,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
             this->CurrentPage = max_page;
         }
         else if(this->CurrentPage > max_page) this->CurrentPage = 1;
-        ChangePagesBack = new ChangeTypeOfSort<N>(17,3,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(29,3,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(17,3,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(29,3,2,0,">","page_id",this);
         gotoxy(1,1);
         std::cout << "CLIENTS: ";
         gotoxy(20,3);
@@ -464,18 +461,18 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         gotoxy(edit_delete_x + 35,16);
         std::cout << std::setw(15) << typeOfSort[this->type_id];
         SortButton<N>* sortClientsButton = new SortButton<N>(edit_delete_x + 40,11,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
-        ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(edit_delete_x + 32,14,2,0,"<","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort2 = new ChangeTypeOfSort<N>(edit_delete_x + 44,14,2,0,">","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort3 = new ChangeTypeOfSort<N>(edit_delete_x + 32,16,2,0,"<","type_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort4 = new ChangeTypeOfSort<N>(edit_delete_x + 35 + typeOfSort[this->type_id].size() + 1,16,2,0,">","type_id",this);
-        handler.AddButton(changeTypeOfSort1);
-        changeTypeOfSort1->DrawButton();
-        changeTypeOfSort2->DrawButton();
-        changeTypeOfSort3->DrawButton();
-        changeTypeOfSort4->DrawButton();
-        handler.AddButton(changeTypeOfSort2);
-        handler.AddButton(changeTypeOfSort3);
-        handler.AddButton(changeTypeOfSort4);
+        ChangePage<N>* ChangePage1 = new ChangePage<N>(edit_delete_x + 32,14,2,0,"<","order_id",this);
+        ChangePage<N>* ChangePage2 = new ChangePage<N>(edit_delete_x + 44,14,2,0,">","order_id",this);
+        ChangePage<N>* ChangePage3 = new ChangePage<N>(edit_delete_x + 32,16,2,0,"<","type_id",this);
+        ChangePage<N>* ChangePage4 = new ChangePage<N>(edit_delete_x + 35 + typeOfSort[this->type_id].size() + 1,16,2,0,">","type_id",this);
+        handler.AddButton(ChangePage1);
+        ChangePage1->DrawButton();
+        ChangePage2->DrawButton();
+        ChangePage3->DrawButton();
+        ChangePage4->DrawButton();
+        handler.AddButton(ChangePage2);
+        handler.AddButton(ChangePage3);
+        handler.AddButton(ChangePage4);
         sortClientsButton->DrawButton();
         handler.AddButton(sortClientsButton);
     }
@@ -489,8 +486,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         else if(this->CurrentPage > max_page) this->CurrentPage = 1;
         gotoxy(10,3);
         std::cout << "Page " << this->CurrentPage << "/" << max_page;
-        ChangePagesBack = new ChangeTypeOfSort<N>(8,3,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(18,3,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(8,3,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(18,3,2,0,">","page_id",this);
         ChangePagesFront->DrawButton();
         ChangePagesBack->DrawButton();
         handler.AddButton(ChangePagesBack);
@@ -531,8 +528,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         std::cout << "Providers: ";
         gotoxy(10,5);
         std::cout << "Page " << this->CurrentPage << "/" << max_page;
-        ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(19,5,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(8,5,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(19,5,2,0,">","page_id",this);
         auto autoBuyButton = new AutoBuyButton(70,16,8,2,"Auto Buy",this->hotel,this);
         autoBuyButton->DrawButton();
         handler.AddButton(autoBuyButton);
@@ -551,8 +548,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         std::cout << "Products for Provider " << this->provider->getName();
         gotoxy(10,5);
         std::cout << "Page " << this->CurrentPage << "/" << max_page;
-        ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(19,5,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(8,5,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(19,5,2,0,">","page_id",this);
         gotoxy(1,8);
         std::cout  <<std::left<< std::setfill(' ') <<std::setw(7)<< "Stock" << std::setw(10) << "Type"
         << std::setw(9) << "ID" <<std::setw(7) << "Price" << std::setw(7) << "Quality" <<std::endl;
@@ -581,23 +578,23 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         std::cout << std::setw(20) << typeOfSort[this->type_id];
 
         SortButton<N>* sortReservationsButton = new SortButton<N>(50,1,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
-        ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(38,4,2,0,"<","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort2 = new ChangeTypeOfSort<N>(40 + order[this->order_id].size() + 1,4,2,0,">","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort3 = new ChangeTypeOfSort<N>(60,4,2,0,"<","type_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort4 = new ChangeTypeOfSort<N>(62 + typeOfSort[this->type_id].size() + 1,4,2,0,">","type_id",this);
-        handler.AddButton(changeTypeOfSort1);
-        changeTypeOfSort1->DrawButton();
-        changeTypeOfSort2->DrawButton();
-        changeTypeOfSort3->DrawButton();
-        changeTypeOfSort4->DrawButton();
-        handler.AddButton(changeTypeOfSort2);
-        handler.AddButton(changeTypeOfSort3);
-        handler.AddButton(changeTypeOfSort4);
+        ChangePage<N>* ChangePage1 = new ChangePage<N>(38,4,2,0,"<","order_id",this);
+        ChangePage<N>* ChangePage2 = new ChangePage<N>(40 + order[this->order_id].size() + 1,4,2,0,">","order_id",this);
+        ChangePage<N>* ChangePage3 = new ChangePage<N>(60,4,2,0,"<","type_id",this);
+        ChangePage<N>* ChangePage4 = new ChangePage<N>(62 + typeOfSort[this->type_id].size() + 1,4,2,0,">","type_id",this);
+        handler.AddButton(ChangePage1);
+        ChangePage1->DrawButton();
+        ChangePage2->DrawButton();
+        ChangePage3->DrawButton();
+        ChangePage4->DrawButton();
+        handler.AddButton(ChangePage2);
+        handler.AddButton(ChangePage3);
+        handler.AddButton(ChangePage4);
         sortReservationsButton->DrawButton();
         handler.AddButton(sortReservationsButton);
 
-        ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(19,5,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(8,5,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(19,5,2,0,">","page_id",this);
         gotoxy(1,3);
         std::cout << "Reservations: ";
         gotoxy(10,5);
@@ -628,18 +625,18 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         gotoxy(62,4);
         std::cout << std::setw(20) << typeOfSort[this->type_id];
         SortButton<N>* sortRoomsButton = new SortButton<N>(50,1,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
-        ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(38,4,2,0,"<","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort2 = new ChangeTypeOfSort<N>(40 + order[this->order_id].size() + 1,4,2,0,">","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort3 = new ChangeTypeOfSort<N>(60,4,2,0,"<","type_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort4 = new ChangeTypeOfSort<N>(62 + typeOfSort[this->type_id].size() + 1,4,2,0,">","type_id",this);
-        handler.AddButton(changeTypeOfSort1);
-        changeTypeOfSort1->DrawButton();
-        changeTypeOfSort2->DrawButton();
-        changeTypeOfSort3->DrawButton();
-        changeTypeOfSort4->DrawButton();
-        handler.AddButton(changeTypeOfSort2);
-        handler.AddButton(changeTypeOfSort3);
-        handler.AddButton(changeTypeOfSort4);
+        ChangePage<N>* ChangePage1 = new ChangePage<N>(38,4,2,0,"<","order_id",this);
+        ChangePage<N>* ChangePage2 = new ChangePage<N>(40 + order[this->order_id].size() + 1,4,2,0,">","order_id",this);
+        ChangePage<N>* ChangePage3 = new ChangePage<N>(60,4,2,0,"<","type_id",this);
+        ChangePage<N>* ChangePage4 = new ChangePage<N>(62 + typeOfSort[this->type_id].size() + 1,4,2,0,">","type_id",this);
+        handler.AddButton(ChangePage1);
+        ChangePage1->DrawButton();
+        ChangePage2->DrawButton();
+        ChangePage3->DrawButton();
+        ChangePage4->DrawButton();
+        handler.AddButton(ChangePage2);
+        handler.AddButton(ChangePage3);
+        handler.AddButton(ChangePage4);
         sortRoomsButton->DrawButton();
         handler.AddButton(sortRoomsButton);
         auto ApplyMultipleDiscount = new ApplyDiscountToTypeOfRoom(40,5,10,2,"Suite",this->hotel,this);
@@ -651,8 +648,8 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         handler.AddButton(ApplyMultipleDiscount2);
         ApplyMultipleDiscount3->DrawButton();
         handler.AddButton(ApplyMultipleDiscount3);
-        ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(18,5,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(8,5,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(18,5,2,0,">","page_id",this);
         gotoxy(1,3);
         std::cout << "ROOMS: ";
         gotoxy(10,5);
@@ -680,22 +677,22 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         gotoxy(50,5);
         std::cout << std::left << std::setw(15) << order[this->order_id] << std::setw(20) << typeOfSort[this->type_id];
         SortButton<N>* sortStaffButton = new SortButton<N>(60,2,5,2,"Sort by: ",this->hotel,order[order_id],typeOfSort[type_id],this);
-        ChangeTypeOfSort<N>* changeTypeOfSort1 = new ChangeTypeOfSort<N>(48,5,2,0,"<","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort2 = new ChangeTypeOfSort<N>(60,5,2,0,">","order_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort3 = new ChangeTypeOfSort<N>(63,5,2,0,"<","type_id",this);
-        ChangeTypeOfSort<N>* changeTypeOfSort4 = new ChangeTypeOfSort<N>(63 + typeOfSort[this->type_id].size() + 2,5,2,0,">","type_id",this);
-        handler.AddButton(changeTypeOfSort1);
-        changeTypeOfSort1->DrawButton();
-        changeTypeOfSort2->DrawButton();
-        changeTypeOfSort3->DrawButton();
-        changeTypeOfSort4->DrawButton();
-        handler.AddButton(changeTypeOfSort2);
-        handler.AddButton(changeTypeOfSort3);
-        handler.AddButton(changeTypeOfSort4);
+        ChangePage<N>* ChangePage1 = new ChangePage<N>(48,5,2,0,"<","order_id",this);
+        ChangePage<N>* ChangePage2 = new ChangePage<N>(60,5,2,0,">","order_id",this);
+        ChangePage<N>* ChangePage3 = new ChangePage<N>(63,5,2,0,"<","type_id",this);
+        ChangePage<N>* ChangePage4 = new ChangePage<N>(63 + typeOfSort[this->type_id].size() + 2,5,2,0,">","type_id",this);
+        handler.AddButton(ChangePage1);
+        ChangePage1->DrawButton();
+        ChangePage2->DrawButton();
+        ChangePage3->DrawButton();
+        ChangePage4->DrawButton();
+        handler.AddButton(ChangePage2);
+        handler.AddButton(ChangePage3);
+        handler.AddButton(ChangePage4);
         sortStaffButton->DrawButton();
         handler.AddButton(sortStaffButton);
-        ChangePagesBack = new ChangeTypeOfSort<N>(8,5,2,0,"<","page_id",this);
-        ChangePagesFront = new ChangeTypeOfSort<N>(19,5,2,0,">","page_id",this);
+        ChangePagesBack = new ChangePage<N>(8,5,2,0,"<","page_id",this);
+        ChangePagesFront = new ChangePage<N>(19,5,2,0,">","page_id",this);
         gotoxy(1,3);
         std::cout << "STAFF: ";
         gotoxy(10,5);
@@ -816,11 +813,7 @@ ApplyDiscountToTypeOfRoom::ApplyDiscountToTypeOfRoom(const int x, const int y, c
                                                          this->GoBackButton = menu_button;
                                                      }
 void ApplyDiscountToTypeOfRoom::onClick(ButtonHandler &handler) {
-    for(auto room: this->hotel->getRooms()){
-        if(room->getType() == this->getText()){
-            room->toggleDiscount();
-        }
-    }
+    this->hotel->activateDiscount(this->getText());
     clearscreen();
     handler.SpecialGoBackClear();
     this->GoBackButton->onClick(handler);
@@ -1091,13 +1084,13 @@ void SearchButton<N>::onClick(ButtonHandler &handler) {
 }
 
 template <class N>
-ChangeTypeOfSort<N>::ChangeTypeOfSort(const int x, const int y, const int width, const int height, const std::string text,std::string type, MenuButton<N> *menu_button):BaseButton(x,y,width,height,text) {
+ChangePage<N>::ChangePage(const int x, const int y, const int width, const int height, const std::string text,std::string type, MenuButton<N> *menu_button):BaseButton(x,y,width,height,text) {
     this->menu_button = menu_button;
     this->type = type;
 }
 
 template <class N>
-void ChangeTypeOfSort<N>::onClick(ButtonHandler &handler) {
+void ChangePage<N>::onClick(ButtonHandler &handler) {
     if(this->getText() == "<"){
         if(this->type == "type_id"){
             this->menu_button->ChangeTypeId(-1);

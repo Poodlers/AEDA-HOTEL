@@ -34,6 +34,11 @@ public:
     /// name NIF
     virtual void print();
 
+    /// Prints person (for console) in format:
+    ///
+    /// name NIF
+    virtual void printConsole();
+
     /// Modifies person.
     ///
     /// If any of the parameters are '.' they are not modified.

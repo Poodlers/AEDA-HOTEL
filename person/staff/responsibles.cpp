@@ -30,3 +30,12 @@ void Responsible::print() {
               std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(19) << this->getYearsOfService()
               << "  " << this->getFloorsAssigned() << std::setw(8) << " " << std::setw(12) << " ";
 }
+
+void Responsible::printConsole() {
+    std::cout << std::left << std::setw(13) << "Responsible" <<  std::setw(22) << std::setfill(' ') << this->getName() <<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(14) << this->getYearsOfService()
+              << "  ";
+    for (int floor :floorsAssigned){
+        std::cout << floor << ", ";
+    }
+}

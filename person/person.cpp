@@ -20,6 +20,10 @@ void Person::print() {
     std::cout << std::setw(20) << std::setfill(' ') << this->getName() << std::setw(10) << this->getNIF();
 }
 
+void Person::printConsole() {
+    std::cout << std::setw(20) << std::setfill(' ') << this->getName() << std::setw(10) << this->getNIF();
+}
+
 void Person::setName(const std::string &name){
     this->name = name;
 }

@@ -26,6 +26,12 @@ void Manager::print() {
               << std::setw(19) << "  " << std::setw(8) << "     " << std::setw(12) << this->getEvaluation();
 }
 
+void Manager::printConsole() {
+    std::cout << std::left << std::setw(13) << "Manager" <<  std::setw(22) << std::setfill(' ') << this->getName() <<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(14) << this->getYearsOfService()
+              << std::setw(19) << "  " << std::setw(8) << "     " << std::setw(12) << this->getEvaluation();
+}
+
 
 void Manager::managerModify(const std::string& name, const std::string& NIF, const std::string& wage,const std::string & password, const std::string& evaluation){
     if (name != "."){

@@ -31,6 +31,11 @@ void Staff::print() {
               << std::setw(19) << " " << std::setw(8) << " " << std::setw(12) << " ";
 }
 
+void Staff::printConsole() {
+    std::cout << std::left << std::setw(13) << this->getType() <<  std::setw(22) << std::setfill(' ') << this->getName()<<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(14) << this->getYearsOfService()
+              << std::setw(19) << " " << std::setw(8) << " " << std::setw(12) << " ";
+}
 
 
 std::string Staff::getType(){

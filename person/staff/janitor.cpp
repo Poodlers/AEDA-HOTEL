@@ -25,6 +25,18 @@ void Janitor::print() {
     }
 }
 
+void Janitor::printConsole() {
+    std::cout << std::left << std::setw(13) << "Janitor" <<  std::setw(22) << std::setfill(' ') << this->getName() <<
+              std::setw(10) << this->getNIF() << std::setw(7) << this->getWage() << std::setw(14) << this->getYearsOfService()
+              << std::setw(19) << " ";
+    if (shift){
+        std::cout << std::setw(8) << "day";
+    }
+    else{
+        std::cout << std::setw(8) << "night";
+    }
+}
+
 void Janitor::janitorModify(const std::string& name, const std::string& NIF, const std::string& wage, const std::string& shift){
     if (name != "."){
         this->name = name;

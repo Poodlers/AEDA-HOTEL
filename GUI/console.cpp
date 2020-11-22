@@ -557,7 +557,7 @@ void staff(Hotel *hotel){
                   std::setw(10) << "NIF" << std::setw(7) << "Wage" << std::setw(16) << "Years of work"
                   << std::setw(16) << "Floors assigned" << std::setw(7) << "Shift" << std::setw(12)<< "Evaluation"<<std::endl;
         for(Staff* staff: hotel->getStaff()){
-            staff->print();
+            staff->printConsole();
             cout<<endl;
         }
         cout << "Write Help to see possible commands."<<endl;

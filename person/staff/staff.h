@@ -55,6 +55,11 @@ public:
     /// type name NIF wage yearsOfService
     void print() override;
 
+    /// Prints staff member's (for console) info in format:
+    ///
+    /// type name NIF wage yearsOfService
+    void printConsole() override;
+
 protected:
     /// employee's wage.
     float wage;
@@ -117,6 +122,11 @@ public:
     /// type name NIF wage yearsOfService assigned rooms
     void print() override;
 
+    /// Prints responsible info (for console) in format:
+    ///
+    /// type name NIF wage yearsOfService assigned rooms
+    void printConsole() override;
+
 private:
     /// Number of floors being monitored by the responsible
     int numberOfFloorsBeingMonitored;
@@ -151,6 +161,11 @@ public:
     ///
     ///  type name NIF wage yearsOfService (free space) shift
     void print() override;
+
+    /// Prints the janitor's (for console) info in format
+    ///
+    ///  type name NIF wage yearsOfService (free space) shift
+    void printConsole() override;
 
     /// Modifies janitor.
     ///
@@ -199,6 +214,11 @@ public:
     ///
     /// type name NIF wage yearsOfService (free space) (free space) evaluation
     void print() override;
+
+    /// Prints the manager (for console) info in format:
+    ///
+    /// type name NIF wage yearsOfService (free space) (free space) evaluation
+    void printConsole() override;
 
     /// Modifies manager.
     ///

@@ -273,7 +273,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
     file<<"End\n";
 }
 
-Hotel::Hotel(const std::string &hotelFile) {
+Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle()){
     std::ifstream file;
     std::string getData;
     std::stringstream ss;
@@ -606,7 +606,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
     if (getData != "Necessities"){
-        throw HotelFileHasWrongFormat("Line should be 'Transactions'");
+        throw HotelFileHasWrongFormat("Line should be 'Necessities'");
     }
     getline(file,getData);
     try{
@@ -635,6 +635,40 @@ Hotel::Hotel(const std::string &hotelFile) {
         std::cout << msg;
         throw HotelFileHasWrongFormat("Should be other necessity");
     }
+
+
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    if (getData != "Fleet"){
+        throw HotelFileHasWrongFormat("Line should be 'Fleet'");
+    }
+    std::string plate;
+    std::string kmsTravelled;
+
+    while (std::getline(file,getData) && getData != "End"){
+        ss << getData;
+        ss >> plate >> kmsTravelled >> capacity;
+        try{
+            addVehicle(plate,kmsTravelled,capacity);
+        }catch(NotAPositiveFloat& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("KmsTravelled should be a float");
+        }
+        catch(NotAnInt& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Capacity should be an int");
+        }catch(InvalidPlate& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Provided license plate was not valid!");
+        }
+        catch(VehicleAlreadyExists& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Trying to add an already existing vehicle!");
+        }
+        ss.clear();
+    }
+
     file.close();
     Provider* provider1 = new Provider("provider1", 50);
     Provider* provider2 = new Provider("provider 2", 55);
@@ -804,6 +838,63 @@ void Hotel::removeRoom(Room* room){
     auto find = std::find(this->rooms.begin(),this->rooms.end(),room);
     this->rooms.erase(find);
     delete room;
+}
+
+void Hotel::modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
+                              std::string &capacity, int posClient) {
+    //if reservation is not future throw shit
+    unsigned RoomId;
+    Date CheckIn;
+    Date CheckOut;
+    unsigned Capacity;
+    if (roomId == ".") RoomId = reservation->getRoomId();
+    else RoomId = std::stoi(roomId);
+    if (checkIn == ".") CheckIn = reservation->getCheckIn();
+    else CheckIn = Date(checkIn);
+    if (checkOut == ".") CheckOut = reservation->getCheckOut();
+    else CheckOut = Date(checkOut);
+    if (capacity == ".") Capacity = reservation->getReservationSize();
+    else Capacity = std::stoi(capacity);
+    if (CheckIn < this->getDate() || CheckOut < this->getDate())
+        throw CantMakeNewResevOldResev();
+    for (Room* room: rooms){
+        if (room->getRoomId() == RoomId){
+            if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0){
+                throw ClientCantMakeThisReservation();
+            }
+            if (room->getCapacity() < Capacity){
+                throw RoomDoesNotHaveTheNecessaryCapacity(RoomId);
+            }
+            for(Reservation* reservation: reservations){
+                if (reservation->getRoomId() == RoomId && reservation->getCheckIn() <= CheckIn && CheckIn<= reservation->getCheckOut()){
+                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(RoomId);
+                }
+            }
+            try{
+                clients[posClient]->deleteReservation(reservation);
+                reservation->setCheckIn(&CheckIn);
+                reservation->setCheckOut(&CheckOut);
+                reservation->setRoomId(RoomId);
+                reservation->setReservationSize(Capacity);
+
+                if(CheckOut < date){
+                    reservation->setIsCurrent(false);
+                    clients[posClient]->addToHistory(reservation);
+                }
+                else{
+                    clients[posClient]->addNewReservation(reservation);
+                    reservation->setIsCurrent(false);
+                }
+
+                this->reservations.push_back(reservation);
+            }
+            catch(...){
+                throw;
+            }
+            return;
+        }
+    }
+    throw RoomDoesNotExist(RoomId);
 }
 
 void Hotel::deleteReservation(Reservation *reservation) {
@@ -1224,6 +1315,30 @@ void Hotel::addClient(const std::string& name, const std::string& NIF){
         throw;
     }
     throw ClientAlreadyExists(name, stoi(NIF));
+}
+
+void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity) {
+    try{
+        checkIfValidPlate(plate);
+        checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
+        checkIfPositiveInteger(capacity,"capacity");
+    } catch (...) {
+        throw;
+    }
+
+
+    Vehicle v1(plate,stof(kmsTravelled),stoi(capacity));
+    BSTItrIn<Vehicle> it(this->fleet);
+    while(!it.isAtEnd()){
+        if(it.retrieve().getPlate() == v1.getPlate()){
+            throw VehicleAlreadyExists(plate);
+        }
+
+        it.advance();
+    }
+
+    fleet.insert(v1);
+
 }
 
 void Hotel::modifyClient(const std::string & name, std::string& NIF, const int& pos){

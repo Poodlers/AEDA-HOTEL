@@ -8,7 +8,9 @@
 #include "../provider/provider.h"
 #include "../product/product1.h"
 #include "reservation.h"
+#include "bst.h"
 #include "date.h"
+#include "../Vehicles/vehicles.h"
 #include <algorithm>
 
 /// Struct which represents a transaction.
@@ -49,6 +51,11 @@ public:
     /// \see hotel_exemplo.txt
     /// \param hotelFile  name of the '.txt' file without the '.txt' extension.
     void saveHotel(const std::string &hotelFile);
+    /**/
+
+    /*VEHICLES*/
+    void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity);
+
 
     /**/
 
@@ -111,6 +118,9 @@ public:
     /// Searches for reservations by searchCriteria which agree with value.
     /// \param searchCriteria  criteria used to search for reservations, can be "Date", "ID" or "Room".
     /// \param value  value that the reservation has to agree with.
+    /// \example searchReservations("Date",date1) will search for reservations with check in date equal to date1.
+    /// \example searchReservations("ID",reservationId) will search for the reservation with ID reservationID.
+    /// \example searchReservations("Room",roomID) will search for the reservations for the room with room ID roomId.
     /// \return list of positions in the vector reservations of the found reservations.
     /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date.
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
@@ -142,6 +152,9 @@ public:
     /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
+
+    void modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
+                           std::string &capacity, int posClient);
     /**/
 
     /*ROOMS*/
@@ -496,6 +509,7 @@ private:
     /// Vector of the transactions made by the hotel.
     std::vector<Transaction*> accounting;
 
+    BST<Vehicle> fleet;
     /// Logged in state.
     /// True if the manager is logged in, false otherwise.
     bool loggedIn = false;

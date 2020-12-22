@@ -310,6 +310,32 @@ std::vector<std::string> askClient() {
 
 }
 
+std::vector<std::string> askmodifyReservation(){
+    std::vector<std::string> vec;
+    std::string edit;
+    std::cout << "Edit the Reservation's information as follows: " << std::endl;
+    std::cout << "Note: If you do not wish to edit the current camp, type '.' \n" << std::endl;
+    gotoxy(0,3);
+    std::cout << "Room Id: " << std::endl;
+    edit = GetNumberInput(22,3,CheckIfInteger);
+    vec.push_back(edit);
+    gotoxy(0,5);
+    std::cout << "Check In Date (day-month-year): " << std::endl;
+    getStringInput(edit,33,5);
+    vec.push_back(edit);
+    edit = " ";
+    gotoxy(0,7);
+    std::cout << "Check Out Date (day-month-year): " << std::endl;
+    getStringInput(edit,33,7);
+    vec.push_back(edit);
+    gotoxy(0,9);
+    std::cout << "Capacity : " << std::endl;
+    edit = GetNumberInput(12,9,CheckIfInteger);
+    vec.push_back(edit);
+    return vec;
+
+}
+
 void askReservation(unsigned int& roomId,Date& checkIn,Date& checkOut,int& capacity,int& reservationId) {
     std::string edit;
     std::cout << "Edit the Reservation's information as follows: " << std::endl;
@@ -515,4 +541,49 @@ std::ostream& operator<<(std::ostream& os, const std::vector<int>& v){
     }
     os << "]";
     return os;
+}
+
+void checkIfValidPlate(const std::string& plate){
+    if(plate.size() != 8 ){
+        throw InvalidPlate(plate);
+    }
+    if(plate[2] != '-' || plate[5] != '-'){
+        throw InvalidPlate(plate);
+    }
+    std::string st1 = "" + plate[0] + plate[1];
+    std::string st2 = "" + plate[3] + plate[4];
+    std::string st3 = "" + plate[6] + plate[7];
+    try{
+        int first = checkIfIsNumber(st1);
+        int second = checkIfIsNumber(st2);
+        int third = checkIfIsNumber(st3);
+        if(first + second + third != 4){
+            throw InvalidPlate(plate);
+        }
+    }catch(...){
+        throw InvalidPlate(plate);
+    }
+
+
+}
+
+int checkIfIsNumber(const std::string& number){
+    if(isdigit(number[0])){
+        if(!isdigit(number[1])){
+            throw ;
+        }else{
+            return 1;
+        }
+    }
+    else if(isalpha(number[0])){
+        if(!isupper(number[0])){
+            throw ;
+        }
+        if(!isalpha(number[1])){
+            throw ;
+        }else if(isupper(number[1])){
+            return 2;
+        }
+    }
+    throw;
 }

@@ -97,6 +97,20 @@ public:
     }
 };
 
+class CantMakeNewResevOldResev{
+public:
+    /// Constructor.
+    CantMakeNewResevOldResev (){}
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const CantMakeNewResevOldResev& exception){
+        return o << "Can't turn a Future Reservation into a Past one!"<<std::endl;
+    }
+};
+
 /// Thrown when a client tries to claim a room that is already claimed for the intended period of time.
 class AnotherReservationForThisRoomAlreadyExistsAtThisTime{
 private:
@@ -122,6 +136,64 @@ public:
     /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const AnotherReservationForThisRoomAlreadyExistsAtThisTime& exception){
         return o << "Room with Id: "<< exception.getRoomId() << " already has a reservation at this time."<<std::endl;
+    }
+};
+
+/// Thrown when trying to add a vehicle with an already existing plate.
+class VehicleAlreadyExists{
+private:
+    /// Plate of repeated vehicle.
+    std::string plate;
+public:
+    /// Constructor.
+    ///
+    /// \param plate plate of repeated vehicle
+    VehicleAlreadyExists(const std::string& plate){
+        this->plate = plate;
+    }
+
+    /// Return plate of repeated vehicle.
+    ///
+    /// \param plate plate of repeated vehicle
+    std::string getPlate() const {return plate;}
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const VehicleAlreadyExists& exception){
+        return o << "Vehicle with plate: "<< exception.getPlate() << " already exists."<<std::endl;
+    }
+};
+
+/// Thrown when trying to create vehicle with invalid plate.
+class InvalidPlate{
+private:
+    /// Invalid plate.
+    std::string plate;
+public:
+    /// Constructor.
+    ///
+    /// \param plate invalid plate
+    InvalidPlate(const std::string& plate){
+        this->plate = plate;
+    }
+
+    /// Return the invalid plate.
+    ///
+    /// \param plate invalid plate
+    std::string getPlate() const{
+        return this->plate;
+    }
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const InvalidPlate& exception){
+        return o << "Plate : "<< exception.getPlate() << " is not a valid plate."<<std::endl;
     }
 };
 

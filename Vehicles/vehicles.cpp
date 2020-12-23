@@ -66,5 +66,5 @@ void Vehicle::changeRented() {
 }
 
 std::ostream & operator << (std::ostream& o, const Vehicle& v1){
-    return o << v1.licensePlate << " " << v1.kmsTravelled << " " << v1.capacity << std::endl;
+    return o << v1.licensePlate << " " << v1.kmsTravelled << " " << v1.capacity << " " << v1.price << std::endl;
 }

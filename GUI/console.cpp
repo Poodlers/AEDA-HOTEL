@@ -7,7 +7,7 @@
 using namespace std;
 
 void vehicle(Hotel* hotel){
-    std::string input, oldPlate, plate, kilometers, capacity;
+    std::string input, oldPlate, plate, kilometers, capacity, price;
     while(true){
         cout << "Date: " << hotel->getDate() <<endl;
         hotel->getFleet().printTree();
@@ -36,7 +36,10 @@ void vehicle(Hotel* hotel){
                 cout << "New Capacity: " << endl;
                 cin >> capacity;
 
-                hotel->modifyVehicle(oldPlate, plate, kilometers, capacity);
+                cout << "New Price: " << endl;
+                cin >> price;
+
+                hotel->modifyVehicle(oldPlate, plate, kilometers, capacity, price);
 
             }
             else if(input == "Remove"){
@@ -59,8 +62,11 @@ void vehicle(Hotel* hotel){
 
                 cin >> capacity;
 
+                cout << "Insert the price of the vehicle you wish to add:"<<endl;
 
-                hotel->addVehicle(plate, kilometers, capacity);
+                cin >> price;
+
+                hotel->addVehicle(plate, kilometers, capacity, price);
 
 
             }

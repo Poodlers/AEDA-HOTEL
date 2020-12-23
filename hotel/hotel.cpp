@@ -279,7 +279,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
     file<<"End\n";
 }
 
-Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0)){
+Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     std::ifstream file;
     std::string getData;
     std::stringstream ss;
@@ -651,12 +651,13 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0)){
     }
     std::string plate;
     std::string kmsTravelled;
+    std::string price;
 
     while (std::getline(file,getData) && getData != "End"){
         ss << getData;
-        ss >> plate >> kmsTravelled >> capacity;
+        ss >> plate >> kmsTravelled >> capacity >> price;
         try{
-            addVehicle(plate,kmsTravelled,capacity);
+            addVehicle(plate,kmsTravelled,capacity, price);
         }catch(NotAPositiveFloat& msg){
             std::cout << msg;
             throw HotelFileHasWrongFormat("KmsTravelled should be a float");
@@ -1069,6 +1070,10 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
             if (v1.getKmsTravelled() < 5000){
                 fleet.insert(v1);
             }
+            Transaction* t = new Transaction();
+            t->description = "Car with plate " + v1.getPlate() + " rented. ";
+            t->value = v1.getPrice();
+            addTransaction(t);
         }
         for (auto &vehicle: vehicles){
             fleet.insert(vehicle);
@@ -1299,6 +1304,10 @@ void Hotel::checkOut(const int& pos, const bool& rentInterested){
                 if (v1.getKmsTravelled() < 5000){
                     fleet.insert(v1);
                 }
+                Transaction* t = new Transaction();
+                t->description = "Car with plate " + v1.getPlate() + " rented. ";
+                t->value = v1.getPrice();
+                addTransaction(t);
             }
             for (auto &vehicle: vehicles){
                 fleet.insert(vehicle);
@@ -1895,7 +1904,7 @@ BST<Vehicle> Hotel::getFleet() const {
 }
 
 Vehicle Hotel::searchVehicle(const string &plate) {
-    Vehicle v1(plate, 0.0, 0);
+    Vehicle v1(plate, 0.0, 0, 0.0);
     BSTItrIn<Vehicle> it(fleet);
     for(; !it.isAtEnd(); it.advance()){
         if (it.retrieve().getPlate() == plate){

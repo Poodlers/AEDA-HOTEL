@@ -22,15 +22,13 @@ void vehicle(Hotel* hotel){
 
                 cout << "Insert the plate of the vehicle you wish to modify:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, oldPlate);
+                cin >> oldPlate;
 
                 cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
                      << endl;
 
                 cout << "New Plate: " << endl;
-                cleanCinBuffer();
-                getline(cin, plate);
+                cin >> plate;
 
                 cout << "New Number of Kilometers: " << endl;
                 cin >> kilometers;
@@ -71,7 +69,7 @@ void vehicle(Hotel* hotel){
 
             }
             else if (input == "Search"){
-                cout << "Insert the plate of the vehicle you wish to add:"<<endl;
+                cout << "Insert the plate of the vehicle you wish to search:"<<endl;
 
                 cleanCinBuffer();
                 getline(cin, plate);
@@ -88,19 +86,28 @@ void vehicle(Hotel* hotel){
                 cout << "Invalid command. Write Help to see possible commands."<<endl;
             }
         }
-        catch(NIFIsNotValid& msg){
+        catch(NotAnInt &msg){
             cout << msg;
         }
-        catch(ClientWithThisNIFAlreadyExists& msg){
+        catch(NotAPositiveInt &msg){
             cout << msg;
         }
-        catch(ClientDoesNotExist& msg){
+        catch(NotAPositiveFloat &msg){
             cout << msg;
         }
-        catch(ClientAlreadyExists& msg){
+        catch(InvalidPlate &msg){
             cout << msg;
         }
-        catch(SortingError& msg){
+        catch(KmsOverLimit &msg){
+            cout << msg;
+        }
+        catch(NotLightweightCar &msg){
+            cout << msg;
+        }
+        catch(VehicleDoesNotExist& msg){
+            cout << msg;
+        }
+        catch(VehicleAlreadyExists& msg){
             cout << msg;
         }
         system("pause");

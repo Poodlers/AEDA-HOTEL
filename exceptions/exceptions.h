@@ -1106,7 +1106,7 @@ public:
 class NoVehiclesInFleet{
 public:
     /// Constructor
-    NoVehiclesInFleet(){};
+    NoVehiclesInFleet(){}
     /// Operator overload for <<.
     ///
     /// \param o
@@ -1114,6 +1114,53 @@ public:
     /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, NoVehiclesInFleet& exception){
         return o << "There are no vehicles left in the fleet." << std::endl;
+    }
+};
+
+/// Thrown if vehicle's kilometers travelled exceed limit.
+class KmsOverLimit{
+private:
+    /// kilometers of travel.
+    std::string kmsTravelled;
+public:
+    /// Constructor
+    ///
+    /// \param kmsTravelled  kilometers travelled.
+    KmsOverLimit(std::string kmsTravelled){this->kmsTravelled = kmsTravelled;}
+    /// Returns kilometers travelled.
+    ///
+    /// \return kilometers travelled.
+    std::string getKmsTravelled() const{ return this->kmsTravelled; }
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, KmsOverLimit& exception){
+        return o << "Number of kilometers travelled (" << exception.getKmsTravelled() << ") exceeds limit."<<  std::endl;
+    }
+};
+
+class NotLightweightCar{
+private:
+    /// invalid capacity.
+    std::string capacity;
+public:
+    /// Constructor
+    ///
+    /// \param capacity  invalid capacity
+    NotLightweightCar(std::string capacity){this->capacity = capacity;}
+    /// Returns invalid capacity.
+    ///
+    /// \return invalid capacity.
+    std::string getCapacity() const{ return this->capacity; }
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, NotLightweightCar& exception){
+        return o << "Capacity exceeds lightweight car's limit(" << exception.getCapacity() << ": should be lower or equal to 9)."<<  std::endl;
     }
 };
 

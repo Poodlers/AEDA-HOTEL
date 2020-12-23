@@ -1800,53 +1800,75 @@ void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,
     try{
         checkIfValidPlate(plate);
         checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
+        if (stof(kmsTravelled) >= 5000){
+            throw KmsOverLimit(kmsTravelled);
+        }
         checkIfPositiveInteger(capacity,"capacity");
-    } catch (...) {
-        throw;
-    }
-
-
-    Vehicle v1(plate,stof(kmsTravelled),stoi(capacity));
-    Vehicle v2 = fleet.find(v1);
-    if (v2.getPlate() != ""){
+        if (stoi(capacity) > 9){
+            throw NotLightweightCar(capacity);
+        }
+        Vehicle v1 = searchVehicle(plate);
         throw VehicleAlreadyExists(plate);
     }
-
-    fleet.insert(v1);
+    catch (VehicleDoesNotExist &msg){
+        Vehicle v2(plate, stof(kmsTravelled), stoi(capacity));
+        fleet.insert(v2);
+    }
+    catch (...) {
+        throw;
+    }
 
 }
 
 void Hotel::removeVehicle(const string &plate) {
     Vehicle v1(plate, 0.0, 0);
-    v1 = fleet.find(v1);
-    if (v1.getPlate() == ""){
-        throw VehicleDoesNotExist(plate);
-    }
-    else{
+    try{
+        v1 = searchVehicle(plate);
         fleet.remove(v1);
+    }
+    catch (...){
+        throw;
     }
 }
 
 void Hotel::modifyVehicle(const std::string& oldPlate, const std::string& newPlate, const string &kmsTravelled, const string &capacity) {
+    Vehicle v1, v2;
     try{
         if (newPlate != "."){
             checkIfValidPlate(newPlate);
         }
         if (kmsTravelled != "."){
             checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
+            if (stof(kmsTravelled) >= 5000){
+                throw KmsOverLimit(kmsTravelled);
+            }
         }
         if (capacity != "."){
             checkIfPositiveInteger(capacity,"capacity");
+            if (stoi(capacity) > 9){
+                throw NotLightweightCar(capacity);
+            }
         }
+        v1 = searchVehicle(oldPlate);
     } catch (...) {
         throw;
     }
-    Vehicle v1(oldPlate,0.0,0);
-    Vehicle v2 = fleet.find(v1);
-    if (v2.getPlate() == ""){
-        throw VehicleDoesNotExist(oldPlate);
+    try{
+        v2 = searchVehicle(newPlate);
+        throw VehicleAlreadyExists(newPlate);
+    } catch (VehicleDoesNotExist &msg){
+        fleet.remove(v1);
+        if (newPlate != "."){
+            v1.setPlate(newPlate);
+        }
+        if (kmsTravelled != "."){
+            v1.setKmsTravelled(stof(kmsTravelled));
+        }
+        if (capacity != "."){
+            v1.setCapacity(stoi(capacity));
+        }
+        fleet.insert(v1);
     }
-
 }
 
 BST<Vehicle> Hotel::getFleet() const {
@@ -1855,10 +1877,12 @@ BST<Vehicle> Hotel::getFleet() const {
 
 Vehicle Hotel::searchVehicle(const string &plate) {
     Vehicle v1(plate, 0.0, 0);
-    v1 = fleet.find(v1);
-    if (v1.getPlate() == ""){
-        throw VehicleDoesNotExist(plate);
+    BSTItrIn<Vehicle> it(fleet);
+    for(; !it.isAtEnd(); it.advance()){
+        if (it.retrieve().getPlate() == plate){
+            return it.retrieve();
+        }
     }
-    return v1;
+    throw VehicleDoesNotExist(plate);
 }
 

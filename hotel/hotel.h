@@ -54,9 +54,9 @@ public:
     /**/
 
     /*VEHICLES*/
-    void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity);
+    void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
     void removeVehicle(const std::string& plate);
-    void modifyVehicle(const std::string& oldPlate, const std::string& newPlate,const std::string& kmsTravelled,const std::string& capacity);
+    void modifyVehicle(const std::string& oldPlate, const std::string& newPlate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
     Vehicle searchVehicle(const std::string& plate);
     /**/
 

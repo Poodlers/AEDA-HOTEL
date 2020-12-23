@@ -1,7 +1,7 @@
 #include "vehicles.h"
 
-Vehicle::Vehicle(std::string licensePlate, float kmsTravelled, unsigned int capacity): licensePlate(licensePlate),
-kmsTravelled(kmsTravelled), capacity(capacity), rented(false){
+Vehicle::Vehicle(std::string licensePlate, float kmsTravelled, unsigned int capacity, float price): licensePlate(licensePlate),
+kmsTravelled(kmsTravelled), capacity(capacity), rented(false), price(price){
 
 }
 
@@ -21,6 +21,10 @@ bool Vehicle::getRented() const {
     return this->rented;
 }
 
+float Vehicle::getPrice() const {
+    return this->price;
+}
+
 void Vehicle::setCapacity(const unsigned int &capacity) {
     this->capacity = capacity;
 }
@@ -36,6 +40,10 @@ void Vehicle::setPlate(const std::string &licensePlate) {
 
 void Vehicle::setRented(const bool &rented) {
     this->rented = rented;
+}
+
+void Vehicle::setPrice(const float &price) {
+    this->price = price;
 }
 
 bool Vehicle::operator<(const Vehicle &v1) const{

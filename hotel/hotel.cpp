@@ -115,6 +115,12 @@ void Hotel::incrementDate(const int& i){
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
     }
+    BSTItrIn<Vehicle> it(fleet);
+    for(; !it.isAtEnd(); it.advance()){
+        if (it.retrieve().getRented()){
+            it.retrieve().changeRented();
+        }
+    }
     if (date.getDay() == 1){
         for (Provider* provider: providers){
             provider->restock();
@@ -1043,23 +1049,26 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
         throw;
     }
     if (rentInterested){
-        if (fleet.isEmpty()){
-            throw NoVehiclesInFleet();
-        }
-        Vehicle v1 = fleet.findMin();
-        while (v1.getRented() || v1.getCapacity() < ppNum){
-            vehicles.push_back(v1);
-            fleet.remove(v1);
+        while (ppNum > 0){
             if (fleet.isEmpty()){
                 throw NoVehiclesInFleet();
             }
-            v1 = fleet.findMin();
-        }
-        fleet.remove(v1);
-        v1.addKms(airportDistance * 2);
-        v1.changeRented();
-        if (v1.getKmsTravelled() < 5000){
-            fleet.insert(v1);
+            Vehicle v1 = fleet.findMin();
+            while (v1.getRented()){
+                vehicles.push_back(v1);
+                fleet.remove(v1);
+                if (fleet.isEmpty()){
+                    throw NoVehiclesInFleet();
+                }
+                v1 = fleet.findMin();
+            }
+            ppNum -= v1.getCapacity();
+            fleet.remove(v1);
+            v1.addKms(airportDistance * 2);
+            v1.changeRented();
+            if (v1.getKmsTravelled() < 5000){
+                fleet.insert(v1);
+            }
         }
         for (auto &vehicle: vehicles){
             fleet.insert(vehicle);
@@ -1270,23 +1279,26 @@ void Hotel::checkOut(const int& pos, const bool& rentInterested){
             }
         }
         if (rentInterested){
-            if (fleet.isEmpty()){
-                throw NoVehiclesInFleet();
-            }
-            Vehicle v1 = fleet.findMin();
-            while (v1.getRented() || v1.getCapacity() < ppNum){
-                vehicles.push_back(v1);
-                fleet.remove(v1);
+            while (ppNum > 0){
                 if (fleet.isEmpty()){
                     throw NoVehiclesInFleet();
                 }
-                v1 = fleet.findMin();
-            }
-            fleet.remove(v1);
-            v1.addKms(airportDistance * 2);
-            v1.changeRented();
-            if (v1.getKmsTravelled() < 5000){
-                fleet.insert(v1);
+                Vehicle v1 = fleet.findMin();
+                while (v1.getRented()){
+                    vehicles.push_back(v1);
+                    fleet.remove(v1);
+                    if (fleet.isEmpty()){
+                        throw NoVehiclesInFleet();
+                    }
+                    v1 = fleet.findMin();
+                }
+                ppNum -= v1.getCapacity();
+                fleet.remove(v1);
+                v1.addKms(airportDistance * 2);
+                v1.changeRented();
+                if (v1.getKmsTravelled() < 5000){
+                    fleet.insert(v1);
+                }
             }
             for (auto &vehicle: vehicles){
                 fleet.insert(vehicle);
@@ -1796,7 +1808,7 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
-void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity) {
+void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price) {
     try{
         checkIfValidPlate(plate);
         checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
@@ -1807,11 +1819,12 @@ void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,
         if (stoi(capacity) > 9){
             throw NotLightweightCar(capacity);
         }
+        checkIfValidPriceOrWage(price, "price");
         Vehicle v1 = searchVehicle(plate);
         throw VehicleAlreadyExists(plate);
     }
     catch (VehicleDoesNotExist &msg){
-        Vehicle v2(plate, stof(kmsTravelled), stoi(capacity));
+        Vehicle v2(plate, stof(kmsTravelled), stoi(capacity), stof(price));
         fleet.insert(v2);
     }
     catch (...) {
@@ -1820,8 +1833,8 @@ void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,
 
 }
 
-void Hotel::removeVehicle(const string &plate) {
-    Vehicle v1(plate, 0.0, 0);
+void Hotel::removeVehicle(const std::string &plate) {
+    Vehicle v1(plate, 0.0, 0, 0.0);
     try{
         v1 = searchVehicle(plate);
         fleet.remove(v1);
@@ -1831,7 +1844,7 @@ void Hotel::removeVehicle(const string &plate) {
     }
 }
 
-void Hotel::modifyVehicle(const std::string& oldPlate, const std::string& newPlate, const string &kmsTravelled, const string &capacity) {
+void Hotel::modifyVehicle(const std::string& oldPlate, const std::string& newPlate, const std::string &kmsTravelled, const std::string &capacity, const std::string& price) {
     Vehicle v1, v2;
     try{
         if (newPlate != "."){
@@ -1848,6 +1861,9 @@ void Hotel::modifyVehicle(const std::string& oldPlate, const std::string& newPla
             if (stoi(capacity) > 9){
                 throw NotLightweightCar(capacity);
             }
+        }
+        if (price != "."){
+            checkIfValidPriceOrWage(price, "price");
         }
         v1 = searchVehicle(oldPlate);
     } catch (...) {
@@ -1866,6 +1882,9 @@ void Hotel::modifyVehicle(const std::string& oldPlate, const std::string& newPla
         }
         if (capacity != "."){
             v1.setCapacity(stoi(capacity));
+        }
+        if (price != "."){
+            v1.setPrice(stof(price));
         }
         fleet.insert(v1);
     }

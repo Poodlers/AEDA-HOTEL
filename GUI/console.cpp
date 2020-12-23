@@ -42,26 +42,22 @@ void vehicle(Hotel* hotel){
             else if(input == "Remove"){
                 cout << "Insert the plate of the vehicle you wish to remove:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, oldPlate);
+                cin >> oldPlate;
 
                 hotel->removeVehicle(oldPlate);
             }
             else if (input == "Add"){
                 cout << "Insert the plate of the vehicle you wish to add:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, plate);
+                cin >> plate;
 
                 cout << "Insert the number of kilometers of the vehicle you wish to add:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, kilometers);
+                cin >> kilometers;
 
                 cout << "Insert the capacity of the vehicle you wish to add:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, capacity);
+                cin >> capacity;
 
 
                 hotel->addVehicle(plate, kilometers, capacity);
@@ -71,8 +67,7 @@ void vehicle(Hotel* hotel){
             else if (input == "Search"){
                 cout << "Insert the plate of the vehicle you wish to search:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, plate);
+                cin >> plate;
                 Vehicle v1 = hotel->searchVehicle(plate);
                 cout << v1;
             }
@@ -467,6 +462,7 @@ void checkIn(Hotel* hotel){
     string name, NIF;
     int pos;
     string type;
+    bool rentACar;
 
     cout << endl << "Input the name and NIF of the client who wishes to check in."<<endl;
     cout << "Name: "<<endl;
@@ -474,10 +470,21 @@ void checkIn(Hotel* hotel){
     getline(cin, name);
     cout << "NIF: "<<endl;
     cin >>NIF;
+    cout << "Do you wish to rent a car? (Yes/No)" << endl;
+    cin >> type;
+    if (type == "Yes"){
+        rentACar = true;
+    }
+    else if (type == "No"){
+        rentACar = false;
+    }
+    else{
+        throw InvalidInput();
+    }
 
     try{
         pos = hotel->search(name,NIF, type ="Client");
-        hotel->checkIn(pos, true);
+        hotel->checkIn(pos, rentACar);
     }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
@@ -491,6 +498,9 @@ void checkIn(Hotel* hotel){
     catch(NoReservationsToCheckIn& msg){
         cout << msg;
     }
+    catch(NoVehiclesInFleet& msg){
+        cout << msg;
+    }
 
 }
 
@@ -498,17 +508,29 @@ void checkOut(Hotel* hotel){
     string name, NIF;
     int pos;
     string type;
+    bool rentACar;
 
-    cout <<endl<< "Input the name and NIF of the client who wishes to check in."<<endl;
+    cout <<endl<< "Input the name and NIF of the client who wishes to check out."<<endl;
     cout << "Name: "<<endl;
     cleanCinBuffer();
     getline(cin, name);
     cout << "NIF: "<<endl;
     cin >>NIF;
+    cout << "Do you wish to rent a car? (Yes/No)" << endl;
+    cin >> type;
+    if (type == "Yes"){
+        rentACar = true;
+    }
+    else if (type == "No"){
+        rentACar = false;
+    }
+    else{
+        throw InvalidInput();
+    }
 
     try{
         pos = hotel->search(name,NIF, type = "Client");
-        hotel->checkOut(pos);
+        hotel->checkOut(pos, rentACar);
     }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
@@ -520,6 +542,9 @@ void checkOut(Hotel* hotel){
         cout <<msg;
     }
     catch(NoReservationsToCheckOut& msg){
+        cout << msg;
+    }
+    catch(NoVehiclesInFleet& msg){
         cout << msg;
     }
 
@@ -634,6 +659,9 @@ void clients(Hotel *hotel){
             else{
                 cout << "Invalid command. Write Help to see possible commands."<<endl;
             }
+        }
+        catch(InvalidInput& msg){
+            cout << msg;
         }
         catch(NIFIsNotValid& msg){
             cout << msg;

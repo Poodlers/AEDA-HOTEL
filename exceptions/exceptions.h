@@ -282,6 +282,19 @@ public:
     }
 };
 
+class InvalidInput{
+public:
+    /// Constructor
+    InvalidInput(){}
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, InvalidInput& exception){
+        return o << "Input is not valid."<< std::endl;
+    }
+};
 
 /// Thrown if room type is not valid (valid : "Suite", "NoViewRoom" or "ViewRoom").
 class InvalidRoomType{

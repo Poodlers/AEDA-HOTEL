@@ -52,11 +52,139 @@ void Hotel::reduceNecessity(std::string type) {
     }
 }
 
+void Hotel::printBestBuys(){
+    std::vector<BuyProduct*> temp;
+    while(!this->bestBuys.empty()){
+        temp.push_back(this->bestBuys.top());
+        std::cout << (*this->bestBuys.top());
+
+        this->bestBuys.pop();
+    }
+
+    for(auto& buy: temp){
+        this->bestBuys.push(buy);
+    }
+}
+
+void Hotel::removeOldProduct(const std::string &prodName) {
+    std::vector<BuyProduct*> temp;
+    while(!this->bestBuys.empty()){
+        if(this->bestBuys.top()->getProductName() == prodName){
+            this->bestBuys.pop();
+            for(auto& buy: temp){
+                this->bestBuys.push(buy);
+            }
+            return;
+        }
+        temp.push_back(this->bestBuys.top());
+        this->bestBuys.pop();
+    }
+    for(auto& buy: temp){
+        this->bestBuys.push(buy);
+    }
+    throw NoSuchProductExists(prodName);
+}
+
+void Hotel::modifyBuyProduct(const std::string &oldName, const std::string &newName, const std::string &providerName,
+                             const std::string &stock, const std::string &rating) {
+    try{
+        BuyProduct* oldProduct = searchBuyProduct(oldName);
+        removeOldProduct(oldName);
+        if (newName != "."){
+            oldProduct->setProductName(newName);
+        }
+        if (providerName != "."){
+            oldProduct->setProviderName(providerName);
+        }
+        if (stock != "."){
+            checkIfPositiveInteger(stock, "stock");
+            oldProduct->setStock(std::stoi(stock));
+        }
+        if (rating != "."){
+            checkIfPositiveInteger(rating, "rating");
+            oldProduct->setRating(std::stoi(rating));
+        }
+        bool found = false;
+        for(auto& prov: this->providers){
+            if(prov->getName() == providerName){
+                prov->addProduct(oldProduct->getProduct());
+                found = true;
+            }
+        }
+        if(!found){
+            Provider* new_provider = new Provider(providerName,{oldProduct->getProduct()});
+            this->providers.push_back(new_provider);
+        }
+
+        this->bestBuys.push(oldProduct);
+
+    } catch (...) {
+        throw;
+    }
+
+}
+
+BuyProduct * Hotel::searchBuyProduct(const std::string &name) {
+    std::vector<BuyProduct*> temp;
+    while(!this->bestBuys.empty()){
+        BuyProduct* prod = this->bestBuys.top();
+        temp.push_back(this->bestBuys.top());
+        this->bestBuys.pop();
+
+        if(prod->getProductName() == name){
+            for(auto& buy: temp){
+                this->bestBuys.push(buy);
+            }
+            return prod;
+        }
+    }
+    for(auto& buy: temp){
+        this->bestBuys.push(buy);
+    }
+    throw NoSuchProductExists(name);
+}
+
+std::vector<BuyProduct*> Hotel::getBestBuys(const std::string & amount,const std::string & minStock, const std::string & maxStock) {
+    std::vector<BuyProduct*> buys = {};
+    std::vector<BuyProduct*> temp = {};
+    try{
+        checkIfPositiveInteger(amount, "amount");
+        checkIfPositiveInteger(minStock, "minStock");
+        checkIfPositiveInteger(maxStock,"maxStock");
+    }catch(...){
+        throw;
+    }
+    int amount_ = std::stoi(amount);
+    int minStock_ = std::stoi(minStock);
+    int maxStock_ = std::stoi(maxStock);
+    for(int i = 0; i < amount_;){
+        if(this->bestBuys.empty()){
+            for(auto buy: temp){
+                this->bestBuys.push(buy);
+            }
+            return buys;
+        }
+        temp.push_back(this->bestBuys.top());
+        if(this->bestBuys.top()->getStock() >= minStock_ && this->bestBuys.top()->getStock() <= maxStock_){
+            buys.push_back(this->bestBuys.top());
+            i++;
+        }
+
+        this->bestBuys.pop();
+    }
+    for(auto buy: temp){
+        this->bestBuys.push(buy);
+    }
+    return buys;
+}
+
 void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
             if (productId == provider->getProducts()[i]->getId()){ // if product exists
                 Transaction* transaction = new Transaction;
+                BuyProduct* bp1 = new BuyProduct(provider->getProducts()[i], provider->getName());
+                this->bestBuys.push(bp1);
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accounting.push_back(transaction); //Creates and adds a new transaction

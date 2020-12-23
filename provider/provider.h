@@ -62,6 +62,8 @@ public:
     /// Restocks its products.
     void restock();
 
+    void addProduct(Product* product);
+
 private:
     /// Mame of provider.
     std::string name;

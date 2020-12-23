@@ -68,6 +68,7 @@ void system(Hotel* hotel);
 /// \param hotel
 void vehicle(Hotel* hotel);
 
+void buyProduct(Hotel* hotel);
 
 
 #endif

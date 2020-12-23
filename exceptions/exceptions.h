@@ -1177,4 +1177,29 @@ public:
     }
 };
 
+/// Thrown if the searched for product does not exist
+class NoSuchProductExists{
+private:
+    /// Name of the non existing product
+    std::string prodName;
+public:
+    /// Constructor
+    ///
+    /// \param prodName the name of the non existent product Name
+    NoSuchProductExists(const std::string& prodName){ this->prodName = prodName; }
+
+    /// Returns prodName.
+    ///
+    /// \return name of the product that doesn't exist.
+    std::string getProdName() const{ return this->prodName; }
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, NoSuchProductExists& exception){
+        return o << "Product with name "<<exception.getProdName() << " does not exist." << std::endl;
+    }
+};
 #endif

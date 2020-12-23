@@ -129,6 +129,111 @@ void accounting(Hotel* hotel){
     cout << "Profit: " << hotel->getProfit()<<endl;
 }
 
+void buyProduct(Hotel* hotel){
+    std::string input, productName, providerName, stock, rating;
+    while(true){
+        cout << "Date: " << hotel->getDate() <<endl;
+        cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
+           << "Stock" << std::setw(8) << "Rating" << endl;
+        hotel->printBestBuys();
+        cout << "Write Help to see possible commands."<<endl;
+
+        cin >> input;
+        try{
+            if (input == "Help"){
+                cout << "Valid commands are: GetBestBuys, Modify, Remove, Search, Time, Back and Help "<<endl;
+            }
+            else if(input == "Modify"){
+
+                cout << "Insert the name of the product you wish to modify:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, input);
+
+                cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
+                     << endl;
+
+                cout << "New Product Name: " << endl;
+                cleanCinBuffer();
+                getline(cin, productName);
+
+                cout << "New Provider Name: " << endl;
+                getline(cin, providerName);
+
+                cout << "New Stock: " << endl;
+                cin >> stock;
+
+                cout << "New Rating: " << endl;
+                cin >> rating;
+
+                hotel->modifyBuyProduct(input,productName,providerName,stock,rating);
+
+            }else if(input == "GetBestBuys"){
+                cout << "Insert the amount of products you wish to get:"<<endl;
+                cleanCinBuffer();
+                getline(cin, input);
+
+                cout << "Insert the minimum stock this product must have:"<<endl;
+
+                cin >> stock;
+
+                cout << "Insert the maximum stock this product must have:"<<endl;
+                cin >> rating;
+
+                vector<BuyProduct*> bestProds = hotel->getBestBuys(input,stock,rating);
+
+                if(bestProds.empty()){
+                    cout << "No products matching your criteria!" << endl;
+                }else{
+                    cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
+                         << "Stock" << std::setw(8) << "Rating" << endl;
+                    for(auto& prod: bestProds){
+                        cout << (*prod);
+                    }
+                }
+
+            }
+            else if(input == "Remove"){
+                cout << "Insert the name of the product Buy you wish to remove:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, input);
+
+                hotel->removeOldProduct(input);
+            }
+            else if (input == "Search"){
+                cout << "Insert the name of the BuyProduct you wish to search:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, input);
+                BuyProduct* bp1 = hotel->searchBuyProduct(input);
+                cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
+                     << "Stock" << std::setw(8) << "Rating" << endl;
+                cout << bp1;
+            }
+            else if(input == "Back"){
+                return;
+            }
+            else if(input == "Time"){
+                hotel->incrementDate(1);
+            }
+            else{
+                cout << "Invalid command. Write Help to see possible commands."<<endl;
+            }
+        }
+        catch(NotAPositiveInt& msg){
+            cout << msg;
+        }catch(NoSuchProductExists& msg){
+            cout << msg;
+        }
+        catch(SortingError& msg){
+            cout << msg;
+        }
+        system("pause");
+        system("CLS");
+    }
+}
+
 void providers(Hotel* hotel){
     if (!hotel->getLoggedInState()){
         throw AccessRestricted();
@@ -912,6 +1017,8 @@ void system(Hotel* hotel){
         }
         else if (input == "Vehicles"){
             vehicle(hotel);
+        }else if(input == "BuyProduct"){
+            buyProduct(hotel);
         }
         else if (input == "LogIn"){
             try{
@@ -931,7 +1038,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time, Vehicles and Exit"<<endl;
+            cout << "Valid commands are: BuyProduct, Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time, Vehicles and Exit"<<endl;
         }
         else if (input == "Reservations"){
             reservation(hotel);

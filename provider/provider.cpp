@@ -38,6 +38,9 @@ std::string Provider::getName() const {
     return this->name;
 }
 
+void Provider::addProduct(Product *product) {
+    this->products.push_back(product);
+}
 std::vector<Product *> Provider::getProducts() const {
     return this->products;
 }

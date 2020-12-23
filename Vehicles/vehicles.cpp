@@ -1,7 +1,7 @@
 #include "vehicles.h"
 
 Vehicle::Vehicle(std::string licensePlate, float kmsTravelled, unsigned int capacity): licensePlate(licensePlate),
-kmsTravelled(kmsTravelled), capacity(capacity){
+kmsTravelled(kmsTravelled), capacity(capacity), rented(false){
 
 }
 
@@ -17,6 +17,10 @@ std::string Vehicle::getPlate() const {
     return this->licensePlate;
 }
 
+bool Vehicle::getRented() const {
+    return this->rented;
+}
+
 void Vehicle::setCapacity(const unsigned int &capacity) {
     this->capacity = capacity;
 }
@@ -30,9 +34,29 @@ void Vehicle::setPlate(const std::string &licensePlate) {
     this->licensePlate = licensePlate;
 }
 
-bool Vehicle::operator<(const Vehicle &v1) {
+void Vehicle::setRented(const bool &rented) {
+    this->rented = rented;
+}
+
+bool Vehicle::operator<(const Vehicle &v1) const{
     if(this->kmsTravelled == v1.getKmsTravelled()){
         return this->capacity < v1.getCapacity();
     }
     return this->kmsTravelled < v1.getKmsTravelled();
+}
+
+void Vehicle::addKms(const float &distance) {
+    kmsTravelled += distance;
+}
+
+bool Vehicle::operator==(const Vehicle &v1) const {
+    return this->licensePlate == v1.licensePlate;
+}
+
+void Vehicle::changeRented() {
+    this->rented = !(this->rented);
+}
+
+std::ostream & operator << (std::ostream& o, const Vehicle& v1){
+    return o << v1.licensePlate << " " << v1.kmsTravelled << " " << v1.capacity << std::endl;
 }

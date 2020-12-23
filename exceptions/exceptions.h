@@ -1076,4 +1076,45 @@ public:
     }
 };
 
+/// Thrown if the selected vehicle does not exist.
+class VehicleDoesNotExist{
+private:
+    /// Plate of the vehicle that doesn't exist.
+    std::string plate;
+public:
+    /// Constructor
+    ///
+    /// \param plate  plate of vehicle that doesn't exist.
+    VehicleDoesNotExist(const std::string& plate){ this->plate = plate; }
+
+    /// Returns plate.
+    ///
+    /// \return plate of vehicle that doesn't exist.
+    std::string getPlate() const{ return this->plate; }
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, VehicleDoesNotExist& exception){
+        return o << "Vehicle with plate "<<exception.getPlate() << " does not exist." << std::endl;
+    }
+};
+
+/// Thrown if there are no vehicles left in the fleet.
+class NoVehiclesInFleet{
+public:
+    /// Constructor
+    NoVehiclesInFleet(){};
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, NoVehiclesInFleet& exception){
+        return o << "There are no vehicles left in the fleet." << std::endl;
+    }
+};
+
 #endif

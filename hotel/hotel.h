@@ -55,8 +55,9 @@ public:
 
     /*VEHICLES*/
     void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity);
-
-
+    void removeVehicle(const std::string& plate);
+    void modifyVehicle(const std::string& oldPlate, const std::string& newPlate,const std::string& kmsTravelled,const std::string& capacity);
+    Vehicle searchVehicle(const std::string& plate);
     /**/
 
     /*PROVIDERS*/
@@ -279,17 +280,19 @@ public:
     /// If the client has any reservations to check in at the time it does so.
     /// Increases the hotel necessities according to the number of days of the reservation checked in.
     /// \param pos  position of the client who wants to check in.
+    /// \param rentInterested interest in renting car.
     /// \see Client#checkIn
     /// \exception throws NoReservationsToCheckIn if there are no reservations of client in position pos to check in.
-    void checkIn(const int& pos);
+    void checkIn(const int& pos, const bool &rentInterested);
 
     /// Check out.
     ///
     /// If the client has any reservations to check out at the time it does so.
     /// \param pos  position of the client who wants to check out.
+    /// \param rentInterested interest in renting car.
     /// \see Client#checkOut
     /// \exception throws NoReservationsToCheckOut if there are no reservations to check out.
-    void checkOut(const int& pos);
+    void checkOut(const int& pos, const bool &rentInterested = false);
 
     /// Modifies client.
     ///
@@ -495,6 +498,11 @@ public:
     /// \return first floor.
     int getFirstFloor() const;
 
+    /// Returns fleet
+    ///
+    /// \return fleet
+    BST<Vehicle> getFleet() const;
+
 private:
     /// Vector of the hotel's clients.
     std::vector <Client*> clients;
@@ -526,9 +534,10 @@ private:
     unsigned int numberOfRooms;
     /// Number of the first floor.
     int firstFloor;
-
     /// Current date.
     Date date;
+    /// Distance to the airport.
+    float airportDistance = 15.4;
 };
 
 

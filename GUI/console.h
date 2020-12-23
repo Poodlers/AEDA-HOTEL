@@ -62,6 +62,12 @@ void staff(Hotel *hotel);
 /// \param hotel
 void system(Hotel* hotel);
 
+/// Vehicle menu for console application.
+///
+/// Displays vehicles and allows to add, modify, remove, sort and search vehicles.
+/// \param hotel
+void vehicle(Hotel* hotel);
+
 
 
 #endif

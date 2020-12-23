@@ -550,9 +550,9 @@ void checkIfValidPlate(const std::string& plate){
     if(plate[2] != '-' || plate[5] != '-'){
         throw InvalidPlate(plate);
     }
-    std::string st1 = "" + plate[0] + plate[1];
-    std::string st2 = "" + plate[3] + plate[4];
-    std::string st3 = "" + plate[6] + plate[7];
+    std::string st1 = plate.substr(0, 2);
+    std::string st2 = plate.substr(3, 2);
+    std::string st3 = plate.substr(6, 2);
     try{
         int first = checkIfIsNumber(st1);
         int second = checkIfIsNumber(st2);

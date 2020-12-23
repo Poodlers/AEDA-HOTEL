@@ -6,6 +6,108 @@
 
 using namespace std;
 
+void vehicle(Hotel* hotel){
+    std::string input, oldPlate, plate, kilometers, capacity;
+    while(true){
+        cout << "Date: " << hotel->getDate() <<endl;
+        hotel->getFleet().printTree();
+        cout << "Write Help to see possible commands."<<endl;
+
+        cin >> input;
+        try{
+            if (input == "Help"){
+                cout << "Valid commands are: Modify, Remove, Add, Search, Time, Back and Help "<<endl;
+            }
+            else if(input == "Modify"){
+
+                cout << "Insert the plate of the vehicle you wish to modify:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, oldPlate);
+
+                cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
+                     << endl;
+
+                cout << "New Plate: " << endl;
+                cleanCinBuffer();
+                getline(cin, plate);
+
+                cout << "New Number of Kilometers: " << endl;
+                cin >> kilometers;
+
+                cout << "New Capacity: " << endl;
+                cin >> capacity;
+
+                hotel->modifyVehicle(oldPlate, plate, kilometers, capacity);
+
+            }
+            else if(input == "Remove"){
+                cout << "Insert the plate of the vehicle you wish to remove:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, oldPlate);
+
+                hotel->removeVehicle(oldPlate);
+            }
+            else if (input == "Add"){
+                cout << "Insert the plate of the vehicle you wish to add:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, plate);
+
+                cout << "Insert the number of kilometers of the vehicle you wish to add:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, kilometers);
+
+                cout << "Insert the capacity of the vehicle you wish to add:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, capacity);
+
+
+                hotel->addVehicle(plate, kilometers, capacity);
+
+
+            }
+            else if (input == "Search"){
+                cout << "Insert the plate of the vehicle you wish to add:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, plate);
+                Vehicle v1 = hotel->searchVehicle(plate);
+                cout << v1;
+            }
+            else if(input == "Back"){
+                return;
+            }
+            else if(input == "Time"){
+                hotel->incrementDate(1);
+            }
+            else{
+                cout << "Invalid command. Write Help to see possible commands."<<endl;
+            }
+        }
+        catch(NIFIsNotValid& msg){
+            cout << msg;
+        }
+        catch(ClientWithThisNIFAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(ClientDoesNotExist& msg){
+            cout << msg;
+        }
+        catch(ClientAlreadyExists& msg){
+            cout << msg;
+        }
+        catch(SortingError& msg){
+            cout << msg;
+        }
+        system("pause");
+        system("CLS");
+    }
+}
+
 void accounting(Hotel* hotel){
     if (!hotel->getLoggedInState()){
         throw AccessRestricted();
@@ -368,7 +470,7 @@ void checkIn(Hotel* hotel){
 
     try{
         pos = hotel->search(name,NIF, type ="Client");
-        hotel->checkIn(pos);
+        hotel->checkIn(pos, true);
     }
     catch(ClientDoesNotExist& msg){
         cout <<msg;
@@ -767,6 +869,9 @@ void system(Hotel* hotel){
         else if (input == "Rooms"){
             rooms(hotel);
         }
+        else if (input == "Vehicles"){
+            vehicle(hotel);
+        }
         else if (input == "LogIn"){
             try{
                 string username, password;
@@ -785,7 +890,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time and Exit"<<endl;
+            cout << "Valid commands are: Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time, Vehicles and Exit"<<endl;
         }
         else if (input == "Reservations"){
             reservation(hotel);

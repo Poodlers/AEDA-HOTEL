@@ -1513,7 +1513,7 @@ CheckInCheckOut::CheckInCheckOut(const int x, const int y, const int width, cons
 
 void CheckInCheckOut::onClick(ButtonHandler &handler) {
     if(this->getText() == "Check In") {
-        this->Button->getHotel()->checkIn(this->pos);
+        this->Button->getHotel()->checkIn(this->pos, true);
     }else{
         this->Button->getHotel()->checkOut(this->pos);
     }

@@ -135,19 +135,19 @@ private:
 
 struct clientHash
 {
-    int operator() (const char& b) const
+    int operator() (const Client& c) const
     {
-        return 0; //n sei fazer hash Functions lol
+        return c.getName()[0];
     }
 
-    bool operator() (const char& b1, const char& b2) const
+    bool operator() (const Client& c1, const Client& c2) const
     {
-       return b1 == b2;
+       return c1.getNIF() == c2.getNIF();
     }
 };
 
 
-typedef std::unordered_set<char, clientHash, clientHash> ClientTable;
+typedef std::unordered_set<Client, clientHash, clientHash> ClientTable;
 
 
 #endif

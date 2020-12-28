@@ -70,5 +70,6 @@ void vehicle(Hotel* hotel);
 
 void buyProduct(Hotel* hotel);
 
+void regularClients(Hotel* hotel);
 
 #endif

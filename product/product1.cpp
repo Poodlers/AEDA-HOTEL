@@ -25,12 +25,12 @@ Product::Product(){
     this->name = "Product " + std::to_string(this->id);
 }
 
-Product::Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type){
+Product::Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type, const unsigned int& ID){
     this->quality = quality;
     this->price = price;
     this->type = type;
-    this->id = totalId;
-    this->totalId++;
+    if (ID > totalId) totalId = ID +1;
+    this->id = id;
     this->stock = 100;
     this->name = name;
 }
@@ -86,6 +86,9 @@ const std::string &Product::getName() const {
     return name;
 }
 
+void BuyProduct::incrementStock() const {
+    this->product->setStock(this->product->getStock() + 1);
+}
 
 BuyProduct::BuyProduct(Product *product, const std::string &providerName) {
     this->product = product;

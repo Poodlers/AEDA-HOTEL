@@ -52,11 +52,162 @@ void Hotel::reduceNecessity(std::string type) {
     }
 }
 
+void Hotel::printBestBuys(){
+    std::vector<BuyProduct> temp;
+    while(!this->bestBuys.empty()){
+        temp.push_back(this->bestBuys.top());
+        std::cout << this->bestBuys.top();
+
+        this->bestBuys.pop();
+    }
+
+    for(auto& buy: temp){
+        this->bestBuys.push(buy);
+    }
+}
+
+void Hotel::removeOldProduct(const std::string &prodName) {
+    std::vector<BuyProduct> temp;
+    while(!this->bestBuys.empty()){
+        if(this->bestBuys.top().getProductName() == prodName){
+            this->bestBuys.pop();
+            for(auto& buy: temp){
+                this->bestBuys.push(buy);
+            }
+            return;
+        }
+        temp.push_back(this->bestBuys.top());
+        this->bestBuys.pop();
+    }
+    for(auto& buy: temp){
+        this->bestBuys.push(buy);
+    }
+    throw NoSuchProductExists(prodName);
+}
+
+void Hotel::modifyBuyProduct(const std::string &oldName, const std::string &newName, const std::string &providerName,
+                             const std::string &stock, const std::string &rating) {
+    try{
+        BuyProduct oldProduct = searchBuyProduct(oldName);
+        removeOldProduct(oldName);
+        if (newName != "."){
+            oldProduct.setProductName(newName);
+        }
+        if (providerName != "."){
+            oldProduct.setProviderName(providerName);
+        }
+        if (stock != "."){
+            checkIfPositiveInteger(stock, "stock");
+            oldProduct.setStock(std::stoi(stock));
+        }
+        if (rating != "."){
+            checkIfPositiveInteger(rating, "rating");
+            oldProduct.setRating(std::stoi(rating));
+        }
+        bool found = false;
+        for(auto& prov: this->providers){
+            if(prov->getName() == providerName){
+                prov->addProduct(oldProduct.getProduct());
+                found = true;
+            }
+        }
+        if(!found){
+            Product* pnew = new Product(oldProduct.getProductName(),oldProduct.getRating(),oldProduct.getPrice(),oldProduct.getType());
+            Provider* new_provider = new Provider(providerName,{pnew});
+            this->providers.push_back(new_provider);
+        }
+
+        this->bestBuys.push(oldProduct);
+
+    } catch (...) {
+        throw;
+    }
+
+}
+
+BuyProduct  Hotel::searchBuyProduct(const std::string &name) {
+    std::vector<BuyProduct> temp;
+    while(!this->bestBuys.empty()){
+        BuyProduct prod = this->bestBuys.top();
+        temp.push_back(this->bestBuys.top());
+        this->bestBuys.pop();
+
+        if(prod.getProductName() == name){
+            for(auto& buy: temp){
+                this->bestBuys.push(buy);
+            }
+            return prod;
+        }
+    }
+    for(auto& buy: temp){
+        this->bestBuys.push(buy);
+    }
+    throw NoSuchProductExists(name);
+}
+
+std::vector<BuyProduct> Hotel::getBestBuys(const std::string & amount,const std::string & minStock, const std::string & maxStock) {
+    std::vector<BuyProduct> buys = {};
+    std::vector<BuyProduct> temp = {};
+    try{
+        checkIfPositiveInteger(amount, "amount");
+        checkIfPositiveInteger(minStock, "minStock");
+        checkIfPositiveInteger(maxStock,"maxStock");
+    }catch(...){
+        throw;
+    }
+    int amount_ = std::stoi(amount);
+    int minStock_ = std::stoi(minStock);
+    int maxStock_ = std::stoi(maxStock);
+    for(int i = 0; i < amount_;){
+        if(this->bestBuys.empty()){
+            for(auto buy: temp){
+                this->bestBuys.push(buy);
+            }
+            return buys;
+        }
+        temp.push_back(this->bestBuys.top());
+        if(this->bestBuys.top().getStock() >= minStock_ && this->bestBuys.top().getStock() <= maxStock_){
+            buys.push_back(this->bestBuys.top());
+            i++;
+        }
+
+        this->bestBuys.pop();
+    }
+    for(auto buy: temp){
+        this->bestBuys.push(buy);
+    }
+    return buys;
+}
+
+bool Hotel::checkIfBuyProductExist(Product *product) {
+    std::vector<BuyProduct> temp;
+    while(!this->bestBuys.empty()){
+        BuyProduct bp = this->bestBuys.top();
+        temp.push_back(this->bestBuys.top());
+        this->bestBuys.pop();
+        if(this->bestBuys.top().getProductName() == product->getName()){
+            for(auto& prod: temp){
+                this->bestBuys.push(prod);
+            }
+            return true;
+        }
+    }
+    for(auto& prod: temp){
+        this->bestBuys.push(prod);
+    }
+    return false;
+}
+
 void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
             if (productId == provider->getProducts()[i]->getId()){ // if product exists
                 Transaction* transaction = new Transaction;
+                if(!checkIfBuyProductExist(provider->getProducts()[i])){
+                    BuyProduct bp1(provider->getProducts()[i], provider->getName());
+                    this->bestBuys.push(bp1);
+                }
+
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accounting.push_back(transaction); //Creates and adds a new transaction
@@ -110,10 +261,39 @@ void Hotel::autoBuy(){
     }
 }
 
+bool Hotel::getChristmasSeason() const {
+    return this->isChristmasSeason;
+}
+
+pair<char, char> Hotel::getDiscountedInitials() const {
+    return this->discountedInitials;
+}
+
 void Hotel::incrementDate(const int& i){
     date = date + i;
+    if(date.getDay() == 1 && date.getMonth() == 12){
+        isChristmasSeason = true;
+        int i = 0;
+        for(auto& initial: regulars){
+            if(i == 0){
+                discountedInitials.first = initial;
+                i++;
+            }else if(i == 1){
+                discountedInitials.second = initial;
+                break;
+            }
+        }
+    }else if(date.getDay() == 5 && date.getMonth() == 1){
+        isChristmasSeason = false;
+    }
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
+    }
+    BSTItrIn<Vehicle> it(fleet);
+    for(; !it.isAtEnd(); it.advance()){
+        if (it.retrieve().getRented()){
+            it.retrieve().changeRented();
+        }
     }
     if (date.getDay() == 1){
         for (Provider* provider: providers){
@@ -273,7 +453,7 @@ void Hotel::saveHotel(const std::string &hotelFile){
     file<<"End\n";
 }
 
-Hotel::Hotel(const std::string &hotelFile) {
+Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     std::ifstream file;
     std::string getData;
     std::stringstream ss;
@@ -606,7 +786,7 @@ Hotel::Hotel(const std::string &hotelFile) {
         throw HotelFileHasWrongFormat("File ends prematurely.");
     }
     if (getData != "Necessities"){
-        throw HotelFileHasWrongFormat("Line should be 'Transactions'");
+        throw HotelFileHasWrongFormat("Line should be 'Necessities'");
     }
     getline(file,getData);
     try{
@@ -635,6 +815,41 @@ Hotel::Hotel(const std::string &hotelFile) {
         std::cout << msg;
         throw HotelFileHasWrongFormat("Should be other necessity");
     }
+    getline(file,getData);
+
+    if (getData.empty()){
+        throw HotelFileHasWrongFormat("File ends prematurely.");
+    }
+    if (getData != "Fleet"){
+        throw HotelFileHasWrongFormat("Line should be 'Fleet'");
+    }
+    std::string plate;
+    std::string kmsTravelled;
+    std::string price;
+
+    while (std::getline(file,getData) && getData != "End"){
+        ss << getData;
+        ss >> plate >> kmsTravelled >> capacity >> price;
+        try{
+            addVehicle(plate,kmsTravelled,capacity, price);
+        }catch(NotAPositiveFloat& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("KmsTravelled/ Price should be a float");
+        }
+        catch(NotAnInt& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Capacity should be an int");
+        }catch(InvalidPlate& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Provided license plate was not valid!");
+        }
+        catch(VehicleAlreadyExists& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Trying to add an already existing vehicle!");
+        }
+        ss.clear();
+    }
+
     file.close();
     Provider* provider1 = new Provider("provider1", 50);
     Provider* provider2 = new Provider("provider 2", 55);
@@ -642,6 +857,13 @@ Hotel::Hotel(const std::string &hotelFile) {
     this->addProvider(provider1);
     this->addProvider(provider2);
     this->addProvider(provider3);
+
+    //add the clients that meet the requirements to the hashtable
+    for(auto& client: this->clients){
+        if(client->getHistory().size() >= 2){
+            regulars.insert(client->getName()[0]);
+        }
+    }
 
 }
 
@@ -806,6 +1028,63 @@ void Hotel::removeRoom(Room* room){
     delete room;
 }
 
+void Hotel::modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
+                              std::string &capacity, int posClient) {
+    //if reservation is not future throw shit
+    unsigned RoomId;
+    Date CheckIn;
+    Date CheckOut;
+    unsigned Capacity;
+    if (roomId == ".") RoomId = reservation->getRoomId();
+    else RoomId = std::stoi(roomId);
+    if (checkIn == ".") CheckIn = reservation->getCheckIn();
+    else CheckIn = Date(checkIn);
+    if (checkOut == ".") CheckOut = reservation->getCheckOut();
+    else CheckOut = Date(checkOut);
+    if (capacity == ".") Capacity = reservation->getReservationSize();
+    else Capacity = std::stoi(capacity);
+    if (CheckIn < this->getDate() || CheckOut < this->getDate())
+        throw CantMakeNewResevOldResev();
+    for (Room* room: rooms){
+        if (room->getRoomId() == RoomId){
+            if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0){
+                throw ClientCantMakeThisReservation();
+            }
+            if (room->getCapacity() < Capacity){
+                throw RoomDoesNotHaveTheNecessaryCapacity(RoomId);
+            }
+            for(Reservation* reservation: reservations){
+                if (reservation->getRoomId() == RoomId && reservation->getCheckIn() <= CheckIn && CheckIn<= reservation->getCheckOut()){
+                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(RoomId);
+                }
+            }
+            try{
+                clients[posClient]->deleteReservation(reservation);
+                reservation->setCheckIn(&CheckIn);
+                reservation->setCheckOut(&CheckOut);
+                reservation->setRoomId(RoomId);
+                reservation->setReservationSize(Capacity);
+
+                if(CheckOut < date){
+                    reservation->setIsCurrent(false);
+                    clients[posClient]->addToHistory(reservation);
+                }
+                else{
+                    clients[posClient]->addNewReservation(reservation);
+                    reservation->setIsCurrent(false);
+                }
+
+                this->reservations.push_back(reservation);
+            }
+            catch(...){
+                throw;
+            }
+            return;
+        }
+    }
+    throw RoomDoesNotExist(RoomId);
+}
+
 void Hotel::deleteReservation(Reservation *reservation) {
     auto find = std::find(this->reservations.begin(),this->reservations.end(),reservation);
     this->reservations.erase(find);
@@ -917,9 +1196,14 @@ int Hotel::search(const std::string& name, const std::string& NIF, std::string& 
 }
 
 
-void Hotel::checkIn(const int& pos){
-    int pos1;
+void Hotel::checkIn(const int& pos, const bool& rentInterested){
+    int pos1, ppNum = 0;
+    bool getsHolidayDiscount = false;
     std::vector<int> reservationIds;
+    std::vector<Vehicle> vehicles;
+    if (this->isChristmasSeason && (clients[pos]->getName()[0] == discountedInitials.first || clients[pos]->getName()[0] == discountedInitials.second  )){
+        getsHolidayDiscount = true;
+    }
     try{
         std::stringstream ss;
         reservationIds = clients[pos]->checkIn(&date);
@@ -927,12 +1211,15 @@ void Hotel::checkIn(const int& pos){
             ss << id;
             for (Reservation* reservation: reservations){
                 if (reservation->getReservationId() == id) {
+                    ppNum += reservation->getReservationSize();
                     pos1 = searchForRoomByRoomId(reservation->getRoomId());
                     rooms[pos1]->changeAvailability(false);
                     Transaction *transaction = new Transaction;
-                    transaction->value = (rooms[pos1]->getPricePerNight() -
-                                          (rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
-                                           rooms[pos1]->getDiscountState())) *
+                    //add the holiday discount to the discount of the room
+                    transaction->value = (rooms[pos1]->getPricePerNight()
+                            - rooms[pos1]->getPricePerNight() * 0.02 * getsHolidayDiscount
+                            - rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
+                                           rooms[pos1]->getDiscountState()) *
                                          (reservation->getCheckOut() - reservation->getCheckIn());
                     transaction->description = "Client check in to room " + std::to_string(reservation->getRoomId()) +
                                                " which was reserved for " +
@@ -948,6 +1235,36 @@ void Hotel::checkIn(const int& pos){
     }
     catch(...){
         throw;
+    }
+    if (rentInterested){
+        while (ppNum > 0){
+            if (fleet.isEmpty()){
+                throw NoVehiclesInFleet();
+            }
+            Vehicle v1 = fleet.findMin();
+            while (v1.getRented()){
+                vehicles.push_back(v1);
+                fleet.remove(v1);
+                if (fleet.isEmpty()){
+                    throw NoVehiclesInFleet();
+                }
+                v1 = fleet.findMin();
+            }
+            ppNum -= v1.getCapacity();
+            fleet.remove(v1);
+            v1.addKms(airportDistance * 2);
+            v1.changeRented();
+            if (v1.getKmsTravelled() < 5000){
+                fleet.insert(v1);
+            }
+            Transaction* t = new Transaction();
+            t->description = "Car with plate " + v1.getPlate() + " rented. ";
+            t->value = v1.getPrice();
+            addTransaction(t);
+        }
+        for (auto &vehicle: vehicles){
+            fleet.insert(vehicle);
+        }
     }
 }
 
@@ -1138,14 +1455,53 @@ void Hotel::sortRooms(const std::string& input,const std::string& order1){
 }
 
 
-void Hotel::checkOut(const int& pos){
-    int pos1;
-    std::vector<int> roomIds;
+void Hotel::checkOut(const int& pos, const bool& rentInterested){
+    int pos1, ppNum = 0;
+    std::vector<int> reservationIds;
+    std::vector<Vehicle> vehicles;
     try{
-        roomIds = clients[pos]->checkOut(&date);
-        for (int roomId: roomIds){
-            pos1 = searchForRoomByRoomId(roomId);
-            rooms[pos1]->changeAvailability(true);
+        reservationIds = clients[pos]->checkOut(&date);
+        if(clients[pos]->getHistory().size() >= 2){
+            regulars.insert(clients[pos]->getName()[0]);
+        }
+        for (int reservationId: reservationIds){
+            for (auto& reservation: reservations){
+                if (reservationId == reservation->getReservationId()){
+                    ppNum += reservation->getReservationSize();
+                    pos1 = searchForRoomByRoomId(reservation->getRoomId());
+                    rooms[pos1]->changeAvailability(true);
+                }
+            }
+        }
+        if (rentInterested){
+            while (ppNum > 0){
+                if (fleet.isEmpty()){
+                    throw NoVehiclesInFleet();
+                }
+                Vehicle v1 = fleet.findMin();
+                while (v1.getRented()){
+                    vehicles.push_back(v1);
+                    fleet.remove(v1);
+                    if (fleet.isEmpty()){
+                        throw NoVehiclesInFleet();
+                    }
+                    v1 = fleet.findMin();
+                }
+                ppNum -= v1.getCapacity();
+                fleet.remove(v1);
+                v1.addKms(airportDistance * 2);
+                v1.changeRented();
+                if (v1.getKmsTravelled() < 5000){
+                    fleet.insert(v1);
+                }
+                Transaction* t = new Transaction();
+                t->description = "Car with plate " + v1.getPlate() + " rented. ";
+                t->value = v1.getPrice();
+                addTransaction(t);
+            }
+            for (auto &vehicle: vehicles){
+                fleet.insert(vehicle);
+            }
         }
     }
     catch(...){
@@ -1651,5 +2007,100 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
+void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price) {
+    try{
+        checkIfValidPlate(plate);
+        checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
+        if (stof(kmsTravelled) >= 5000){
+            throw KmsOverLimit(kmsTravelled);
+        }
+        checkIfPositiveInteger(capacity,"capacity");
+        if (stoi(capacity) > 9){
+            throw NotLightweightCar(capacity);
+        }
+        checkIfValidPriceOrWage(price, "price");
+        Vehicle v1 = searchVehicle(plate);
+        throw VehicleAlreadyExists(plate);
+    }
+    catch (VehicleDoesNotExist &msg){
+        Vehicle v2(plate, stof(kmsTravelled), stoi(capacity), stof(price));
 
+    }
+    catch (...) {
+        throw;
+    }
+
+}
+
+void Hotel::removeVehicle(const std::string &plate) {
+    Vehicle v1(plate, 0.0, 0, 0.0);
+    try{
+        v1 = searchVehicle(plate);
+        fleet.remove(v1);
+    }
+    catch (...){
+        throw;
+    }
+}
+
+void Hotel::modifyVehicle(const std::string& oldPlate, const std::string& newPlate, const std::string &kmsTravelled, const std::string &capacity, const std::string& price) {
+    Vehicle v1, v2;
+    try{
+        if (newPlate != "."){
+            checkIfValidPlate(newPlate);
+        }
+        if (kmsTravelled != "."){
+            checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
+            if (stof(kmsTravelled) >= 5000){
+                throw KmsOverLimit(kmsTravelled);
+            }
+        }
+        if (capacity != "."){
+            checkIfPositiveInteger(capacity,"capacity");
+            if (stoi(capacity) > 9){
+                throw NotLightweightCar(capacity);
+            }
+        }
+        if (price != "."){
+            checkIfValidPriceOrWage(price, "price");
+        }
+        v1 = searchVehicle(oldPlate);
+    } catch (...) {
+        throw;
+    }
+    try{
+        v2 = searchVehicle(newPlate);
+        throw VehicleAlreadyExists(newPlate);
+    } catch (VehicleDoesNotExist &msg){
+        fleet.remove(v1);
+        if (newPlate != "."){
+            v1.setPlate(newPlate);
+        }
+        if (kmsTravelled != "."){
+            v1.setKmsTravelled(stof(kmsTravelled));
+        }
+        if (capacity != "."){
+            v1.setCapacity(stoi(capacity));
+        }
+        if (price != "."){
+            v1.setPrice(stof(price));
+        }
+        fleet.insert(v1);
+    }
+}
+
+BST<Vehicle> Hotel::getFleet() const {
+    return fleet;
+}
+
+Vehicle Hotel::searchVehicle(const string &plate) {
+    Vehicle v1(plate, 0.0, 0, 0.0);
+    BSTItrIn<Vehicle> it(fleet);
+    for(; !it.isAtEnd(); it.advance()){
+        if (it.retrieve().getPlate() == plate){
+            return it.retrieve();
+        }
+    }
+    throw VehicleDoesNotExist(plate);
+}
 

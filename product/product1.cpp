@@ -22,16 +22,19 @@ Product::Product(){
     this->id = totalId;
     this->totalId++;
     this->stock = 100;
+    this->name = "Product " + std::to_string(this->id);
 }
 
-Product::Product(const unsigned int& quality, const float& price, const std::string & type){
+Product::Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type){
     this->quality = quality;
     this->price = price;
     this->type = type;
     this->id = totalId;
     this->totalId++;
     this->stock = 100;
+    this->name = name;
 }
+
 unsigned int Product::getQuality() const{
     return this->quality;
 }
@@ -75,4 +78,73 @@ void Product::setId(const unsigned int &id) {
     this->id = id;
 }
 
+void Product::setName(const std::string &name) {
+    Product::name = name;
+}
 
+const std::string &Product::getName() const {
+    return name;
+}
+
+
+BuyProduct::BuyProduct(Product *product, const std::string &providerName) {
+    this->product = product;
+    this->providerName = providerName;
+}
+
+const std::string &BuyProduct::getProductName() const {
+    return this->product->getName();
+}
+
+const std::string &BuyProduct::getProviderName() const {
+    return providerName;
+}
+
+unsigned int BuyProduct::getStock() const {
+    return this->product->getStock();
+}
+
+unsigned int BuyProduct::getRating() const {
+    return this->product->getQuality();
+}
+
+void BuyProduct::setProductName(const std::string &productName) {
+    this->product->setName(productName);
+}
+
+void BuyProduct::setProviderName(const std::string &providerName) {
+    BuyProduct::providerName = providerName;
+}
+
+void BuyProduct::setStock(unsigned int stock) {
+    this->product->setStock(stock);
+}
+
+void BuyProduct::setRating(unsigned int rating) {
+    this->product->setQuality(rating);
+}
+
+bool BuyProduct::operator<(const BuyProduct &bp1) const {
+    if(this->getRating() == bp1.getRating()){
+        return this->getStock() < bp1.getStock();
+    }
+    return this->getRating() < bp1.getRating();
+}
+
+std::ostream &operator<<(std::ostream &os, const BuyProduct &buyProduct) {
+    os << std::setw(5) << buyProduct.getProductName() << std::setw(15)  << buyProduct.providerName << std::setw(7)
+            << buyProduct.getStock() << std::setw(8) << buyProduct.getRating() << std::endl;
+    return os;
+}
+
+Product *BuyProduct::getProduct() const {
+    return product;
+}
+
+float BuyProduct::getPrice() const {
+    return this->product->getPrice();
+}
+
+std::string BuyProduct::getType() const {
+    return this->product->getType();
+}

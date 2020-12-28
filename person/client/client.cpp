@@ -39,7 +39,7 @@ std::vector<int> Client::checkIn(Date* date) {
             futureReservations[i]->setCheckIn(date);
             this->currentReservations.push_back(futureReservations[i]);
             currentReservations[i]->setIsCurrent(true);
-            reservationIds.push_back(futureReservations[i]->getRoomId());
+            reservationIds.push_back(futureReservations[i]->getReservationId());
             this->futureReservations.erase(futureReservations.begin()+i);
         }
     }
@@ -137,13 +137,13 @@ void Client::deleteReservation(Reservation *reservation) {
 }
 
 std::vector<int> Client::checkOut( Date* date){
-    std::vector<int> roomIds;
+    std::vector<int> reservationIds;
     if (this->currentReservations.size()==0) throw NoReservationsToCheckOut(this->getName(),this->getNIF());
     for (int i = 0; i < currentReservations.size(); i++) {
         if (currentReservations[i]->getCheckOut() == *date) {
             currentReservations[i]->setIsCurrent(false);
             this->history.push_back(currentReservations[i]);
-            roomIds.push_back(currentReservations[i]->getRoomId());
+            reservationIds.push_back(currentReservations[i]->getReservationId());
             this->currentReservations.erase(currentReservations.begin()+i);
             std::cout << "The checkOut for room " << currentReservations[i]->getRoomId() << " was completed."<<std::endl;
         }
@@ -153,11 +153,11 @@ std::vector<int> Client::checkOut( Date* date){
                       << currentReservations[i]->getCheckOut() - *date << " days early." << std::endl;
             currentReservations[i]->setCheckOut(date);
             this->history.push_back(currentReservations[i]);
-            roomIds.push_back(currentReservations[i]->getRoomId());
+            reservationIds.push_back(currentReservations[i]->getReservationId());
             this->currentReservations.erase(currentReservations.begin()+i);
         }
     }
-    return roomIds;
+    return reservationIds;
 }
 
 void Client::setHistory(const std::vector<Reservation *> &history) {

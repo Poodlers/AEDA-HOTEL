@@ -8,8 +8,12 @@
 #include "../provider/provider.h"
 #include "../product/product1.h"
 #include "reservation.h"
+#include "bst.h"
 #include "date.h"
+#include "../Vehicles/vehicles.h"
 #include <algorithm>
+#include <queue>
+
 
 /// Struct which represents a transaction.
 ///
@@ -49,8 +53,16 @@ public:
     /// \see hotel_exemplo.txt
     /// \param hotelFile  name of the '.txt' file without the '.txt' extension.
     void saveHotel(const std::string &hotelFile);
-
     /**/
+
+    /*VEHICLES*/
+    void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
+    void removeVehicle(const std::string& plate);
+    void modifyVehicle(const std::string& oldPlate, const std::string& newPlate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
+    Vehicle searchVehicle(const std::string& plate);
+    /**/
+
+    bool checkIfBuyProductExist(Product* product);
 
     /*PROVIDERS*/
 
@@ -111,6 +123,9 @@ public:
     /// Searches for reservations by searchCriteria which agree with value.
     /// \param searchCriteria  criteria used to search for reservations, can be "Date", "ID" or "Room".
     /// \param value  value that the reservation has to agree with.
+    /// \example searchReservations("Date",date1) will search for reservations with check in date equal to date1.
+    /// \example searchReservations("ID",reservationId) will search for the reservation with ID reservationID.
+    /// \example searchReservations("Room",roomID) will search for the reservations for the room with room ID roomId.
     /// \return list of positions in the vector reservations of the found reservations.
     /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date.
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
@@ -142,6 +157,9 @@ public:
     /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
+
+    void modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
+                           std::string &capacity, int posClient);
     /**/
 
     /*ROOMS*/
@@ -266,17 +284,19 @@ public:
     /// If the client has any reservations to check in at the time it does so.
     /// Increases the hotel necessities according to the number of days of the reservation checked in.
     /// \param pos  position of the client who wants to check in.
+    /// \param rentInterested interest in renting car.
     /// \see Client#checkIn
     /// \exception throws NoReservationsToCheckIn if there are no reservations of client in position pos to check in.
-    void checkIn(const int& pos);
+    void checkIn(const int& pos, const bool &rentInterested);
 
     /// Check out.
     ///
     /// If the client has any reservations to check out at the time it does so.
     /// \param pos  position of the client who wants to check out.
+    /// \param rentInterested interest in renting car.
     /// \see Client#checkOut
     /// \exception throws NoReservationsToCheckOut if there are no reservations to check out.
-    void checkOut(const int& pos);
+    void checkOut(const int& pos, const bool &rentInterested = false);
 
     /// Modifies client.
     ///
@@ -482,6 +502,25 @@ public:
     /// \return first floor.
     int getFirstFloor() const;
 
+    bool getChristmasSeason() const;
+
+    /// Returns fleet
+    ///
+    /// \return fleet
+    BST<Vehicle> getFleet() const;
+
+    std::vector<BuyProduct> getBestBuys(const std::string &amount, const std::string & minStock,const std::string & maxStock);
+
+    void printBestBuys();
+
+    void modifyBuyProduct(const std::string& oldName, const std::string& newName, const std::string& providerName, const std::string& stock,const std::string& rating);
+
+    BuyProduct searchBuyProduct(const std::string& name);
+
+    void removeOldProduct(const std::string& prodName);
+
+    pair<char,char> getDiscountedInitials() const;
+
 private:
     /// Vector of the hotel's clients.
     std::vector <Client*> clients;
@@ -496,9 +535,19 @@ private:
     /// Vector of the transactions made by the hotel.
     std::vector<Transaction*> accounting;
 
+    BST<Vehicle> fleet;
+
+    std::priority_queue<BuyProduct> bestBuys;
+
+    ClientTable regulars;
+
+    std::pair<char,char> discountedInitials;
+
     /// Logged in state.
     /// True if the manager is logged in, false otherwise.
     bool loggedIn = false;
+
+    bool isChristmasSeason = false;
 
     /// Cleaning necessity.
     int cleaningNecessity;
@@ -512,9 +561,10 @@ private:
     unsigned int numberOfRooms;
     /// Number of the first floor.
     int firstFloor;
-
     /// Current date.
     Date date;
+    /// Distance to the airport.
+    float airportDistance = 15.4;
 };
 
 

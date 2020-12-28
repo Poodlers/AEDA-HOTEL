@@ -5,6 +5,7 @@
 #include <iomanip>
 
 
+
 /// Class which represents a Product.
 ///
 /// Defined by quality, price, ID, type and stock.
@@ -20,7 +21,7 @@ public:
     /// \param quality  quality of the product.
     /// \param price  price of the product.
     /// \param type  type of product.
-    Product(const unsigned int& quality, const float& price, const std::string & type);
+    Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type);
 
     /// Returns the quality.
     ///
@@ -79,6 +80,10 @@ public:
     /// stock type id price quality
     void print();
 
+    void setName(const std::string &name);
+
+    const std::string &getName() const;
+
 private:
     /// Quality of the product.
     unsigned int quality;
@@ -86,6 +91,8 @@ private:
     float price;
     /// ID of the product.
     unsigned int id;
+    /// name of the product.
+    std::string name;
     /// Variable to keep product ids unique.
     static int totalId;
     /// Type of product.
@@ -93,6 +100,43 @@ private:
     std::string type;
     /// Amount of the product in the provider.
     unsigned int stock;
+};
+
+class BuyProduct{
+public:
+    BuyProduct(Product* product, const std::string& providerName);
+
+    const std::string &getProductName() const;
+
+    const std::string &getProviderName() const;
+
+    unsigned int getStock() const;
+
+    unsigned int getRating() const;
+
+    float getPrice() const;
+
+    std::string getType() const;
+
+    void setProductName(const std::string &productName);
+
+    void setProviderName(const std::string &providerName);
+
+    void setStock(unsigned int stock);
+
+    void setRating(unsigned int rating);
+
+    bool operator< (const BuyProduct& bp1) const;
+
+    friend std::ostream &operator<<(std::ostream &os, const BuyProduct &buyProduct);
+
+    Product *getProduct() const;
+
+
+private:
+    Product* product;
+    std::string providerName;
+
 };
 
 #endif

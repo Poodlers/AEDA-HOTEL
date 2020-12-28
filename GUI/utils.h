@@ -127,6 +127,8 @@ std::vector<std::string> askStaff();
 /// \param reservationId reservation ID
 void askReservation(unsigned int& roomId,Date& checkIn,Date& checkOut,int& capacity,int& reservationId);
 
+std::vector<std::string> askmodifyReservation();
+
 /// Asks for a room's capacity and price per night
 ///
 /// \return capacity and price per nightin a vector
@@ -139,4 +141,7 @@ std::vector<std::string> askRoom();
 /// \return os
 std::ostream& operator<<(std::ostream& os, const std::vector<int> v);
 
+void checkIfValidPlate(const std::string& plate);
+
+int checkIfIsNumber(const std::string& number);
 #endif

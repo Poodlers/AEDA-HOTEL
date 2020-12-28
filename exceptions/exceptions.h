@@ -97,6 +97,20 @@ public:
     }
 };
 
+class CantMakeNewResevOldResev{
+public:
+    /// Constructor.
+    CantMakeNewResevOldResev (){}
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const CantMakeNewResevOldResev& exception){
+        return o << "Can't turn a Future Reservation into a Past one!"<<std::endl;
+    }
+};
+
 /// Thrown when a client tries to claim a room that is already claimed for the intended period of time.
 class AnotherReservationForThisRoomAlreadyExistsAtThisTime{
 private:
@@ -122,6 +136,64 @@ public:
     /// \return ostream
     friend std::ostream & operator << (std::ostream& o,const AnotherReservationForThisRoomAlreadyExistsAtThisTime& exception){
         return o << "Room with Id: "<< exception.getRoomId() << " already has a reservation at this time."<<std::endl;
+    }
+};
+
+/// Thrown when trying to add a vehicle with an already existing plate.
+class VehicleAlreadyExists{
+private:
+    /// Plate of repeated vehicle.
+    std::string plate;
+public:
+    /// Constructor.
+    ///
+    /// \param plate plate of repeated vehicle
+    VehicleAlreadyExists(const std::string& plate){
+        this->plate = plate;
+    }
+
+    /// Return plate of repeated vehicle.
+    ///
+    /// \param plate plate of repeated vehicle
+    std::string getPlate() const {return plate;}
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const VehicleAlreadyExists& exception){
+        return o << "Vehicle with plate: "<< exception.getPlate() << " already exists."<<std::endl;
+    }
+};
+
+/// Thrown when trying to create vehicle with invalid plate.
+class InvalidPlate{
+private:
+    /// Invalid plate.
+    std::string plate;
+public:
+    /// Constructor.
+    ///
+    /// \param plate invalid plate
+    InvalidPlate(const std::string& plate){
+        this->plate = plate;
+    }
+
+    /// Return the invalid plate.
+    ///
+    /// \param plate invalid plate
+    std::string getPlate() const{
+        return this->plate;
+    }
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream & operator << (std::ostream& o,const InvalidPlate& exception){
+        return o << "Plate : "<< exception.getPlate() << " is not a valid plate."<<std::endl;
     }
 };
 
@@ -210,6 +282,19 @@ public:
     }
 };
 
+class InvalidInput{
+public:
+    /// Constructor
+    InvalidInput(){}
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, InvalidInput& exception){
+        return o << "Input is not valid."<< std::endl;
+    }
+};
 
 /// Thrown if room type is not valid (valid : "Suite", "NoViewRoom" or "ViewRoom").
 class InvalidRoomType{
@@ -1004,4 +1089,117 @@ public:
     }
 };
 
+/// Thrown if the selected vehicle does not exist.
+class VehicleDoesNotExist{
+private:
+    /// Plate of the vehicle that doesn't exist.
+    std::string plate;
+public:
+    /// Constructor
+    ///
+    /// \param plate  plate of vehicle that doesn't exist.
+    VehicleDoesNotExist(const std::string& plate){ this->plate = plate; }
+
+    /// Returns plate.
+    ///
+    /// \return plate of vehicle that doesn't exist.
+    std::string getPlate() const{ return this->plate; }
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, VehicleDoesNotExist& exception){
+        return o << "Vehicle with plate "<<exception.getPlate() << " does not exist." << std::endl;
+    }
+};
+
+/// Thrown if there are no vehicles left in the fleet.
+class NoVehiclesInFleet{
+public:
+    /// Constructor
+    NoVehiclesInFleet(){}
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, NoVehiclesInFleet& exception){
+        return o << "There are no vehicles left in the fleet." << std::endl;
+    }
+};
+
+/// Thrown if vehicle's kilometers travelled exceed limit.
+class KmsOverLimit{
+private:
+    /// kilometers of travel.
+    std::string kmsTravelled;
+public:
+    /// Constructor
+    ///
+    /// \param kmsTravelled  kilometers travelled.
+    KmsOverLimit(std::string kmsTravelled){this->kmsTravelled = kmsTravelled;}
+    /// Returns kilometers travelled.
+    ///
+    /// \return kilometers travelled.
+    std::string getKmsTravelled() const{ return this->kmsTravelled; }
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, KmsOverLimit& exception){
+        return o << "Number of kilometers travelled (" << exception.getKmsTravelled() << ") exceeds limit."<<  std::endl;
+    }
+};
+
+class NotLightweightCar{
+private:
+    /// invalid capacity.
+    std::string capacity;
+public:
+    /// Constructor
+    ///
+    /// \param capacity  invalid capacity
+    NotLightweightCar(std::string capacity){this->capacity = capacity;}
+    /// Returns invalid capacity.
+    ///
+    /// \return invalid capacity.
+    std::string getCapacity() const{ return this->capacity; }
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, NotLightweightCar& exception){
+        return o << "Capacity exceeds lightweight car's limit(" << exception.getCapacity() << ": should be lower or equal to 9)."<<  std::endl;
+    }
+};
+
+/// Thrown if the searched for product does not exist
+class NoSuchProductExists{
+private:
+    /// Name of the non existing product
+    std::string prodName;
+public:
+    /// Constructor
+    ///
+    /// \param prodName the name of the non existent product Name
+    NoSuchProductExists(const std::string& prodName){ this->prodName = prodName; }
+
+    /// Returns prodName.
+    ///
+    /// \return name of the product that doesn't exist.
+    std::string getProdName() const{ return this->prodName; }
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, NoSuchProductExists& exception){
+        return o << "Product with name "<<exception.getProdName() << " does not exist." << std::endl;
+    }
+};
 #endif

@@ -308,19 +308,9 @@ void EditButton<N>::onClick(ButtonHandler& handler) {
     }else if constexpr (std::is_same_v<N,Reservation>){
         int pos = std::find(this->OriginalButton->getHotel()->getClients().begin(),this->OriginalButton->getHotel()->getClients().end(),this->OriginalButton->getClient()
         ) -  this->OriginalButton->getHotel()->getClients().begin();
-        unsigned int roomId;
-        Date checkIn;
-        Date checkOut;
-        int capacity;
-        int posClient;
-        int reservationId;
-        askReservation(roomId,checkIn,checkOut,capacity,reservationId);
+        fields = askmodifyReservation();
         try{
-            //this->OriginalButton->getHotel()->modifyReservation(this->getObject(),roomId,&checkIn,&checkOut,capacity,pos);
-        }catch(RoomDoesNotExist& msg){
-            gotoxy(0,15);
-            std::cout << msg;
-            Sleep(waitSeeMessage);
+            this->OriginalButton->getHotel()->modifyReservation(this->getObject(),fields[0],fields[1],fields[2],fields[3],pos);
         }
         catch(NotAPositiveInt& msg){
             gotoxy(0,15);
@@ -333,11 +323,6 @@ void EditButton<N>::onClick(ButtonHandler& handler) {
             Sleep(waitSeeMessage);
         }
         catch(DateIsNotValid& msg){
-            gotoxy(0,15);
-            std::cout << msg;
-            Sleep(waitSeeMessage);
-        }
-        catch(NIFIsNotValid& msg){
             gotoxy(0,15);
             std::cout << msg;
             Sleep(waitSeeMessage);
@@ -372,7 +357,16 @@ void EditButton<N>::onClick(ButtonHandler& handler) {
             std::cout << msg;
             Sleep(waitSeeMessage);
         }
-        catch(NoReservationsToCheckIn& msg){
+        catch(NoReservationsToCheckIn& msg) {
+            gotoxy(0, 15);
+            std::cout << msg;
+            Sleep(waitSeeMessage);
+        }
+    catch(RoomDoesNotExist& msg){
+        gotoxy(0,15);
+        std::cout << msg;
+        Sleep(waitSeeMessage);
+    }catch(CantMakeNewResevOldResev& msg){
             gotoxy(0,15);
             std::cout << msg;
             Sleep(waitSeeMessage);
@@ -638,7 +632,7 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
         if(this->CurrentPage == 0){
             this->CurrentPage = max_page;
         } else if(this->CurrentPage > max_page) this->CurrentPage = 1;
-        std::vector<std::string> typeOfSort {"Room ID", "Check In","Check Out"};
+        std::vector<std::string> typeOfSort {"Room Id", "Check In","Check Out"};
         if(this->type_id >= typeOfSort.size()){
             this->type_id = 0;
         }
@@ -859,6 +853,10 @@ void MenuButton<N>::onClick(ButtonHandler& handler) {
                 handler.AddButton(checkIn);
             }
              else if(!menu_items[i]->getIsCurrent()){
+                 if (this->client != nullptr && menu_items[i]->getCheckOut() > this->hotel->getDate()){
+                     handler.AddButton(NewEditButton);
+                     NewEditButton->DrawButton();
+                 }
                 handler.AddButton(NewDeleteButton);
                 NewDeleteButton->DrawButton();
             }
@@ -1515,7 +1513,7 @@ CheckInCheckOut::CheckInCheckOut(const int x, const int y, const int width, cons
 
 void CheckInCheckOut::onClick(ButtonHandler &handler) {
     if(this->getText() == "Check In") {
-        this->Button->getHotel()->checkIn(this->pos);
+        this->Button->getHotel()->checkIn(this->pos, true);
     }else{
         this->Button->getHotel()->checkOut(this->pos);
     }

@@ -36,4 +36,4 @@ add_executable(
         person/person.cpp
         product/product1.cpp
         hotel/hotel.cpp
-        GUI/console.h)
+        GUI/console.h Vehicles/vehicles.cpp)

@@ -53,10 +53,10 @@ void Hotel::reduceNecessity(std::string type) {
 }
 
 void Hotel::printBestBuys(){
-    std::vector<BuyProduct*> temp;
+    std::vector<BuyProduct> temp;
     while(!this->bestBuys.empty()){
         temp.push_back(this->bestBuys.top());
-        std::cout << (*this->bestBuys.top());
+        std::cout << this->bestBuys.top();
 
         this->bestBuys.pop();
     }
@@ -67,9 +67,9 @@ void Hotel::printBestBuys(){
 }
 
 void Hotel::removeOldProduct(const std::string &prodName) {
-    std::vector<BuyProduct*> temp;
+    std::vector<BuyProduct> temp;
     while(!this->bestBuys.empty()){
-        if(this->bestBuys.top()->getProductName() == prodName){
+        if(this->bestBuys.top().getProductName() == prodName){
             this->bestBuys.pop();
             for(auto& buy: temp){
                 this->bestBuys.push(buy);
@@ -88,31 +88,32 @@ void Hotel::removeOldProduct(const std::string &prodName) {
 void Hotel::modifyBuyProduct(const std::string &oldName, const std::string &newName, const std::string &providerName,
                              const std::string &stock, const std::string &rating) {
     try{
-        BuyProduct* oldProduct = searchBuyProduct(oldName);
+        BuyProduct oldProduct = searchBuyProduct(oldName);
         removeOldProduct(oldName);
         if (newName != "."){
-            oldProduct->setProductName(newName);
+            oldProduct.setProductName(newName);
         }
         if (providerName != "."){
-            oldProduct->setProviderName(providerName);
+            oldProduct.setProviderName(providerName);
         }
         if (stock != "."){
             checkIfPositiveInteger(stock, "stock");
-            oldProduct->setStock(std::stoi(stock));
+            oldProduct.setStock(std::stoi(stock));
         }
         if (rating != "."){
             checkIfPositiveInteger(rating, "rating");
-            oldProduct->setRating(std::stoi(rating));
+            oldProduct.setRating(std::stoi(rating));
         }
         bool found = false;
         for(auto& prov: this->providers){
             if(prov->getName() == providerName){
-                prov->addProduct(oldProduct->getProduct());
+                prov->addProduct(oldProduct.getProduct());
                 found = true;
             }
         }
         if(!found){
-            Provider* new_provider = new Provider(providerName,{oldProduct->getProduct()});
+            Product* pnew = new Product(oldProduct.getProductName(),oldProduct.getRating(),oldProduct.getPrice(),oldProduct.getType());
+            Provider* new_provider = new Provider(providerName,{pnew});
             this->providers.push_back(new_provider);
         }
 
@@ -124,14 +125,14 @@ void Hotel::modifyBuyProduct(const std::string &oldName, const std::string &newN
 
 }
 
-BuyProduct * Hotel::searchBuyProduct(const std::string &name) {
-    std::vector<BuyProduct*> temp;
+BuyProduct  Hotel::searchBuyProduct(const std::string &name) {
+    std::vector<BuyProduct> temp;
     while(!this->bestBuys.empty()){
-        BuyProduct* prod = this->bestBuys.top();
+        BuyProduct prod = this->bestBuys.top();
         temp.push_back(this->bestBuys.top());
         this->bestBuys.pop();
 
-        if(prod->getProductName() == name){
+        if(prod.getProductName() == name){
             for(auto& buy: temp){
                 this->bestBuys.push(buy);
             }
@@ -144,9 +145,9 @@ BuyProduct * Hotel::searchBuyProduct(const std::string &name) {
     throw NoSuchProductExists(name);
 }
 
-std::vector<BuyProduct*> Hotel::getBestBuys(const std::string & amount,const std::string & minStock, const std::string & maxStock) {
-    std::vector<BuyProduct*> buys = {};
-    std::vector<BuyProduct*> temp = {};
+std::vector<BuyProduct> Hotel::getBestBuys(const std::string & amount,const std::string & minStock, const std::string & maxStock) {
+    std::vector<BuyProduct> buys = {};
+    std::vector<BuyProduct> temp = {};
     try{
         checkIfPositiveInteger(amount, "amount");
         checkIfPositiveInteger(minStock, "minStock");
@@ -165,7 +166,7 @@ std::vector<BuyProduct*> Hotel::getBestBuys(const std::string & amount,const std
             return buys;
         }
         temp.push_back(this->bestBuys.top());
-        if(this->bestBuys.top()->getStock() >= minStock_ && this->bestBuys.top()->getStock() <= maxStock_){
+        if(this->bestBuys.top().getStock() >= minStock_ && this->bestBuys.top().getStock() <= maxStock_){
             buys.push_back(this->bestBuys.top());
             i++;
         }
@@ -183,7 +184,7 @@ void Hotel::buy(const unsigned int &productId){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
             if (productId == provider->getProducts()[i]->getId()){ // if product exists
                 Transaction* transaction = new Transaction;
-                BuyProduct* bp1 = new BuyProduct(provider->getProducts()[i], provider->getName());
+                BuyProduct bp1(provider->getProducts()[i], provider->getName());
                 this->bestBuys.push(bp1);
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
@@ -238,8 +239,31 @@ void Hotel::autoBuy(){
     }
 }
 
+bool Hotel::getChristmasSeason() const {
+    return this->isChristmasSeason;
+}
+
+pair<char, char> Hotel::getDiscountedInitials() const {
+    return this->discountedInitials;
+}
+
 void Hotel::incrementDate(const int& i){
     date = date + i;
+    if(date.getDay() == 1 && date.getMonth() == 12){
+        isChristmasSeason = true;
+        int i = 0;
+        for(auto& initial: regulars){
+            if(i == 0){
+                discountedInitials.first = initial;
+                i++;
+            }else if(i == 1){
+                discountedInitials.second = initial;
+                break;
+            }
+        }
+    }else if(date.getDay() == 5 && date.getMonth() == 1){
+        isChristmasSeason = false;
+    }
     for(Client* client: clients){
         client->archiveExpiredReservations(&this->date);
     }
@@ -788,7 +812,7 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
             addVehicle(plate,kmsTravelled,capacity, price);
         }catch(NotAPositiveFloat& msg){
             std::cout << msg;
-            throw HotelFileHasWrongFormat("KmsTravelled should be a float");
+            throw HotelFileHasWrongFormat("KmsTravelled/ Price should be a float");
         }
         catch(NotAnInt& msg){
             std::cout << msg;
@@ -811,6 +835,13 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     this->addProvider(provider1);
     this->addProvider(provider2);
     this->addProvider(provider3);
+
+    //add the clients that meet the requirements to the hashtable
+    for(auto& client: this->clients){
+        if(client->getHistory().size() >= 2){
+            regulars.insert(client->getName()[0]);
+        }
+    }
 
 }
 
@@ -1145,8 +1176,12 @@ int Hotel::search(const std::string& name, const std::string& NIF, std::string& 
 
 void Hotel::checkIn(const int& pos, const bool& rentInterested){
     int pos1, ppNum = 0;
+    bool getsHolidayDiscount = false;
     std::vector<int> reservationIds;
     std::vector<Vehicle> vehicles;
+    if (this->isChristmasSeason && (clients[pos]->getName()[0] == discountedInitials.first || clients[pos]->getName()[0] == discountedInitials.second  )){
+        getsHolidayDiscount = true;
+    }
     try{
         std::stringstream ss;
         reservationIds = clients[pos]->checkIn(&date);
@@ -1158,9 +1193,11 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
                     pos1 = searchForRoomByRoomId(reservation->getRoomId());
                     rooms[pos1]->changeAvailability(false);
                     Transaction *transaction = new Transaction;
-                    transaction->value = (rooms[pos1]->getPricePerNight() -
-                                          (rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
-                                           rooms[pos1]->getDiscountState())) *
+                    //add the holiday discount to the discount of the room
+                    transaction->value = (rooms[pos1]->getPricePerNight()
+                            - rooms[pos1]->getPricePerNight() * 0.02 * getsHolidayDiscount
+                            - rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
+                                           rooms[pos1]->getDiscountState()) *
                                          (reservation->getCheckOut() - reservation->getCheckIn());
                     transaction->description = "Client check in to room " + std::to_string(reservation->getRoomId()) +
                                                " which was reserved for " +
@@ -1402,6 +1439,9 @@ void Hotel::checkOut(const int& pos, const bool& rentInterested){
     std::vector<Vehicle> vehicles;
     try{
         reservationIds = clients[pos]->checkOut(&date);
+        if(clients[pos]->getHistory().size() >= 2){
+            regulars.insert(clients[pos]->getName()[0]);
+        }
         for (int reservationId: reservationIds){
             for (auto& reservation: reservations){
                 if (reservationId == reservation->getReservationId()){

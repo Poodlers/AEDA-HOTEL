@@ -6,10 +6,69 @@
 
 using namespace std;
 
+void regularClients(Hotel* hotel){
+    std::string input, sort, order, NIF, name;
+    while(true) {
+        try {
+            if (hotel->getChristmasSeason()) {
+                if (!hotel->getInitialsHaveBeenChosen()) return;
+                cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+                cout << hotel->getDiscountedInitials().first << "   and    " << hotel->getDiscountedInitials().second;
+            }
+            cout << "Date: " << hotel->getDate() << endl;
+            for (Client client: hotel->getRegulars()) {
+                client.printConsole();
+            }
+            cout << "Write Help to see possible commands."<<endl;
+
+            cin >> input;
+
+            if (input == "Sort") {
+                cout
+                        << "Insert the type of sorting to be done. Options are: Name, NIF, Future reservations, Past reservations, Current reservations,"
+                           " Amount of reservations, Most recent reservation" << endl;
+                string sorting, order;
+                cleanCinBuffer();
+                getline(cin, sorting);
+                cout << "Should the order by Ascending or Descending?" << endl;
+                cin >> order;
+                hotel->sortRegulars(sorting, order);
+            } else if (input == "Search") {
+                cout << "Insert the name of the client you wish to find:"<<endl;
+
+                cleanCinBuffer();
+                getline(cin, name);
+
+                cout << "Insert the NIF of the client you wish to find." << endl;
+                cin >> NIF;
+                Client c = hotel->searchRegulars(NIF, name);
+                c.printConsole();
+            } else if (input == "Back") {
+                return;
+            } else if (input == "Help") {
+                cout << "Valid commands are: Sort, Search, Back and Help " << endl;
+            }
+        }
+        catch (NIFIsNotValid &msg) {
+            cout << msg;
+        }
+        catch (ClientDoesNotExist &msg) {
+            cout << msg;
+        }
+        catch(SortingError& msg){
+            cout << msg;
+        }
+        system("pause");
+        system("CLS");
+    }
+}
+
+
 void vehicle(Hotel* hotel){
     std::string input, oldPlate, plate, kilometers, capacity, price;
     while(true){
         if(hotel->getChristmasSeason()){
+            if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -134,9 +193,11 @@ void accounting(Hotel* hotel){
 }
 
 void buyProduct(Hotel* hotel){
+    system("CLS");
     std::string input, productName, providerName, stock, rating;
     while(true){
         if(hotel->getChristmasSeason()){
+            if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -258,6 +319,8 @@ void providers(Hotel* hotel){
         std::string input, Id;
         cout << "Date: " << hotel->getDate() <<endl;
         if(hotel->getChristmasSeason()){
+            system("cls");
+            if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -308,6 +371,7 @@ void reservation(Hotel * hotel){
 
         while (true) {
             if(hotel->getChristmasSeason()){
+                if (!hotel->getInitialsHaveBeenChosen()) return;
                 cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
                 cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
             }
@@ -461,6 +525,7 @@ void rooms(Hotel * hotel){
     string roomId, roomNumber, capacity, type, price, floor;
     while (true){
         if(hotel->getChristmasSeason()){
+            if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -692,6 +757,7 @@ void clients(Hotel *hotel){
     string type;
     while(true){
         if(hotel->getChristmasSeason()){
+            if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -704,7 +770,11 @@ void clients(Hotel *hotel){
         cin >> input;
         try{
             if (input == "Help"){
-                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, CheckIn, CheckOut, Back and Help "<<endl;
+                cout << "Valid commands are: Modify, Remove, Add, Sort, Search, Time, CheckIn, CheckOut, Back, Regulars and Help "<<endl;
+            }
+            if (input == "Regulars"){
+                system("CLS");
+                regularClients(hotel);
             }
             else if(input == "Modify"){
 
@@ -833,6 +903,7 @@ void staff(Hotel *hotel){
     string password, shift, wage, yearsOfService, evaluation;
     while(true){
         if(hotel->getChristmasSeason()){
+            if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -1031,10 +1102,46 @@ void staff(Hotel *hotel){
 
 void system(Hotel* hotel){
 
-    std::string input;
+    std::string input, in1,in2;
 
     while (true){
         if(hotel->getChristmasSeason()){
+            if (!hotel->getInitialsHaveBeenChosen()){
+                while(!hotel->getLoggedInState()){
+                    cout << "Please log in to choose the initials of the clients with discount on the holiday season." << endl;
+                    try{
+                        string username, password;
+                        cout << "Insert Username"<<endl;
+                        cleanCinBuffer();
+                        getline(cin,username);
+                        cout << "Insert Password"<<endl;
+                        cin >> password;
+                        hotel->logIn(username,password);
+                    }
+                    catch(IncorrectCredentials& msg){
+                        cout << msg;
+                    }
+                    catch(AlreadyLoggedIn& msg){
+                        cout << msg;
+                    }
+                }
+                while (true){
+                    cout << "Please choose the initials of the clients with discount on the holiday season." << endl;
+                    cout << "First initial: ";
+                    cin >> in1;
+                    cout << "Second initial: ";
+                    cin >> in2;
+                    try{
+                        hotel->changeDiscountInitials(in1,in2);
+                        break;
+                    }
+                    catch (MustBeInitial& msg){
+                        cout <<msg;
+                    }
+
+                }
+            }
+            system("cls");
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
         }
@@ -1122,8 +1229,7 @@ void system(Hotel* hotel){
         else{
             cout << "Invalid command. Write Help to see possible commands."<<endl;
         }
-
-
+        system("pause");
         system("CLS");
     }
 }

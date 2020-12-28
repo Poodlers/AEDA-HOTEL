@@ -580,7 +580,7 @@ public:
 class ClientDoesNotExist{
 private:
     /// Name of client who doesn't exist.
-    std::string name;
+    std::string name = "";
     /// NIF of client who doesn't exist.
     unsigned int NIF;
 public:
@@ -1200,6 +1200,22 @@ public:
     /// \return ostream
     friend std::ostream& operator <<(std::ostream& o, NoSuchProductExists& exception){
         return o << "Product with name "<<exception.getProdName() << " does not exist." << std::endl;
+    }
+};
+
+///Thrown if the manager is asked to input an initial but writes something else
+class MustBeInitial{
+public:
+    /// Constructor
+    MustBeInitial(){}
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, MustBeInitial& exception){
+        return o << "Input must be a single letter."<< std::endl;
     }
 };
 #endif

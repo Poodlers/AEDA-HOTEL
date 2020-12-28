@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <queue>
 
-
 /// Struct which represents a transaction.
 ///
 /// Holds the value and the description of the transaction.
@@ -56,7 +55,7 @@ public:
     /**/
 
     /*VEHICLES*/
-    void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
+    void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price, const std::string& free = "0");
     void removeVehicle(const std::string& plate);
     void modifyVehicle(const std::string& oldPlate, const std::string& newPlate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
     Vehicle searchVehicle(const std::string& plate);
@@ -521,6 +520,15 @@ public:
 
     pair<char,char> getDiscountedInitials() const;
 
+    void changeDiscountInitials(const std::string& in1, const std::string& in2);
+
+    bool getInitialsHaveBeenChosen() const;
+
+    ClientTable getRegulars() const;
+
+    void sortRegulars(const std::string& input,const std::string& order1);
+
+    Client searchRegulars(const std::string& NIF, const std::string& name);
 private:
     /// Vector of the hotel's clients.
     std::vector <Client*> clients;
@@ -548,6 +556,8 @@ private:
     bool loggedIn = false;
 
     bool isChristmasSeason = false;
+
+    bool initialsHaveBeenChosen = false;
 
     /// Cleaning necessity.
     int cleaningNecessity;

@@ -21,7 +21,7 @@ public:
     /// \param quality  quality of the product.
     /// \param price  price of the product.
     /// \param type  type of product.
-    Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type);
+    Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type, const unsigned int& ID = totalId);
 
     /// Returns the quality.
     ///
@@ -110,6 +110,8 @@ public:
 
     const std::string &getProviderName() const;
 
+
+
     unsigned int getStock() const;
 
     unsigned int getRating() const;
@@ -123,6 +125,8 @@ public:
     void setProviderName(const std::string &providerName);
 
     void setStock(unsigned int stock);
+
+    void incrementStock() const;
 
     void setRating(unsigned int rating);
 

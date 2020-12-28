@@ -181,21 +181,20 @@ std::vector<BuyProduct> Hotel::getBestBuys(const std::string & amount,const std:
 
 bool Hotel::checkIfBuyProductExist(Product *product) {
     std::vector<BuyProduct> temp;
+    bool a = false;
     while(!this->bestBuys.empty()){
-        BuyProduct bp = this->bestBuys.top();
+        if(this->bestBuys.top().getProductName() == product->getName()){
+            bestBuys.top().incrementStock();
+            a = true;
+            break;
+        }
         temp.push_back(this->bestBuys.top());
         this->bestBuys.pop();
-        if(this->bestBuys.top().getProductName() == product->getName()){
-            for(auto& prod: temp){
-                this->bestBuys.push(prod);
-            }
-            return true;
-        }
     }
     for(auto& prod: temp){
         this->bestBuys.push(prod);
     }
-    return false;
+    return a;
 }
 
 void Hotel::buy(const unsigned int &productId){
@@ -204,7 +203,10 @@ void Hotel::buy(const unsigned int &productId){
             if (productId == provider->getProducts()[i]->getId()){ // if product exists
                 Transaction* transaction = new Transaction;
                 if(!checkIfBuyProductExist(provider->getProducts()[i])){
-                    BuyProduct bp1(provider->getProducts()[i], provider->getName());
+                    Product *p1 = new Product();
+                    *p1 = *(provider->getProducts()[i]);
+                    p1->setStock(1);
+                    BuyProduct bp1(p1, provider->getName());
                     this->bestBuys.push(bp1);
                 }
 
@@ -273,16 +275,7 @@ void Hotel::incrementDate(const int& i){
     date = date + i;
     if(date.getDay() == 1 && date.getMonth() == 12){
         isChristmasSeason = true;
-        int i = 0;
-        for(auto& initial: regulars){
-            if(i == 0){
-                discountedInitials.first = initial;
-                i++;
-            }else if(i == 1){
-                discountedInitials.second = initial;
-                break;
-            }
-        }
+        initialsHaveBeenChosen = false;
     }else if(date.getDay() == 5 && date.getMonth() == 1){
         isChristmasSeason = false;
     }
@@ -826,12 +819,17 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     std::string plate;
     std::string kmsTravelled;
     std::string price;
+    std::string free;
 
-    while (std::getline(file,getData) && getData != "End"){
+    while (std::getline(file,getData) && getData != "Products"){
         ss << getData;
-        ss >> plate >> kmsTravelled >> capacity >> price;
+        ss >> plate >> kmsTravelled >> capacity >> price >> free;
         try{
-            addVehicle(plate,kmsTravelled,capacity, price);
+            if (free != "0" && free != "1"){
+                throw HotelFileHasWrongFormat("the forth vehicle input must be 1 (for a vehicle that's currently being used) or 0 (for a currently free vehicle)");
+            }
+            addVehicle(plate,kmsTravelled,capacity, price,free);
+
         }catch(NotAPositiveFloat& msg){
             std::cout << msg;
             throw HotelFileHasWrongFormat("KmsTravelled/ Price should be a float");
@@ -850,6 +848,40 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
         ss.clear();
     }
 
+    std::string ID;
+    std::string rating;
+    std::string stock, provider;
+    while(std::getline(file,getData) && getData != "End"){
+        ss << getData;
+        ss >> name >> ID >> rating >> price >> stock >> provider>> type;
+        name += " " + ID;
+        try{
+            checkIfPositiveInteger(stock,"product stock");
+            checkIfPositiveInteger(rating, "rating");
+            if (stoi(rating) < 0 && stoi(rating)> 5 ){
+                throw HotelFileHasWrongFormat("Invalid rating");
+            }
+            checkIfPositiveInteger(ID, "ID");
+            checkIfValidPriceOrWage(price, "price");
+            if (type != "cleaning" && type != "other" && type != "catering"){
+                throw HotelFileHasWrongFormat("Invalid product type");
+            }
+            Product* p = new Product(name,stoi(rating),stof(price),type,stoi(ID));
+            BuyProduct* b1 = new BuyProduct(p,provider);
+            if (!checkIfBuyProductExist(p)){
+                bestBuys.push(*b1);
+            }
+        }
+        catch(NotAPositiveFloat& msg){
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("Price should be a float");
+        }
+        catch(NotAnInt& msg) {
+            std::cout << msg;
+            throw HotelFileHasWrongFormat("rating, stock and ID should be an int");
+        }
+    }
+
     file.close();
     Provider* provider1 = new Provider("provider1", 50);
     Provider* provider2 = new Provider("provider 2", 55);
@@ -861,7 +893,7 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     //add the clients that meet the requirements to the hashtable
     for(auto& client: this->clients){
         if(client->getHistory().size() >= 2){
-            regulars.insert(client->getName()[0]);
+            regulars.insert(*client);
         }
     }
 
@@ -1215,7 +1247,6 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
                     pos1 = searchForRoomByRoomId(reservation->getRoomId());
                     rooms[pos1]->changeAvailability(false);
                     Transaction *transaction = new Transaction;
-                    //add the holiday discount to the discount of the room
                     transaction->value = (rooms[pos1]->getPricePerNight()
                             - rooms[pos1]->getPricePerNight() * 0.02 * getsHolidayDiscount
                             - rooms[pos1]->getPricePerNight() * rooms[pos1]->getDiscountValue() *
@@ -1230,6 +1261,7 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
                     cateringNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                     otherNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                 }
+                getsHolidayDiscount = false;
             }
         }
     }
@@ -1462,7 +1494,7 @@ void Hotel::checkOut(const int& pos, const bool& rentInterested){
     try{
         reservationIds = clients[pos]->checkOut(&date);
         if(clients[pos]->getHistory().size() >= 2){
-            regulars.insert(clients[pos]->getName()[0]);
+            regulars.insert(*clients[pos]);
         }
         for (int reservationId: reservationIds){
             for (auto& reservation: reservations){
@@ -2007,7 +2039,7 @@ void Hotel::staffSort(const std::string& input,const std::string& order1){
     else throw SortingError();
 }
 
-void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price) {
+void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price, const std::string& free) {
     try{
         checkIfValidPlate(plate);
         checkIfValidPriceOrWage(kmsTravelled,"KmsTravelled");
@@ -2024,7 +2056,8 @@ void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,
     }
     catch (VehicleDoesNotExist &msg){
         Vehicle v2(plate, stof(kmsTravelled), stoi(capacity), stof(price));
-
+        v2.setRented(stoi(free));
+        fleet.insert(v2);
     }
     catch (...) {
         throw;
@@ -2104,3 +2137,224 @@ Vehicle Hotel::searchVehicle(const string &plate) {
     throw VehicleDoesNotExist(plate);
 }
 
+void Hotel::changeDiscountInitials(const std::string &in1, const std::string &in2) {
+    if (in1.size() != 1 || in2.size() != 1){
+        throw MustBeInitial();
+    }
+    else if(!isalpha(in1[0])|| !isalpha(in1[0])){
+        throw MustBeInitial();
+    }
+    discountedInitials.first = in1[0];
+    discountedInitials.second = in2[0];
+    initialsHaveBeenChosen = true;
+
+}
+
+bool Hotel::getInitialsHaveBeenChosen() const{
+    return initialsHaveBeenChosen;
+}
+
+ClientTable Hotel::getRegulars() const{
+    return regulars;
+}
+
+void Hotel::sortRegulars(const std::string& input,const std::string& order1){
+    vector<Client> clients1;
+    for (Client c: regulars){
+        clients1.push_back(c);
+    }
+    regulars.clear();
+    bool order;
+    if (order1 == "Ascending"){
+        order = true;
+    }
+    else if (order1 == "Descending"){
+        order = false;
+    }
+    else throw SortingError();
+
+    if (input == "Name"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getName() < c2.getName();
+            });
+        }
+        else{
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getName() > c2.getName();
+            });
+        }
+    }
+    else if (input == "NIF"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getNIF() < c2.getNIF();
+            });
+        }
+        else{
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getNIF() > c2.getNIF();
+            });
+        }
+    }
+    else if (input == "Future reservations"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getFutureReservations().size() < c2.getFutureReservations().size();
+            });
+        }
+        else{
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getFutureReservations().size() > c2.getFutureReservations().size();
+            });
+        }
+    }
+    else if (input == "Past reservations"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getHistory().size() < c2.getHistory().size();
+            });
+        }
+        else{
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getHistory().size() > c2.getHistory().size();
+            });
+        }
+    }
+    else if (input == "Current reservations"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getCurrentReservations().size() < c2.getCurrentReservations().size();
+            });
+        }
+        else{
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return c1.getCurrentReservations().size() > c2.getCurrentReservations().size();
+            });
+        }
+    }
+    else if (input == "Amount of reservations"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return (c1.getCurrentReservations().size() + c1.getHistory().size() + c1.getCurrentReservations().size())
+                < (c2.getCurrentReservations().size() + c2.getHistory().size() + c2.getCurrentReservations().size());
+            });
+        }
+        else{
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                return (c1.getCurrentReservations().size() + c1.getHistory().size() + c1.getCurrentReservations().size()) >
+                (c2.getCurrentReservations().size() + c2.getHistory().size() + c2.getCurrentReservations().size());
+            });
+        }
+    }
+    else if(input == "Most recent reservation"){
+        if (order){
+            sort(clients1.begin(),clients1.end(),[](Client c1, Client c2){
+                Date min1(31,12,9999), min2(31,12,9999);
+                if(c1.getCurrentReservations().empty() && c2.getCurrentReservations().empty()&& c1.getHistory().empty() && c2.getHistory().empty()){
+                    return false;
+                }
+                else if ((!c1.getCurrentReservations().empty()||!c1.getHistory().empty()) && c2.getCurrentReservations().empty()
+                && c2.getHistory().empty()){
+                    return false;
+                }
+                else if ((!c2.getCurrentReservations().empty()||!c2.getHistory().empty()) && c1.getCurrentReservations().empty()
+                && c1.getHistory().empty()){
+                    return true;
+                }
+                else {
+                    if (!c1.getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c1.getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c1.getHistory()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
+                        }
+                    }
+                    if (!c2.getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c2.getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c2.getHistory()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
+                        }
+                    }
+                    return min1 < min2;
+                }
+            });
+        }
+        else {
+            sort(clients1.begin(), clients1.end(), [](Client c1, Client c2) {
+                Date min1(31, 12, 9999), min2(31, 12, 9999);
+                if (c1.getCurrentReservations().empty() && c2.getCurrentReservations().empty() &&
+                    c1.getHistory().empty() && c2.getHistory().empty()) {
+                    return false;
+                } else if ((!c1.getCurrentReservations().empty() || !c1.getHistory().empty()) &&
+                           c2.getCurrentReservations().empty() && c2.getHistory().empty()) {
+                    return true;
+                } else if ((!c2.getCurrentReservations().empty() || !c2.getHistory().empty()) &&
+                           c1.getCurrentReservations().empty() && c1.getHistory().empty()) {
+                    return false;
+                } else {
+                    if (!c1.getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c1.getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c1.getHistory()) {
+                            if (reservation->getCheckIn() < min1) {
+                                min1 = reservation->getCheckIn();
+                            }
+                        }
+                    }
+                    if (!c2.getCurrentReservations().empty()) {
+                        for (Reservation *reservation: c2.getCurrentReservations()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
+                        }
+                    } else {
+                        for (Reservation *reservation: c2.getHistory()) {
+                            if (reservation->getCheckIn() < min2) {
+                                min2 = reservation->getCheckIn();
+                            }
+                        }
+                    }
+                    return min1 > min2;
+                }
+            });
+        }
+    }
+    else throw SortingError();
+
+    for (Client c1: clients1){
+        regulars.insert(c1);
+    }
+
+
+}
+
+Client Hotel::searchRegulars(const std::string& NIF, const std::string& name){
+    try{
+        validateNIF(NIF, "");
+    }
+    catch(...){
+        throw;
+    }
+    Client c(name,stoi(NIF));
+    auto search = regulars.find(c);
+    if (search == regulars.end()) throw ClientDoesNotExist(name,stoi(NIF));
+    return *search;
+}

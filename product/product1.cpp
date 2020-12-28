@@ -140,3 +140,11 @@ std::ostream &operator<<(std::ostream &os, const BuyProduct &buyProduct) {
 Product *BuyProduct::getProduct() const {
     return product;
 }
+
+float BuyProduct::getPrice() const {
+    return this->product->getPrice();
+}
+
+std::string BuyProduct::getType() const {
+    return this->product->getType();
+}

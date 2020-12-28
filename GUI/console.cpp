@@ -9,6 +9,10 @@ using namespace std;
 void vehicle(Hotel* hotel){
     std::string input, oldPlate, plate, kilometers, capacity, price;
     while(true){
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Date: " << hotel->getDate() <<endl;
         hotel->getFleet().printTree();
         cout << "Write Help to see possible commands."<<endl;
@@ -132,6 +136,10 @@ void accounting(Hotel* hotel){
 void buyProduct(Hotel* hotel){
     std::string input, productName, providerName, stock, rating;
     while(true){
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Date: " << hotel->getDate() <<endl;
         cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
            << "Stock" << std::setw(8) << "Rating" << endl;
@@ -154,7 +162,7 @@ void buyProduct(Hotel* hotel){
                      << endl;
 
                 cout << "New Product Name: " << endl;
-                cleanCinBuffer();
+
                 getline(cin, productName);
 
                 cout << "New Provider Name: " << endl;
@@ -180,7 +188,7 @@ void buyProduct(Hotel* hotel){
                 cout << "Insert the maximum stock this product must have:"<<endl;
                 cin >> rating;
 
-                vector<BuyProduct*> bestProds = hotel->getBestBuys(input,stock,rating);
+                vector<BuyProduct> bestProds = hotel->getBestBuys(input,stock,rating);
 
                 if(bestProds.empty()){
                     cout << "No products matching your criteria!" << endl;
@@ -188,7 +196,7 @@ void buyProduct(Hotel* hotel){
                     cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
                          << "Stock" << std::setw(8) << "Rating" << endl;
                     for(auto& prod: bestProds){
-                        cout << (*prod);
+                        cout << (prod);
                     }
                 }
 
@@ -206,7 +214,7 @@ void buyProduct(Hotel* hotel){
 
                 cleanCinBuffer();
                 getline(cin, input);
-                BuyProduct* bp1 = hotel->searchBuyProduct(input);
+                BuyProduct bp1 = hotel->searchBuyProduct(input);
                 cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
                      << "Stock" << std::setw(8) << "Rating" << endl;
                 cout << bp1;
@@ -239,6 +247,7 @@ void providers(Hotel* hotel){
         throw AccessRestricted();
     }
     while(true){
+
         for (Provider* provider: hotel->getProviders()){
             provider->printConsole();
             cout << endl;
@@ -248,6 +257,10 @@ void providers(Hotel* hotel){
         cout << "Other products need: " << hotel->getOtherNecessity()<<endl;
         std::string input, Id;
         cout << "Date: " << hotel->getDate() <<endl;
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Write Help to see possible commands."<<endl;
         cin >> input;
         try{
@@ -294,6 +307,10 @@ void reservation(Hotel * hotel){
     string type;
 
         while (true) {
+            if(hotel->getChristmasSeason()){
+                cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+                cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            }
             cout << "Date: " << hotel->getDate() << endl;
 
             std::cout << std::left <<  std::setw(20) << std::setfill(' ') << "Reservation ID"
@@ -443,6 +460,10 @@ void rooms(Hotel * hotel){
     int pos;
     string roomId, roomNumber, capacity, type, price, floor;
     while (true){
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Date: " << hotel->getDate() <<endl;
         std::cout << std::left << std::setw(14) << "Type" <<  std::setw(10) << std::setfill(' ') << "Room ID" << std::setw(15)
                   << "Room Number" << std::setw(8)<< "Floor" << std::setw(10) << "Capacity" <<std::setw(18) << "Price per night"
@@ -670,6 +691,10 @@ void clients(Hotel *hotel){
     string NIF;
     string type;
     while(true){
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Date: " << hotel->getDate() <<endl;
         for(Client* client: hotel->getClients()){
             client->printConsole();
@@ -807,6 +832,10 @@ void staff(Hotel *hotel){
     string type;
     string password, shift, wage, yearsOfService, evaluation;
     while(true){
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Date: " << hotel->getDate() <<endl;
         std::cout << std::left << std::setw(13) << "Position" <<  std::setw(22) << std::setfill(' ') << "Name" <<
                   std::setw(10) << "NIF" << std::setw(7) << "Wage" << std::setw(16) << "Years of work"
@@ -1005,6 +1034,10 @@ void system(Hotel* hotel){
     std::string input;
 
     while (true){
+        if(hotel->getChristmasSeason()){
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+        }
         cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see commands"<<endl;
         cin>>input;
@@ -1089,7 +1122,8 @@ void system(Hotel* hotel){
         else{
             cout << "Invalid command. Write Help to see possible commands."<<endl;
         }
-        system("pause");
+
+
         system("CLS");
     }
 }

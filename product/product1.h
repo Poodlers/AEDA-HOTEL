@@ -114,6 +114,10 @@ public:
 
     unsigned int getRating() const;
 
+    float getPrice() const;
+
+    std::string getType() const;
+
     void setProductName(const std::string &productName);
 
     void setProviderName(const std::string &providerName);

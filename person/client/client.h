@@ -5,6 +5,9 @@
 #include "../../hotel/reservation.h"
 #include "../person.h"
 #include "../../exceptions/exceptions.h"
+#include "unordered_set"
+
+
 
 /// \class Client
 /// Class which represents a Client.
@@ -127,4 +130,24 @@ private:
     /// Vector with all reservations
     std::vector<Reservation*> allReservations;
 };
+
+
+
+struct clientHash
+{
+    int operator() (const char& b) const
+    {
+        return 0; //n sei fazer hash Functions lol
+    }
+
+    bool operator() (const char& b1, const char& b2) const
+    {
+       return b1 == b2;
+    }
+};
+
+
+typedef std::unordered_set<char, clientHash, clientHash> ClientTable;
+
+
 #endif

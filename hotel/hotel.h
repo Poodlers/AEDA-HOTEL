@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <queue>
 
+
 /// Struct which represents a transaction.
 ///
 /// Holds the value and the description of the transaction.
@@ -499,20 +500,25 @@ public:
     /// \return first floor.
     int getFirstFloor() const;
 
+    bool getChristmasSeason() const;
+
     /// Returns fleet
     ///
     /// \return fleet
     BST<Vehicle> getFleet() const;
 
-    std::vector<BuyProduct*> getBestBuys(const std::string &amount, const std::string & minStock,const std::string & maxStock);
+    std::vector<BuyProduct> getBestBuys(const std::string &amount, const std::string & minStock,const std::string & maxStock);
 
     void printBestBuys();
 
     void modifyBuyProduct(const std::string& oldName, const std::string& newName, const std::string& providerName, const std::string& stock,const std::string& rating);
 
-    BuyProduct* searchBuyProduct(const std::string& name);
+    BuyProduct searchBuyProduct(const std::string& name);
 
     void removeOldProduct(const std::string& prodName);
+
+    pair<char,char> getDiscountedInitials() const;
+
 private:
     /// Vector of the hotel's clients.
     std::vector <Client*> clients;
@@ -529,10 +535,17 @@ private:
 
     BST<Vehicle> fleet;
 
-    std::priority_queue<BuyProduct*> bestBuys;
+    std::priority_queue<BuyProduct> bestBuys;
+
+    ClientTable regulars;
+
+    std::pair<char,char> discountedInitials;
+
     /// Logged in state.
     /// True if the manager is logged in, false otherwise.
     bool loggedIn = false;
+
+    bool isChristmasSeason = false;
 
     /// Cleaning necessity.
     int cleaningNecessity;

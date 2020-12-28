@@ -179,13 +179,35 @@ std::vector<BuyProduct> Hotel::getBestBuys(const std::string & amount,const std:
     return buys;
 }
 
+bool Hotel::checkIfBuyProductExist(Product *product) {
+    std::vector<BuyProduct> temp;
+    while(!this->bestBuys.empty()){
+        BuyProduct bp = this->bestBuys.top();
+        temp.push_back(this->bestBuys.top());
+        this->bestBuys.pop();
+        if(this->bestBuys.top().getProductName() == product->getName()){
+            for(auto& prod: temp){
+                this->bestBuys.push(prod);
+            }
+            return true;
+        }
+    }
+    for(auto& prod: temp){
+        this->bestBuys.push(prod);
+    }
+    return false;
+}
+
 void Hotel::buy(const unsigned int &productId){
     for (Provider* provider: providers){
         for (unsigned int i = 0; i < provider->getProducts().size(); i++){
             if (productId == provider->getProducts()[i]->getId()){ // if product exists
                 Transaction* transaction = new Transaction;
-                BuyProduct bp1(provider->getProducts()[i], provider->getName());
-                this->bestBuys.push(bp1);
+                if(!checkIfBuyProductExist(provider->getProducts()[i])){
+                    BuyProduct bp1(provider->getProducts()[i], provider->getName());
+                    this->bestBuys.push(bp1);
+                }
+
                 transaction->value =  - provider->getProducts()[i]->getPrice();
                 transaction->description = "Bought " + provider->getProducts()[i]->getType() + " product from " + provider->getName();
                 accounting.push_back(transaction); //Creates and adds a new transaction
@@ -2002,7 +2024,7 @@ void Hotel::addVehicle(const std::string& plate,const std::string& kmsTravelled,
     }
     catch (VehicleDoesNotExist &msg){
         Vehicle v2(plate, stof(kmsTravelled), stoi(capacity), stof(price));
-        fleet.insert(v2);
+
     }
     catch (...) {
         throw;

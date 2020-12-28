@@ -62,6 +62,8 @@ public:
     Vehicle searchVehicle(const std::string& plate);
     /**/
 
+    bool checkIfBuyProductExist(Product* product);
+
     /*PROVIDERS*/
 
     /// Adds provider to providers.

@@ -854,7 +854,6 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     while(std::getline(file,getData) && getData != "End"){
         ss << getData;
         ss >> name >> ID >> rating >> price >> stock >> provider>> type;
-        name += " " + ID;
         try{
             checkIfPositiveInteger(stock,"product stock");
             checkIfPositiveInteger(rating, "rating");
@@ -1234,7 +1233,8 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
     std::vector<int> reservationIds;
     std::vector<Vehicle> vehicles;
     if (this->isChristmasSeason && (clients[pos]->getName()[0] == discountedInitials.first || clients[pos]->getName()[0] == discountedInitials.second  )){
-        getsHolidayDiscount = true;
+        auto search = regulars.find(*clients[pos]);
+        if (search != regulars.end()) getsHolidayDiscount = true;
     }
     try{
         std::stringstream ss;

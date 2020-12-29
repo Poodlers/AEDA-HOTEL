@@ -13,7 +13,7 @@ void regularClients(Hotel* hotel){
             if (hotel->getChristmasSeason()) {
                 if (!hotel->getInitialsHaveBeenChosen()) return;
                 cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-                cout << hotel->getDiscountedInitials().first << "   and    " << hotel->getDiscountedInitials().second;
+                cout << hotel->getDiscountedInitials().first << "   and    " << hotel->getDiscountedInitials().second<< "\n";
             }
             cout << "Date: " << hotel->getDate() << endl;
             for (Client client: hotel->getRegulars()) {
@@ -70,7 +70,7 @@ void vehicle(Hotel* hotel){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second<< "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
         hotel->getFleet().printTree();
@@ -199,7 +199,7 @@ void buyProduct(Hotel* hotel){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
         cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
@@ -322,7 +322,7 @@ void providers(Hotel* hotel){
             system("cls");
             if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";;
         }
         cout << "Write Help to see possible commands."<<endl;
         cin >> input;
@@ -373,7 +373,7 @@ void reservation(Hotel * hotel){
             if(hotel->getChristmasSeason()){
                 if (!hotel->getInitialsHaveBeenChosen()) return;
                 cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-                cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+                cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";;
             }
             cout << "Date: " << hotel->getDate() << endl;
 
@@ -527,7 +527,7 @@ void rooms(Hotel * hotel){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second<< "\n";;
         }
         cout << "Date: " << hotel->getDate() <<endl;
         std::cout << std::left << std::setw(14) << "Type" <<  std::setw(10) << std::setfill(' ') << "Room ID" << std::setw(15)
@@ -759,7 +759,7 @@ void clients(Hotel *hotel){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";;
         }
         cout << "Date: " << hotel->getDate() <<endl;
         for(Client* client: hotel->getClients()){
@@ -905,7 +905,7 @@ void staff(Hotel *hotel){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
         std::cout << std::left << std::setw(13) << "Position" <<  std::setw(22) << std::setfill(' ') << "Name" <<
@@ -1143,7 +1143,7 @@ void system(Hotel* hotel){
             }
             system("cls");
             cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
-            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second;
+            cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
         cout << "Write Help to see commands"<<endl;

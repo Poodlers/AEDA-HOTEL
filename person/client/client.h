@@ -51,7 +51,9 @@ public:
     ///
     /// \param reservation  reservation to add.
     void addCurrentReservation(Reservation *reservation);
-
+    /// deletes reservation.
+    ///
+    /// \param reservation reservation to delete.
     void deleteReservation(Reservation* reservation);
     /// Check Out.
     ///
@@ -132,20 +134,25 @@ private:
 };
 
 
-
+/// Hash fuction fot hash table.
 struct clientHash
 {
+    ///
+    /// \param c Client.
+    /// \return First letter of the client's name.
     int operator() (const Client& c) const
     {
         return c.getName()[0];
     }
-
+    ///
+    /// \param c1 Client 1.
+    /// \param c2 Client 2.
+    /// \return c1.getNIF() == c2.getNIF().
     bool operator() (const Client& c1, const Client& c2) const
     {
        return c1.getNIF() == c2.getNIF();
     }
 };
-
 
 typedef std::unordered_set<Client, clientHash, clientHash> ClientTable;
 

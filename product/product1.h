@@ -80,9 +80,13 @@ public:
     ///
     /// stock type id price quality
     void print();
-
+    /// Sets new name.
+    ///
+    /// \param name new name.
     void setName(const std::string &name);
-
+    /// Returns name.
+    ///
+    /// \return name.
     const std::string &getName() const;
 
 private:
@@ -103,43 +107,81 @@ private:
     unsigned int stock;
 };
 
+
+/// Class which represents bought products.
+///
+/// Defined by Product pointer and provider.
 class BuyProduct{
 public:
+    /// BuyProduct constructor.
+    ///
+    /// \param product Product pointer.
+    /// \param providerName name of the provider.
     BuyProduct(Product* product, const std::string& providerName);
-
+    /// returns name of the product.
+    ///
+    /// \return product name.
     const std::string &getProductName() const;
-
+    /// returns name of the provider.
+    ///
+    /// \return provider name.
     const std::string &getProviderName() const;
 
 
-
+    /// returns stock.
+    ///
+    /// \return stock.
     unsigned int getStock() const;
-
+    /// returns rating.
+    ///
+    /// \return rating.
     unsigned int getRating() const;
-
+    /// returns price.
+    ///
+    /// \return price.
     float getPrice() const;
-
+    /// returns type.
+    ///
+    /// \return type.
     std::string getType() const;
-
+    /// sets new product name.
+    ///
+    /// \param productName new product name.
     void setProductName(const std::string &productName);
-
+    /// sets new provider name.
+    ///
+    /// \param providerName new provider name.
     void setProviderName(const std::string &providerName);
-
+    /// sets new stock.
+    ///
+    /// \param stock new stock.
     void setStock(unsigned int stock);
-
+    /// increments stock.
     void incrementStock() const;
-
+    /// sets new rating.
+    ///
+    /// \param rating new rating
     void setRating(unsigned int rating);
-
+    /// overload for <
+    ///
+    /// \param bp1
+    /// \return this-> < BuyProduct.
     bool operator< (const BuyProduct& bp1) const;
-
+    ///
+    /// \param os ostream
+    /// \param buyProduct product to print
+    /// \return message
     friend std::ostream &operator<<(std::ostream &os, const BuyProduct &buyProduct);
-
+    /// returns Product.
+    ///
+    /// \return Product.
     Product *getProduct() const;
 
 
 private:
+    /// Product pointer.
     Product* product;
+    /// Provider name.
     std::string providerName;
 
 };

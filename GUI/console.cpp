@@ -202,7 +202,7 @@ void buyProduct(Hotel* hotel){
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
-        cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
+        cout << std::left << std::setw(12) << std::setfill(' ') << "Name" << std::setw(4) << "ID" << std::setw(15)  << "Provider Name" << std::setw(7)
            << "Stock" << std::setw(8) << "Rating" << endl;
         hotel->printBestBuys();
         cout << "Write Help to see possible commands."<<endl;
@@ -216,18 +216,17 @@ void buyProduct(Hotel* hotel){
 
                 cout << "Insert the name of the product you wish to modify:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, input);
+                cin >> input;
 
                 cout << "Write the modification when prompted, if you do not wish to alter a specific camp write '.' "
                      << endl;
 
                 cout << "New Product Name: " << endl;
 
-                getline(cin, productName);
+                cin >> productName;
 
                 cout << "New Provider Name: " << endl;
-                getline(cin, providerName);
+                cin >> providerName;
 
                 cout << "New Stock: " << endl;
                 cin >> stock;
@@ -265,16 +264,15 @@ void buyProduct(Hotel* hotel){
             else if(input == "Remove"){
                 cout << "Insert the name of the product Buy you wish to remove:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, input);
+
+                cin >> input;
 
                 hotel->removeOldProduct(input);
             }
             else if (input == "Search"){
                 cout << "Insert the name of the BuyProduct you wish to search:"<<endl;
 
-                cleanCinBuffer();
-                getline(cin, input);
+                cin >> input;
                 BuyProduct bp1 = hotel->searchBuyProduct(input);
                 cout << std::setw(5) << "Name" << std::setw(15)  << "Provider Name" << std::setw(7)
                      << "Stock" << std::setw(8) << "Rating" << endl;
@@ -1156,8 +1154,9 @@ void system(Hotel* hotel){
             rooms(hotel);
         }
         else if (input == "Vehicles"){
+            system("CLS");
             vehicle(hotel);
-        }else if(input == "BuyProduct"){
+        }else if(input == "ProductsBought"){
             buyProduct(hotel);
         }
         else if (input == "LogIn"){
@@ -1178,7 +1177,7 @@ void system(Hotel* hotel){
             }
         }
         else if (input == "Help"){
-            cout << "Valid commands are: BuyProduct, Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time, Vehicles and Exit"<<endl;
+            cout << "Valid commands are: ProductsBought, Clients, Rooms, Reservations, LogIn, LogOut, Staff, Providers, Accounting, Time, Vehicles and Exit"<<endl;
         }
         else if (input == "Reservations"){
             reservation(hotel);

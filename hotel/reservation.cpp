@@ -8,10 +8,14 @@ Reservation::Reservation(const int &reservationSize,Date* checkIn,Date* checkOut
     if (*checkOut < *checkIn) { throw ReservationHasInvalidDates(); }
 
     if (reservationId == -1){
-        this->reservationId = this->ID;
         ID++;
+        this->reservationId = this->ID;
     }
-    else this->reservationId = reservationId;
+    else{
+        ID = this->reservationId + 1;
+        this->reservationId = reservationId;
+
+    }
 
     this->reservationSize = reservationSize;
     this->checkIn = *checkIn;
@@ -40,8 +44,9 @@ Reservation::Reservation(const int &reservationSize,const int& dayIn, const int&
     try{
         Date checkIn(dayIn,monthIn,yearIn), checkOut(dayOut,monthOut,yearOut);
         if (checkOut < checkIn) { throw ReservationHasInvalidDates(); }
-        this->reservationId = this->ID;
         ID++;
+        this->reservationId = this->ID;
+
 
         this->reservationSize = reservationSize;
 

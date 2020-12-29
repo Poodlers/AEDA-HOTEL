@@ -112,7 +112,7 @@ void Hotel::modifyBuyProduct(const std::string &oldName, const std::string &newN
             }
         }
         if(!found){
-            Product* pnew = new Product(oldProduct.getProductName(),oldProduct.getRating(),oldProduct.getPrice(),oldProduct.getType());
+            Product* pnew = new Product(oldProduct.getProductName(),oldProduct.getRating(),oldProduct.getPrice(),oldProduct.getType(), oldProduct.getStock());
             Provider* new_provider = new Provider(providerName,{pnew});
             this->providers.push_back(new_provider);
         }
@@ -443,6 +443,25 @@ void Hotel::saveHotel(const std::string &hotelFile){
     file << cleaningNecessity<<"\n";
     file << cateringNecessity<<"\n";
     file << otherNecessity<<"\n";
+    file << "Fleet\n";
+    BSTItrIn<Vehicle> itr(this->fleet);
+    while(!itr.isAtEnd()){
+        file << itr.retrieve().getPlate() << " " << itr.retrieve().getKmsTravelled() << " " << itr.retrieve().getCapacity() << " " << itr.retrieve().getPrice() << " " << itr.retrieve().getRented() << "\n";
+        itr.advance();
+    }
+    file << "Products\n";
+    std::vector<BuyProduct> temp;
+    while(!this->bestBuys.empty()){
+        auto buy = this->bestBuys.top();
+        this->bestBuys.pop();
+        file << buy.getProductName() << " " << buy.getProduct()->getId() << " " << buy.getRating()  << " " << buy.getPrice()  << " " << buy.getStock() << " " << buy.getProviderName() << " " << buy.getType() << "\n";
+
+    }
+
+    for(auto& bruh: temp){
+        this->bestBuys.push(bruh);
+    }
+
     file<<"End\n";
 }
 
@@ -865,7 +884,7 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
             if (type != "cleaning" && type != "other" && type != "catering"){
                 throw HotelFileHasWrongFormat("Invalid product type");
             }
-            Product* p = new Product(name,stoi(rating),stof(price),type,stoi(ID));
+            Product* p = new Product(name,stoi(rating),stof(price),type,stoi(stock),stoi(ID));
             BuyProduct* b1 = new BuyProduct(p,provider);
             if (!checkIfBuyProductExist(p)){
                 bestBuys.push(*b1);
@@ -882,9 +901,9 @@ Hotel::Hotel(const std::string &hotelFile): fleet(Vehicle("", 0.0, 0, 0.0)){
     }
 
     file.close();
-    Provider* provider1 = new Provider("provider1", 50);
-    Provider* provider2 = new Provider("provider 2", 55);
-    Provider* provider3 = new Provider("provider 3", 65);
+    Provider* provider1 = new Provider("Continente", 50);
+    Provider* provider2 = new Provider("Lidl", 55);
+    Provider* provider3 = new Provider("TikTok", 65);
     this->addProvider(provider1);
     this->addProvider(provider2);
     this->addProvider(provider3);
@@ -1229,7 +1248,8 @@ int Hotel::search(const std::string& name, const std::string& NIF, std::string& 
 
 void Hotel::checkIn(const int& pos, const bool& rentInterested){
     int pos1, ppNum = 0;
-    bool getsHolidayDiscount = false;
+    bool getsHolidayDiscount;
+    getsHolidayDiscount = false;
     std::vector<int> reservationIds;
     std::vector<Vehicle> vehicles;
     if (this->isChristmasSeason && (clients[pos]->getName()[0] == discountedInitials.first || clients[pos]->getName()[0] == discountedInitials.second  )){
@@ -1261,7 +1281,7 @@ void Hotel::checkIn(const int& pos, const bool& rentInterested){
                     cateringNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                     otherNecessity += 10 * (reservation->getCheckOut() - reservation->getCheckIn());
                 }
-                getsHolidayDiscount = false;
+
             }
         }
     }
@@ -2144,8 +2164,8 @@ void Hotel::changeDiscountInitials(const std::string &in1, const std::string &in
     else if(!isalpha(in1[0])|| !isalpha(in1[0])){
         throw MustBeInitial();
     }
-    discountedInitials.first = in1[0];
-    discountedInitials.second = in2[0];
+    discountedInitials.first = toupper(in1[0]);
+    discountedInitials.second = toupper(in2[0]);
     initialsHaveBeenChosen = true;
 
 }

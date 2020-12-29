@@ -21,7 +21,8 @@ public:
     /// \param quality  quality of the product.
     /// \param price  price of the product.
     /// \param type  type of product.
-    Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type, const unsigned int& ID = totalId);
+    ///\param stock amount of the product in existence.
+    Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type,const unsigned int& stock, const unsigned int& ID = totalId);
 
     /// Returns the quality.
     ///

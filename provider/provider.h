@@ -62,6 +62,9 @@ public:
     /// Restocks its products.
     void restock();
 
+    ///Adds a single product to the Provider's products
+    ///
+    /// \param product product to add to the provider's products
     void addProduct(Product* product);
 
 private:

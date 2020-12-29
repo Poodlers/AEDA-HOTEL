@@ -36,7 +36,6 @@ class Hotel{
 public:
     /*HOTEL-BUILDING-AND-SAVING*/
 
-    /// \fn Hotel::Hotel(const std::string &hotelFile)
     /// Hotel Constructor.
     ///
     /// Creates a hotel from a '.txt' file with the correct format.
@@ -55,12 +54,51 @@ public:
     /**/
 
     /*VEHICLES*/
+    /// Add Vehicle.
+    ///
+    /// Adds a vehicle to the binary tree.
+    /// \param plate plate of the new vehicle.
+    /// \param kmsTravelled kms travelled by the new vehicle.
+    /// \param capacity capacity of the new vehicle.
+    /// \param price price of the new vehicle.
+    /// \param free signals if the vehicle is currently rented (true) or not (false).
+    /// \exception throws KmsOverLimit if the kms of the new vehicle are over 5000.
+    /// \exception throws NotLightweightCar if the vehicle has a bigger capacity then a normal light weight car.
+    /// \exception throws VehicleAlreadyExists if a vehicle with this plate already exists.
     void addVehicle(const std::string& plate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price, const std::string& free = "0");
+
+    /// Removes Vehicle.
+    ///
+    /// \param plate plate of the vehicle to remove.
+    /// \exception throws VehicleDoesNotExist if a vehicle with this plate does not exist.
     void removeVehicle(const std::string& plate);
+
+    /// Modify Vehicle.
+    ///
+    /// \param oldPlate plate of the vehicle to modify.
+    /// \param newPlate new plate. If '.' doesn't change.
+    /// \param kmsTravelled new kms travelled. If '.' doesn't change.
+    /// \param capacity new capacity. If '.' doesn't change.
+    /// \param price new price. If '.' doesn't change.
+    /// \exception throws KmsOverLimit if the kms of the new vehicle are over 5000.
+    /// \exception throws NotLightweightCar if the vehicle has a bigger capacity then a normal light weight car.
+    /// \exception throws VehicleDoesNotExist if a vehicle with old plate does not exist.
+    /// \exception throws VehicleAlreadyExists if a vehicle with new plate already exists.
     void modifyVehicle(const std::string& oldPlate, const std::string& newPlate,const std::string& kmsTravelled,const std::string& capacity, const std::string& price);
+
+
+    /// Finds Vehicle
+    ///
+    /// \param plate plate of the vehicle to search for
+    /// \return vehicle found.
+    /// \exception throws VehicleDoesNotExist if a vehicle with this plate does not exist.
     Vehicle searchVehicle(const std::string& plate);
     /**/
 
+    /// Checks if a certain product exists in the buyProducts priority_queue
+    ///
+    /// \param product product to check
+    /// \return true if it exists, false if not.
     bool checkIfBuyProductExist(Product* product);
 
     /*PROVIDERS*/
@@ -157,6 +195,20 @@ public:
     /// \exception throws NoReservationsToCheckIn if when creating the hotel from the file a reservation is marked as checkIn but in reality it can't be checked in.
     void makeReservation(const unsigned int& roomId,Date* checkIn,Date* checkOut, const int& capacity, const int& posClient,const int& reservationId, const int& in);
 
+    /// Modify reservation.
+    ///
+    /// \param reservation reservation to modify.
+    /// \param roomId new roomID.
+    /// \param checkIn new checkIn date.
+    /// \param checkOut old checkOut date.
+    /// \param capacity new capacity
+    /// \param posClient position of the client in the vector clients.
+    /// \exception throws CantMakeNewResevOldResev if client tries to modify a reservation and put the check in date in the past.
+    /// \exception throws ClientCantMakeThisReservation when client is trying to make a reservation for a Suite with no previous reservations registered.
+    /// \exception throws RoomDoesNotHaveTheNecessaryCapacity if the reservation size is bigger than the room's capacity.
+    /// \exception throws AnotherReservationForThisRoomAlreadyExistsAtThisTime if the room is claimed at the time intended for the reservation.
+    /// \exception throws RoomDoesNotExist is there is no room with room ID roomId.
+    /// \exception throws DateIsNotValid if checkIn or checkOut date is invalid.
     void modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
                            std::string &capacity, int posClient);
     /**/
@@ -251,6 +303,7 @@ public:
     /// Checks every five days if the hotel is in need of buying products and warns the user.
     /// If there are products missing every six days it automatically buys them.
     /// Pays staff (last day of the month).
+    /// Activates flag for christmas on the first of december and deactivates it on de fifth of december
     /// \param i  number of days to increment.
     /// \see Client#archiveExpiredReservations, Provider#restock, payStaff and autoBuy
     void incrementDate(const int& i);
@@ -282,19 +335,25 @@ public:
     ///
     /// If the client has any reservations to check in at the time it does so.
     /// Increases the hotel necessities according to the number of days of the reservation checked in.
+    /// Adds bill to the transactions vector.
+    /// Verifies if the client has become a regular, and adds him to the regulars hash table accordingly.
+    /// Rents a car if requested of the client.
     /// \param pos  position of the client who wants to check in.
     /// \param rentInterested interest in renting car.
     /// \see Client#checkIn
     /// \exception throws NoReservationsToCheckIn if there are no reservations of client in position pos to check in.
+    /// \exception throws NoVehiclesInFleet if the client wants to rent a vehicle but there are no free vehicles.
     void checkIn(const int& pos, const bool &rentInterested);
 
     /// Check out.
     ///
     /// If the client has any reservations to check out at the time it does so.
+    /// Rents a car if requested of the client.
     /// \param pos  position of the client who wants to check out.
     /// \param rentInterested interest in renting car.
     /// \see Client#checkOut
     /// \exception throws NoReservationsToCheckOut if there are no reservations to check out.
+    /// \exception throws NoVehiclesInFleet if the client wants to rent a vehicle but there are no free vehicles.
     void checkOut(const int& pos, const bool &rentInterested = false);
 
     /// Modifies client.
@@ -508,26 +567,71 @@ public:
     /// \return fleet
     BST<Vehicle> getFleet() const;
 
+    /// Returns the first amount elements from the priority queue with stock between minStock and maxStock.
+    ///
+    /// \param amount amount to return.
+    /// \param minStock minStock.
+    /// \param maxStock maxStock.
+    /// \return returns vector with the elements.
     std::vector<BuyProduct> getBestBuys(const std::string &amount, const std::string & minStock,const std::string & maxStock);
 
+    /// Prints the priority queue.
     void printBestBuys();
 
+    /// Modifies buy product.
+    ///
+    /// \param oldName name of the product to modify
+    /// \param newName new name
+    /// \param providerName new provider name
+    /// \param stock new stock
+    /// \param rating new rating
+    /// \exception throws NoSuchProductExists if product with old name does not exist in the priority queue.
+    /// \exception throws NotAPositiveInt if stock or rating aren't positive numbers.
+    /// \exception throws InvalidRating if rating is not between  0 and 5.
     void modifyBuyProduct(const std::string& oldName, const std::string& newName, const std::string& providerName, const std::string& stock,const std::string& rating);
 
+    /// Searches for product.
+    ///
+    /// \param name name of the product to search for.
+    /// \return product if found.
+    /// \exception throws NoSuchProductExists if product with old name does not exist in the priority queue.
     BuyProduct searchBuyProduct(const std::string& name);
 
+    /// Removes product with name prodName.
+    /// \param prodName name of the product to remove.
+    /// \exception throws NoSuchProductExists if product with old name does not exist in the priority queue.
     void removeOldProduct(const std::string& prodName);
 
+    /// Returns the initials of the people with christmas discount.
+    /// \return discounted initials.
     pair<char,char> getDiscountedInitials() const;
 
+    /// Changes the initials with discount
+    /// \param in1 first initial with discount
+    /// \param in2 second initial with discount
     void changeDiscountInitials(const std::string& in1, const std::string& in2);
 
+    /// Flag that tells if the initials with discount have been chosen.
+    /// \return true if they have been chosen, false if not.
     bool getInitialsHaveBeenChosen() const;
 
+    /// Returns regulars hash table.
+    /// \return regulars hash table.
     ClientTable getRegulars() const;
 
+    /// Sorts Regulars
+    ///
+    /// \param criteria  sorting criteria, can be "Name", "NIF", "Future reservations", "Past reservations", "Current reservations", "Amount of reservations" or "Most recent reservation".
+    /// \param order1  sorting order, can be "Ascending" or "Descending".
+    /// \exception throws SortingError if criteria or order is incorrect.
     void sortRegulars(const std::string& input,const std::string& order1);
 
+    /// Search for regulars.
+    ///
+    /// \param NIF NIF of the client to search for.
+    /// \param name name of the client to search for.
+    /// \return client if found.
+    /// \exception throws ClientDoesNotExist if client does not exist in the hash table.
     Client searchRegulars(const std::string& NIF, const std::string& name);
 private:
     /// Vector of the hotel's clients.
@@ -542,21 +646,21 @@ private:
     std::vector<Provider*> providers;
     /// Vector of the transactions made by the hotel.
     std::vector<Transaction*> accounting;
-
+    /// Binary search tree of vehicles.
     BST<Vehicle> fleet;
-
+    /// Priority queue of products bought.
     std::priority_queue<BuyProduct> bestBuys;
-
+    /// Hash table of regular clients.
     ClientTable regulars;
-
+    /// Discounted initials.
     std::pair<char,char> discountedInitials;
 
     /// Logged in state.
     /// True if the manager is logged in, false otherwise.
     bool loggedIn = false;
-
+    /// False if not Christmas Season, true otherwise.
     bool isChristmasSeason = false;
-
+    /// False if initials have not been chosen, true otherwise.
     bool initialsHaveBeenChosen = false;
 
     /// Cleaning necessity.
@@ -576,38 +680,4 @@ private:
     /// Distance to the airport.
     float airportDistance = 15.4;
 };
-
-
-/**
-  \file "..\cmake-build-debug\hotel_exemplo.txt"
-  File used to build a hotel, must have the following format:
-  ### Example
-  ~~~~~~~~~~~~~~~~~~~.cpp
-      //Hotel-File
-      //"in program date of the state of the hotel"
-      //"number of floors"
-      //"first floor with rooms"
-      //Rooms
-      //"floor" "room number" "capacity" "price" "type"
-      //(...) more rooms
-      //Staff
-      //"name" "NIF" "first year of work" "wage" "position" "shift"/"password"/nothing "evaluation"/nothing
-      //(...) more staff
-      //Client
-      //"name" "NIF" "reservation" (… more reservations)
-      //(...) more clients
-      //Transactions
-      //"value" "description"
-      //Necessities
-      //"cleaning necessity"
-      //"catering necessity"
-      //"other necessity"
-      //End
-
-      //"reservation" :"room ID","Check In date","Check Out date","Reservation ID","Reservation Size","Vector marker"(without spaces)
-  ~~~~~~~~~~~~~~~~~~~
- */
-
-
-
 #endif

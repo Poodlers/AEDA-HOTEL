@@ -68,8 +68,16 @@ void system(Hotel* hotel);
 /// \param hotel
 void vehicle(Hotel* hotel);
 
+/// Products bought menu for console application.
+///
+/// Displays bought products and allows to modify, remove, search and get the best buys.
+/// \param hotel
 void buyProduct(Hotel* hotel);
 
+/// Regular clients menu for console application
+///
+/// Displays regular clients and allows to sort and search regular clients.
+/// \param hotel
 void regularClients(Hotel* hotel);
 
 #endif

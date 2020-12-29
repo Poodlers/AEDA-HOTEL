@@ -1218,4 +1218,20 @@ public:
         return o << "Input must be a single letter."<< std::endl;
     }
 };
+
+/// Thrown if rating is invalid
+class InvalidRating{
+public:
+    /// Constructor
+    InvalidRating(){}
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, InvalidRating& exception){
+        return o << "Rating must be between 0 and 5."<< std::endl;
+    }
+};
 #endif

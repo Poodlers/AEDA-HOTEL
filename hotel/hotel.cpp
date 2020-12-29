@@ -102,6 +102,9 @@ void Hotel::modifyBuyProduct(const std::string &oldName, const std::string &newN
         }
         if (rating != "."){
             checkIfPositiveInteger(rating, "rating");
+            if (stoi(rating) < 0 || stoi(rating) > 5){
+                throw InvalidRating();
+            }
             oldProduct.setRating(std::stoi(rating));
         }
         bool found = false;
@@ -1080,7 +1083,6 @@ void Hotel::removeRoom(Room* room){
 
 void Hotel::modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
                               std::string &capacity, int posClient) {
-    //if reservation is not future throw shit
     unsigned RoomId;
     Date CheckIn;
     Date CheckOut;
@@ -1185,7 +1187,7 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
             return pos;
         }
         catch(DateIsNotValid& msg){
-            throw msg;
+            throw;
         }
     }
     return {};

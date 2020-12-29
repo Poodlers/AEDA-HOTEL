@@ -22,16 +22,17 @@ Product::Product(){
     this->id = totalId;
     this->totalId++;
     this->stock = 100;
-    this->name = "Product " + std::to_string(this->id);
+    this->name = "Product" + std::to_string(this->id);
 }
 
-Product::Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type, const unsigned int& ID){
+Product::Product(const std::string &name, const unsigned int& quality, const float& price, const std::string & type, const unsigned int& stock,  const unsigned int& ID){
     this->quality = quality;
     this->price = price;
     this->type = type;
-    if (ID > totalId) totalId = ID +1;
-    this->id = id;
-    this->stock = 100;
+    if (ID > totalId) totalId = ID;
+    this->id = ID;
+    this->totalId++;
+    this->stock = stock;
     this->name = name;
 }
 
@@ -135,7 +136,7 @@ bool BuyProduct::operator<(const BuyProduct &bp1) const {
 }
 
 std::ostream &operator<<(std::ostream &os, const BuyProduct &buyProduct) {
-    os << std::setw(5) << buyProduct.getProductName() << std::setw(15)  << buyProduct.providerName << std::setw(7)
+    os << std::setw(12) << buyProduct.getProductName() << std::setw(4) << buyProduct.getProduct()->getId() << std::setw(15)  << buyProduct.providerName << std::setw(7)
             << buyProduct.getStock() << std::setw(8) << buyProduct.getRating() << std::endl;
     return os;
 }

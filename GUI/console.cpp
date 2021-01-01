@@ -12,7 +12,7 @@ void regularClients(Hotel* hotel){
         try {
             if (hotel->getChristmasSeason()) {
                 if (!hotel->getInitialsHaveBeenChosen()) return;
-                cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+                cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
                 cout << hotel->getDiscountedInitials().first << "   and    " << hotel->getDiscountedInitials().second<< "\n";
             }
             cout << "Date: " << hotel->getDate() << endl;
@@ -69,7 +69,7 @@ void vehicle(Hotel* hotel){
     while(true){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second<< "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
@@ -198,7 +198,7 @@ void buyProduct(Hotel* hotel){
     while(true){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
@@ -319,7 +319,7 @@ void providers(Hotel* hotel){
         if(hotel->getChristmasSeason()){
             system("cls");
             if (!hotel->getInitialsHaveBeenChosen()) return;
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";;
         }
         cout << "Write Help to see possible commands."<<endl;
@@ -362,7 +362,7 @@ void providers(Hotel* hotel){
 
 void reservation(Hotel * hotel){
     system("CLS");
-    string name, NIF, capacity, roomId, date, input, reservationId;
+    string name, NIF, capacity, roomId, date, input, reservationId, id, cIn, cOut;
     int pos1;
     vector<int> pos;
     string type;
@@ -370,7 +370,7 @@ void reservation(Hotel * hotel){
         while (true) {
             if(hotel->getChristmasSeason()){
                 if (!hotel->getInitialsHaveBeenChosen()) return;
-                cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+                cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
                 cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";;
             }
             cout << "Date: " << hotel->getDate() << endl;
@@ -408,7 +408,39 @@ void reservation(Hotel * hotel){
                     cin >> date;
                     Date *checkOut = new Date(date);
                     hotel->makeReservation(stoi(roomId), checkIn, checkOut, stoi(capacity), pos1, -1, false);
-                } else if (input == "Search") {
+                } else if (input == "Modify"){
+                    cout << "Input the reservation ID of the reservation you wish to modify."<<endl;
+                    cin >> id;
+                    pos = hotel->searchReservations("ID", id);
+                    int p;
+                    for (Client* c1: hotel->getClients()){
+                        for (Reservation* res: c1->getFutureReservations()){
+                            if (res->getReservationId() == hotel->getReservations()[pos[0]]->getReservationId()){
+                                break;
+                            }
+                        }
+                        p++;
+                    }
+                    if (p > hotel->getClients().size()) {
+                        cout << "Only future reservations can be altered!" << endl;
+                        continue;
+                    }
+
+                    cout << "Insert the new room ID (write '.' to keep as is):"<<endl;
+                    cin >> roomId;
+
+                    cout << "Insert the new capacity (write '.' to keep as is):"<<endl;
+                    cin >> capacity;
+
+                    cout << "Insert the new check in date (dd-mm-yyyy) (write '.' to keep as is):"<<endl;
+                    cin >> cIn;
+
+                    cout << "Insert the new check in date (dd-mm-yyyy) (write '.' to keep as is):"<<endl;
+                    cin >> cOut;
+
+                    hotel->modifyReservation(hotel->getReservations()[pos[0]],roomId,cIn,cOut,capacity,p);
+                }
+                else if (input == "Search") {
                     cout
                             << "Do you want reservations for/from a specific date (Date), room (Room) or a specific Id (ID)?"
                             << endl;
@@ -437,7 +469,7 @@ void reservation(Hotel * hotel){
                             hotel->getReservations()[position]->print();
                         }
                     } else if (type == "ID") {
-                        cout << "Insert the room of the ID of the reservation you wish to find:" << endl;
+                        cout << "Insert the ID of the reservation you wish to find:" << endl;
                         cin >> reservationId;
                         pos = hotel->searchReservations("ID", reservationId);
                         std::cout << std::left << std::setw(20) << std::setfill(' ') << "Reservation ID"
@@ -481,6 +513,9 @@ void reservation(Hotel * hotel){
             catch (NotAPositiveInt &msg) {
                 cout << msg;
             }
+            catch(CantMakeNewResevOldResev &msg){
+                cout <<msg;
+            }
             catch (NotAnInt &msg) {
                 cout << msg;
             }
@@ -511,6 +546,9 @@ void reservation(Hotel * hotel){
             catch (NoReservationsToCheckIn &msg) {
                 cout << msg;
             }
+            catch(ReservationNotFound & msg){
+                cout <<msg;
+            }
             system("pause");
             system("CLS");
         }
@@ -524,7 +562,7 @@ void rooms(Hotel * hotel){
     while (true){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second<< "\n";;
         }
         cout << "Date: " << hotel->getDate() <<endl;
@@ -756,7 +794,7 @@ void clients(Hotel *hotel){
     while(true){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";;
         }
         cout << "Date: " << hotel->getDate() <<endl;
@@ -902,7 +940,7 @@ void staff(Hotel *hotel){
     while(true){
         if(hotel->getChristmasSeason()){
             if (!hotel->getInitialsHaveBeenChosen()) return;
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;
@@ -1140,7 +1178,7 @@ void system(Hotel* hotel){
                 }
             }
             system("cls");
-            cout << "CHRISTMAS SEASON DISCOUNTS FOR INTIALS: " << endl;
+            cout << "CHRISTMAS SEASON DISCOUNTS FOR INITIALS: " << endl;
             cout << hotel->getDiscountedInitials().first << "   and    "  << hotel->getDiscountedInitials().second << "\n";
         }
         cout << "Date: " << hotel->getDate() <<endl;

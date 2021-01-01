@@ -1084,55 +1084,56 @@ void Hotel::removeRoom(Room* room){
 void Hotel::modifyReservation(Reservation *reservation,std::string &roomId, std::string checkIn, std::string checkOut,
                               std::string &capacity, int posClient) {
     unsigned RoomId;
-    Date CheckIn;
-    Date CheckOut;
-    unsigned Capacity;
-    if (roomId == ".") RoomId = reservation->getRoomId();
-    else RoomId = std::stoi(roomId);
-    if (checkIn == ".") CheckIn = reservation->getCheckIn();
-    else CheckIn = Date(checkIn);
-    if (checkOut == ".") CheckOut = reservation->getCheckOut();
-    else CheckOut = Date(checkOut);
-    if (capacity == ".") Capacity = reservation->getReservationSize();
-    else Capacity = std::stoi(capacity);
-    if (CheckIn < this->getDate() || CheckOut < this->getDate())
-        throw CantMakeNewResevOldResev();
-    for (Room* room: rooms){
-        if (room->getRoomId() == RoomId){
-            if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0){
-                throw ClientCantMakeThisReservation();
-            }
-            if (room->getCapacity() < Capacity){
-                throw RoomDoesNotHaveTheNecessaryCapacity(RoomId);
-            }
-            for(Reservation* reservation: reservations){
-                if (reservation->getRoomId() == RoomId && reservation->getCheckIn() <= CheckIn && CheckIn<= reservation->getCheckOut()){
-                    throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(RoomId);
-                }
-            }
-            try{
-                clients[posClient]->deleteReservation(reservation);
-                reservation->setCheckIn(&CheckIn);
-                reservation->setCheckOut(&CheckOut);
-                reservation->setRoomId(RoomId);
-                reservation->setReservationSize(Capacity);
+    try{
+        Date CheckIn;
+        Date CheckOut;
 
-                if(CheckOut < date){
-                    reservation->setIsCurrent(false);
-                    clients[posClient]->addToHistory(reservation);
+        unsigned Capacity;
+        if (roomId == ".") RoomId = reservation->getRoomId();
+        else RoomId = std::stoi(roomId);
+        if (checkIn == ".") CheckIn = reservation->getCheckIn();
+        else CheckIn = Date(checkIn);
+        if (checkOut == ".") CheckOut = reservation->getCheckOut();
+        else CheckOut = Date(checkOut);
+        if (capacity == ".") Capacity = reservation->getReservationSize();
+        else Capacity = std::stoi(capacity);
+        if (CheckIn < this->getDate() || CheckOut < this->getDate())
+            throw CantMakeNewResevOldResev();
+        for (Room* room: rooms){
+            if (room->getRoomId() == RoomId){
+                if (room->getType() == "Suite" && clients[posClient]->getHistory().size() == 0){
+                    throw ClientCantMakeThisReservation();
                 }
-                else{
-                    clients[posClient]->addNewReservation(reservation);
-                    reservation->setIsCurrent(false);
+                if (room->getCapacity() < Capacity){
+                    throw RoomDoesNotHaveTheNecessaryCapacity(RoomId);
                 }
+                for(Reservation* reservation: reservations){
+                    if (reservation->getRoomId() == RoomId && reservation->getCheckIn() <= CheckIn && CheckIn<= reservation->getCheckOut()){
+                        throw AnotherReservationForThisRoomAlreadyExistsAtThisTime(RoomId);
+                    }
+                }
+                    clients[posClient]->deleteReservation(reservation);
+                    reservation->setCheckIn(&CheckIn);
+                    reservation->setCheckOut(&CheckOut);
+                    reservation->setRoomId(RoomId);
+                    reservation->setReservationSize(Capacity);
 
-                this->reservations.push_back(reservation);
+                    if(CheckOut < date){
+                        reservation->setIsCurrent(false);
+                        clients[posClient]->addToHistory(reservation);
+                    }
+                    else{
+                        clients[posClient]->addNewReservation(reservation);
+                        reservation->setIsCurrent(false);
+                    }
+
+                    this->reservations.push_back(reservation);
+                }
+                return;
             }
-            catch(...){
-                throw;
-            }
-            return;
-        }
+    }
+    catch(...){
+        throw;
     }
     throw RoomDoesNotExist(RoomId);
 }
@@ -1167,6 +1168,7 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
                 return pos;
             }
         }
+        throw ReservationNotFound();
     }
     else if (searchCriteria == "Room"){
         for (int i = 0; i < reservations.size(); i++){
@@ -1174,6 +1176,7 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
                 pos.push_back(i);
             }
         }
+        if (pos.empty()) throw ReservationNotFound();
         return pos;
     }
     else if (searchCriteria == "Date"){
@@ -1184,6 +1187,7 @@ std::vector<int> Hotel::searchReservations(const std::string& searchCriteria, co
                     pos.push_back(i);
                 }
             }
+            if (pos.empty()) throw ReservationNotFound();
             return pos;
         }
         catch(DateIsNotValid& msg){

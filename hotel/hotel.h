@@ -165,6 +165,7 @@ public:
     /// \example searchReservations("Room",roomID) will search for the reservations for the room with room ID roomId.
     /// \return list of positions in the vector reservations of the found reservations.
     /// \exception throws DateIsNotValid if searching by Date and the value is not a correct date.
+    /// \exception throws ReservationNotFound if there are no reservations with the mentioned characteristics.
     std::vector<int> searchReservations(const std::string& searchCriteria, const std::string & value);
 
     /// Removes reservation.
@@ -200,7 +201,7 @@ public:
     /// \param reservation reservation to modify.
     /// \param roomId new roomID.
     /// \param checkIn new checkIn date.
-    /// \param checkOut old checkOut date.
+    /// \param checkOut new checkOut date.
     /// \param capacity new capacity
     /// \param posClient position of the client in the vector clients.
     /// \exception throws CantMakeNewResevOldResev if client tries to modify a reservation and put the check in date in the past.

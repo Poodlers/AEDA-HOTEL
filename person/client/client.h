@@ -134,7 +134,7 @@ private:
 };
 
 
-/// Hash fuction fot hash table.
+/// Hash function fot hash table.
 struct clientHash
 {
     ///

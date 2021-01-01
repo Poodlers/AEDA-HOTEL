@@ -1219,6 +1219,22 @@ public:
     }
 };
 
+///Thrown when the user searches for a reservation that does not exist
+class ReservationNotFound{
+public:
+    /// Constructor
+    ReservationNotFound(){}
+
+    /// Operator overload for <<.
+    ///
+    /// \param o
+    /// \param exception
+    /// \return ostream
+    friend std::ostream& operator <<(std::ostream& o, ReservationNotFound& exception){
+        return o << "There are no reservations with this characteristic."<< std::endl;
+    }
+};
+
 /// Thrown if rating is invalid
 class InvalidRating{
 public:
